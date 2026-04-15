@@ -148,7 +148,6 @@ vendor/
 .env.local
 
 # Banco de dados local
-*.sql
 *.sqlite
 
 # IDE
