@@ -137,3 +137,24 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+
+
+
+
+vendor/
+
+# Ambiente (dados sensíveis)
+.env.local
+
+# Banco de dados local
+*.sql
+*.sqlite
+
+# IDE
+.vscode/
+.idea/
+
+# Arquivos temporários
+tmp/
+temp/
