@@ -1,8 +1,6 @@
 # PI-Sistema-de-Gestao-para-Oficina-Mecanica
 
-Esse será o repositório utilizado para o desenvolvimento do Projeto Integrador: Engenharia de Software, do terceiro semestre dos cursos de Análise e Desenvolvimento de Sistemas e Sistema da Informação.
-
-Este repositório contém o desenvolvimento do Projeto Integrador (PI) da disciplina de Engenharia de Software, do terceiro semestre dos cursos de Análise e Desenvolvimento de Sistemas e Sistemas de Informação.
+Este será o repositório utilizado para o desenvolvimento do Projeto Integrador: Engenharia de Software, do terceiro semestre dos cursos de Análise e Desenvolvimento de Sistemas e Sistema da Informação.
 
 
 ## Sobre o Projeto
