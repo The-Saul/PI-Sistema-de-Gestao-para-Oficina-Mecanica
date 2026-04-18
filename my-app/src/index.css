@@ -1,0 +1,196 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #f5f6f8;
+}
+
+/* Layout */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #0f172a, #020617);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px;
+}
+
+.logo img {
+  width: 40px;
+}
+
+.logo h1 {
+  font-size: 18px;
+}
+
+.logo p {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* Menu */
+.sidebar nav ul {
+  list-style: none;
+  padding: 10px;
+}
+
+.sidebar nav li {
+  margin-bottom: 10px;
+}
+
+.sidebar button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: transparent;
+  color: #cbd5e1;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar button img {
+  width: 22px;
+}
+
+.sidebar button:hover {
+  background: #0062ff;
+}
+
+/* Footer */
+.sidebar footer {
+  padding: 15px;
+  border-top: 1px solid #1e293b;
+}
+
+/* Main */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* Header */
+.header h2 {
+  font-size: 34px;
+}
+
+.header p {
+  color: #6b7280;
+  margin-bottom: 15px;
+}
+
+/* Aba */
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #2563eb;
+  border-bottom: 2px solid #2563eb;
+  width: fit-content;
+  padding-bottom: 5px;
+  margin-bottom: 20px;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+  font-size: 28px;
+  margin-top: 10px;
+}
+
+.card p {
+  color: #6b7280;
+}
+
+/* Ícones */
+.icon {
+  width: 45px;
+  height: 45px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.blue { background: #dbeafe; color: #2563eb; }
+.purple { background: #ede9fe; color: #7c3aed; }
+.yellow { background: #fef3c7; color: #d97706; }
+.green { background: #d1fae5; color: #059669; }
+
+/* Financeiro */
+.finance-box {
+  margin-top: 30px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+}
+
+.finance-box h3 {
+  margin-bottom: 20px;
+}
+
+.finance {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.fin {
+  padding: 20px;
+  border-radius: 14px;
+}
+
+.fin h2 {
+  margin-top: 10px;
+}
+
+/* Cores */
+.red {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.green {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.orange {
+  background: #ffedd5;
+  color: #c2410c;
+}
