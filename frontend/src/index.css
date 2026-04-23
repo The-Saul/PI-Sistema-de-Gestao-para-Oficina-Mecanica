@@ -34,7 +34,7 @@ body {
 }
 
 .logo img {
-  width: 40px;
+  width: 45px;
 }
 
 .logo h1 {
@@ -113,7 +113,60 @@ body {
   margin-bottom: 20px;
 }
 
-/* Cards */
+/* Sidebar */
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  text-decoration: none; /* tira o sublinhado */
+  color: rgb(202, 202, 202); /* ou a cor do teu layout */
+
+  padding: 10px;
+  border-radius: 8px;
+
+  transition: 0.2s;
+}
+
+.sidebar a:hover {
+  background-color: #1c2333;
+}
+
+.sidebar .icon {
+  width: 40px;
+  height: 40px;
+
+  filter: brightness(0) saturate(100%) invert(80%);
+}
+
+.sidebar #icon-cli {
+    width: 35px;
+    height: 35px;
+}
+
+.sidebar .active .icon {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+.sidebar a:hover .icon {
+  filter: brightness(0) saturate(100%) invert(100%);
+}
+
+.sidebar span {
+  font-size: 18px;
+  font-weight: 520;
+}
+
+.sidebar .active {
+  background-color: #2a3350;
+  color: white;
+}
+
+/* =========================
+   CARDS
+========================= */
+
 .cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -123,36 +176,82 @@ body {
 .card {
   background: #fff;
   border-radius: 18px;
-  padding: 20px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+  padding: 22px;
+
+  box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
 }
 
 .card h3 {
-  font-size: 28px;
+  font-size: 26px;
   margin-top: 10px;
 }
 
 .card p {
   color: #6b7280;
+  font-size: 14px;
 }
 
-/* Ícones */
-.icon {
-  width: 45px;
-  height: 45px;
-  border-radius: 12px;
+/* =========================
+   ÍCONE DO CARD (BADGE)
+========================= */
+
+.card .icon {
+  width: 54px;
+  height: 54px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+
+  border-radius: 14px;
+
+  margin-bottom: 10px;
+
+  background: #f8fafc;
 }
 
-.blue { background: #dbeafe; color: #2563eb; }
-.purple { background: #ede9fe; color: #7c3aed; }
-.yellow { background: #fef3c7; color: #d97706; }
-.green { background: #d1fae5; color: #059669; }
+/* ÍCONES SVG DENTRO DO BADGE */
+.card .icon img {
+  width: 25px;
+  height: 25px;
 
-/* Financeiro */
+  filter: brightness(0) saturate(100%) opacity(0.80);
+
+  transform: scale(1.05);
+}
+
+/* =========================
+   CORES DOS BADGES (FORTE E CONTRASTANTE)
+========================= */
+
+.card.blue .icon {
+  background: #568feb;
+}
+
+.card.purple .icon {
+  background: #9875ec;
+}
+
+.card.yellow .icon {
+  background: #f8bb51;
+}
+
+.card.green .icon {
+  background: #3ac295;
+}
+
+
+
+/* =========================
+   FINANCEIRO
+========================= */
+
 .finance-box {
   margin-top: 30px;
   background: #fff;
@@ -179,18 +278,21 @@ body {
   margin-top: 10px;
 }
 
-/* Cores */
-.red {
+/* =========================
+   FINANCE BOX (ISOLADO)
+========================= */
+
+.fin.red {
   background: #fee2e2;
   color: #b91c1c;
 }
 
-.green {
+.fin.green {
   background: #d1fae5;
   color: #065f46;
 }
 
-.orange {
+.fin.orange {
   background: #ffedd5;
   color: #c2410c;
 }

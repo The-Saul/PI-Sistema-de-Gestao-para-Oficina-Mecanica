@@ -1,3 +1,5 @@
+import { NavLink } from "react-router-dom";
+
 function Sidebar() {
   return (
     <aside className="sidebar">
@@ -13,38 +15,38 @@ function Sidebar() {
         <nav>
           <ul>
             <li>
-              <button className="active">
-                <img src="/Img/SVG DashBoard.png" alt="" />
+              <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
+                <img src="/icons/dashboard-svgrepo-com.svg" alt="" className="icon" id="icon-dash" />
                 <span>Dashboard</span>
-              </button>
+              </NavLink>
             </li>
 
             <li>
-              <button>
-                <img src="/Img/SVG People.png" alt="" />
+              <NavLink to="/clientes" className={({ isActive }) => isActive ? "active" : ""}>
+                <img src="/icons/people-svgrepo-com.svg" alt="" className="icon" id="icon-cli" />
                 <span>Clientes</span>
-              </button>
+              </NavLink>
             </li>
 
             <li>
-              <button>
-                <img src="./Img/SVG Truck.png" alt="" />
+              <NavLink to="/fornecedores" className={({ isActive }) => isActive ? "active" : ""}>
+                <img src="/icons/truck-svgrepo-com.svg" alt="" className="icon" id="icon-for" />
                 <span>Fornecedores</span>
-              </button>
+              </NavLink>
             </li>
 
             <li>
-              <button>
-                <img src="./Img/SVG Box.png" alt="" />
+              <NavLink to="/estoque" className={({ isActive }) => isActive ? "active" : ""}>
+                <img src="/icons/box-svgrepo-com.svg" alt="" className="icon" id="icon-est" />
                 <span>Estoque</span>
-              </button>
+              </NavLink>
             </li>
 
             <li>
-              <button>
-                <img src="./Img/SVG Money.png" alt="" />
+              <NavLink to="/financeiro" className={({ isActive }) => isActive ? "active" : ""}>
+                <img src="/icons/dolar-svgrepo-com.svg" alt="" className="icon" id="icon-fin" />
                 <span>Financeiro</span>
-              </button>
+              </NavLink>
             </li>
           </ul>
         </nav>
