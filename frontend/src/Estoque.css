@@ -50,32 +50,21 @@
   margin-left: 10px;
   font-size: 14px;
   cursor: pointer;
-  background: #e5e7eb;
-  color: #111827;
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
+  color: #ffffff;
   font-weight: 500;
   transition: 0.2s;
 }
 
 /* HOVER PADRÃO */
 .actions button:hover {
-  background-color: #d1d5db;
+  background: linear-gradient(90deg, #1a5edb, #2d7df6);
 }
 
 /* BOTÃO ATIVO (tipo "Estoque") */
 .actions .active {
   background-color: #0062ff;
   color: white;
-}
-
-/* BOTÃO PRINCIPAL (+ Novo Produto) */
-.actions .primary {
-  background: linear-gradient(90deg, #2d7df6, #1a5edb);
-  color: white;
-  font-weight: 600;
-}
-
-.actions .primary:hover {
-  background: linear-gradient(90deg, #1a5edb, #2d7df6);
 }
 
 /* CARDS */
@@ -162,9 +151,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-
   background: rgba(0, 0, 0, 0.3);
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -223,7 +210,7 @@
 }
 
 .btn-add {
-  background: #2d7df6;
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
   color: white;
   border: none;
   padding: 8px 16px;

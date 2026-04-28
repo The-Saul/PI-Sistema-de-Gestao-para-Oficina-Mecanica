@@ -159,7 +159,7 @@ body {
 }
 
 .sidebar .active {
-  background-color: #2a3350;
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
   color: white;
 }
 
@@ -279,7 +279,7 @@ body {
 }
 
 /* =========================
-   FINANCE BOX (ISOLADO)
+   FINANCE
 ========================= */
 
 .fin.red {

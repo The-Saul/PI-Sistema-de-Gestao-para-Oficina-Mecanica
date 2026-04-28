@@ -1,4 +1,4 @@
-export function ModalNovoProduto({ open, onClose }) {
+export function NovoProduto({ open, onClose }) {
   if (!open) return null;
 
   return (
