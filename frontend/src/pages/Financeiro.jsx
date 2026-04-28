@@ -1,5 +1,10 @@
+import Sidebar from "../components/Sidebar";
 function Financeiro() {
-  return <h1>Financeiro</h1>;
+  return  (
+    <div>
+      <Sidebar/>
+    </div>
+  )
 }
 
 export default Financeiro;

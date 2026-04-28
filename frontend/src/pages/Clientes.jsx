@@ -1,5 +1,10 @@
+import Sidebar from "../components/Sidebar";
 function Clientes() {
-  return <h1>Clientes</h1>;
+  return  (
+    <div>
+      <Sidebar/>
+    </div>
+  )
 }
 
 export default Clientes;
