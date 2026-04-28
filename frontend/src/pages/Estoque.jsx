@@ -1,9 +1,9 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import HeaderEstoque from "../components/HeaderEstoque";
-import CardEstoque from "../components/CardEstoque";
-import ListEstoque from "../components/ListaEstoque";
-import { ModalNovoProduto } from "../components/NovoProduto";
+import HeaderEstoque from "../components/EStoque/HeaderEstoque";
+import CardEstoque from "../components/EStoque/CardEstoque";
+import ListEstoque from "../components/EStoque/ListaEstoque";
+import { ModalNovoProduto } from "../components/EStoque/NovoProduto";
 
 function Estoque() {
   const [openModal, setOpenModal] = useState(false);
