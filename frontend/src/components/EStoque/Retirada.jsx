@@ -1,17 +1,17 @@
-export function NovoProduto({ open, onClose }) {
+export function Retirada({ open, onClose }) {
   if (!open) return null;
 
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2>Novo produto</h2>
+        <h2>Retirada</h2>
 
         <div className="form-grid">
-          <input placeholder="Fornecedor" />
+          <input placeholder="Funcionario" />
           <input placeholder="Código" />
           <input placeholder="Quantidade" />
+
           <input placeholder="Peça" />
-          <input placeholder="Valor" />
           <input type="date" />
 
           <input className="full" placeholder="Observação" />
@@ -23,7 +23,7 @@ export function NovoProduto({ open, onClose }) {
           </button>
 
           <button className="btn-add">
-            Adicionar
+            Retirar
           </button>
         </div>
       </div>
