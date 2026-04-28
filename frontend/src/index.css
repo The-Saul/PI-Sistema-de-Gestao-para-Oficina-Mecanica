@@ -352,11 +352,29 @@ body {
   background: #e5e7eb;
   color: #111827;
   font-weight: 500;
+  transition: 0.2s;
 }
 
-.actions .primary {
-  background: #2563eb;
+/* HOVER PADRÃO */
+.actions button:hover {
+  background-color: #d1d5db;
+}
+
+/* BOTÃO ATIVO (tipo "Estoque") */
+.actions .active {
+  background-color: #0062ff;
   color: white;
+}
+
+/* BOTÃO PRINCIPAL (+ Novo Produto) */
+.actions .primary {
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
+  color: white;
+  font-weight: 600;
+}
+
+.actions .primary:hover {
+  background: linear-gradient(90deg, #1a5edb, #2d7df6);
 }
 
 /* CARDS */
@@ -432,4 +450,94 @@ body {
 /* ALERTA */
 .alert {
   border: 1px solid #ef4444;
+}
+
+/* ================= NovoProduto ================= */
+
+/* FUNDO ESCURO */
+.modal-overlay {
+  position: fixed; /* 🔥 ESSENCIAL */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+
+  background: rgba(0, 0, 0, 0.3);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999; /* 🔥 FICA NA FRENTE DE TUDO */
+}
+
+/* CAIXA DO MODAL */
+.modal {
+  background: #f3f3f3;
+  padding: 20px;
+  border-radius: 12px;
+  width: 500px;
+
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+  animation: popup 0.2s ease;
+}
+
+/* GRID DO FORM */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.form-grid input {
+  width: 100%; /* 🔥 evita quebrar */
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #ddd;
+  font-size: 14px;
+}
+
+/* INPUT GRANDE */
+.full {
+  grid-column: span 3;
+}
+
+/* BOTÕES DO MODAL */
+.modal-actions {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-cancel {
+  background: #ccc;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn-add {
+  background: #2d7df6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ANIMAÇÃO */
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

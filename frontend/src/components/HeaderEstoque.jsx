@@ -1,4 +1,4 @@
-export default function HeaderEstoque() {
+export default function HeaderEstoque({ onNovoProduto }) {
   return (
     <header className="top">
       <div>
@@ -7,9 +7,12 @@ export default function HeaderEstoque() {
       </div>
 
       <div className="actions">
-        <button>Estoque</button>
-        <button>Rstirada</button>
-        <button className="primary">+ Novo Produto</button>
+        <button className="active">Estoque</button>
+        <button>Retirada</button>
+
+        <button className="primary" onClick={onNovoProduto}>
+          + Novo Produto
+        </button>
       </div>
     </header>
   );
