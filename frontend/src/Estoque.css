@@ -142,7 +142,7 @@
   border: 1px solid #ef4444;
 }
 
-/* ================= NovoProduto ================= */
+/* ================= NovoProduto, Retirada ================= */
 
 /* FUNDO ESCURO */
 .modal-overlay {
@@ -214,6 +214,59 @@
   color: white;
   border: none;
   padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ANIMAÇÃO */
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+   
+
+
+/* ===== listproduto =====*/
+.modal-ListProduto {
+  position: fixed; /* 🔥 ESSENCIAL */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999; /* 🔥 FICA NA FRENTE DE TUDO */
+}
+
+/* CAIXA DO MODAL */
+.modal-List {
+  background: #f3f3f3;
+  padding: 20px;
+  border-radius: 12px;
+  width: 1000px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  animation: popup 0.2s ease;
+}
+
+/* INPUT GRANDE */
+.full-List {
+  width: 500px;
+}
+
+.btn-Voltar {
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
+  color: white;
+  border: none;
+  padding: 8px 12px;
   border-radius: 8px;
   cursor: pointer;
 }

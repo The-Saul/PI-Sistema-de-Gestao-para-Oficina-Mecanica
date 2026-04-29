@@ -1,14 +1,19 @@
-export default function HeaderEstoque({ onNovoProduto ,onRetirada}) {
+export default function HeaderEstoque({ onNovoProduto, onRetirada, onListProduto }) {
   return (
     <header className="top">
       <div>
         <h1>Estoque</h1>
-        <p>200 Produtos Cadastrados</p>
+        <p>Produtos Cadastrados</p>
       </div>
 
       <div className="actions">
-        <button className="active">Estoque</button>
-        <button onClick={onRetirada}>Retirada</button>
+        <button className="active" onClick={onListProduto}>
+          Estoque
+        </button>
+
+        <button onClick={onRetirada}>
+          Retirada
+        </button>
 
         <button onClick={onNovoProduto}>
           + Novo Produto

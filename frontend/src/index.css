@@ -174,7 +174,7 @@ body {
 }
 
 .card {
-  background: #fff;
+  background: #ffffff;
   border-radius: 18px;
   padding: 22px;
 
@@ -204,25 +204,20 @@ body {
 .card .icon {
   width: 54px;
   height: 54px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 14px;
 
   margin-bottom: 10px;
 
-  background: #f8fafc;
 }
 
 /* ÍCONES SVG DENTRO DO BADGE */
 .card .icon img {
   width: 25px;
   height: 25px;
-
   filter: brightness(0) saturate(100%) opacity(0.80);
-
   transform: scale(1.05);
 }
 

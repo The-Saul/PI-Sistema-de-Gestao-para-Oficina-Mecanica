@@ -5,9 +5,10 @@ import CardEstoque from "../components/EStoque/CardEstoque";
 import ListEstoque from "../components/EStoque/ListaEstoque";
 import { NovoProduto } from "../components/EStoque/NovoProduto";
 import { Retirada } from "../components/EStoque/Retirada";
+import { ListProduto } from "../components/EStoque/ListProduto";
 
 function Estoque() {
-  const [modal, setModal] = useState(null); // "novo" | "retirada" | null
+  const [modal, setModal] = useState(null);
 
   return (
     <>
@@ -18,19 +19,20 @@ function Estoque() {
           <HeaderEstoque
             onNovoProduto={() => setModal("novo")}
             onRetirada={() => setModal("retirada")}
+            onListProduto={() => setModal("List")}
           />
           <CardEstoque />
           <ListEstoque />
         </div>
       </div>
-
-      {/* Modal Novo Produto */}
+      <ListProduto
+        open={modal === "List"}
+        onClose={() => setModal(null)}
+      />
       <NovoProduto
         open={modal === "novo"}
         onClose={() => setModal(null)}
       />
-
-      {/* Modal Retirada */}
       <Retirada
         open={modal === "retirada"}
         onClose={() => setModal(null)}
