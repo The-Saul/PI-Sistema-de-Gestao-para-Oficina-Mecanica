@@ -88,10 +88,17 @@ body {
 /* Main */
 .main {
   flex: 1;
+  display: flex;
+  flex-direction: column;
   padding: 30px;
 }
 
 /* Header */
+
+.header {
+  margin-bottom: 20px;
+}
+
 .header h2 {
   font-size: 34px;
 }
@@ -225,18 +232,30 @@ body {
    CORES DOS BADGES (FORTE E CONTRASTANTE)
 ========================= */
 
+.card.blue {
+  background: #c8ddff;
+}
 .card.blue .icon {
-  background: #568feb;
+  background: #81aff9;
 }
 
+.card.purple {
+  background: #e3d8fe;
+}
 .card.purple .icon {
   background: #9875ec;
 }
 
+.card.yellow {
+  background: #fce9c8;
+}
 .card.yellow .icon {
   background: #f8bb51;
 }
 
+.card.green {
+  background: #d2fef0
+}
 .card.green .icon {
   background: #3ac295;
 }

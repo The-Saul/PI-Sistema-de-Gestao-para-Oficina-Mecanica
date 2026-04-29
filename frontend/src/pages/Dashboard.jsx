@@ -5,11 +5,16 @@ import FinanceBox from "../components/FinanceBox";
 
 function Dashboard() {
   return (
+
     <div className="app">
       <Sidebar />
 
       <main className="main">
-        <Header />
+
+        <Header
+          title="Dashboard"
+          subtitle="Visão geral da sua oficina mecânica"
+        />
 
         <div className="tab">
           <span>$</span>

@@ -1,8 +1,8 @@
-function Header() {
+function Header({ title, subtitle }) {
   return (
     <header className="header">
-      <h2>Dashboard</h2>
-      <p>Visão geral da sua oficina mecânica</p>
+      <h2>{title}</h2>
+      <p>{subtitle}</p>
     </header>
   );
 }
