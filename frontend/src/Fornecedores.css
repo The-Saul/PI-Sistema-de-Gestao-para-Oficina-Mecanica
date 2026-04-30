@@ -1,0 +1,320 @@
+/* ── Botão "+ Novo Fornecedor" no header ─────────────────────── */
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-novo {
+  background: #383FC8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+.btn-novo:hover { background: #5345f3; }
+
+/* ── Barra de busca ──────────────────────────────────────────── */
+.busca-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+.busca-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  opacity: 0.4;
+  pointer-events: none;
+}
+.busca-input {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 17px;
+  color: #111827;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+.busca-input:focus { border-color: #2563eb; }
+
+/* ── Lista de fornecedores ───────────────────────────────────── */
+.fornecedores-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lista-vazia {
+  text-align: center;
+  color: #9ca3af;
+  padding: 40px 0;
+  font-size: 14px;
+}
+
+/* ── Card de fornecedor ──────────────────────────────────────── */
+.fornecedor-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.fornecedor-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+.fornecedor-card__principal {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.fornecedor-card__nome {
+  font-size: 19px;
+  font-weight: 600;
+  color: #111827;
+}
+.fornecedor-card__cnpj {
+  font-size: 15px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+.fornecedor-card__contato {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.fornecedor-card__contato span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #374151;
+}
+.fornecedor-card__contato .icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.5;
+}
+
+/* ── Ações do card ───────────────────────────────────────────── */
+.fornecedor-card__acoes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.btn-editar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 7px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.btn-editar:hover { background: #f3f4f6; border-color: #d1d5db; }
+.btn-editar .icon { width: 14px; height: 14px; opacity: 0.6; }
+
+.btn-excluir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid #fecaca;
+  border-radius: 7px;
+  background: #fef2f2;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-excluir:hover { background: #fee2e2; }
+.icon-trash { width: 15px; height: 15px; }
+
+/* ── Modal overlay ───────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* ── Modal box ───────────────────────────────────────────────── */
+.modal {
+  background: #fff;
+  border-radius: 14px;
+  padding: 28px 28px 24px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+.modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+.modal__titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+.modal__fechar {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.15s;
+}
+.modal__fechar:hover { color: #374151; }
+
+/* ── Separador de seção ──────────────────────────────────────── */
+.modal__secao {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 20px 0 14px;
+}
+
+/* ── Grid de campos ──────────────────────────────────────────── */
+.modal__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.modal__row--3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* ── Campo individual ────────────────────────────────────────── */
+.modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.modal__field label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+.obrigatorio { color: #ef4444; }
+
+.modal__field input,
+.modal__field select {
+  padding: 9px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+.modal__field input:focus,
+.modal__field select:focus { border-color: #2563eb; }
+.modal__field input::placeholder { color: #9ca3af; }
+
+/* ── CEP com botão embutido ──────────────────────────────────── */
+.input-cep {
+  display: flex;
+  gap: 6px;
+}
+.input-cep input { flex: 1; }
+.btn-buscar-cep {
+  padding: 9px 12px;
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+.btn-buscar-cep:hover:not(:disabled) { background: #e5e7eb; }
+.btn-buscar-cep:disabled { opacity: 0.6; cursor: not-allowed; }
+.erro-cep { font-size: 12px; color: #ef4444; margin-top: 2px; }
+
+/* ── Rodapé do modal ─────────────────────────────────────────── */
+.modal__footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+}
+.btn-cancelar {
+  padding: 9px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-cancelar:hover { background: #f9fafb; }
+
+.btn-salvar {
+  padding: 9px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-salvar:hover { background: #1d4ed8; }
+
+/* ── Responsivo ──────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .modal__row,
+  .modal__row--3 { grid-template-columns: 1fr; }
+  .fornecedor-card { flex-direction: column; align-items: flex-start; }
+  .fornecedor-card__acoes { width: 100%; justify-content: flex-end; }
+}

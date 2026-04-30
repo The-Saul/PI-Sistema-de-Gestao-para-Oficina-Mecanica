@@ -7,7 +7,7 @@ function Sidebar() {
         <header className="logo">
           <img src="./Img/Rectangle 55.png" alt="logo" />
           <div>
-            <h1>Sistema de Gestão</h1>
+            <h1>CODEMEC</h1>
             <p>Nome da Empresa</p>
           </div>
         </header>

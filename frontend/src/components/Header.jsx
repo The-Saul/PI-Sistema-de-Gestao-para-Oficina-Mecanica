@@ -1,8 +1,11 @@
-function Header({ title, subtitle }) {
+function Header({ title, subtitle, action }) {
   return (
     <header className="header">
-      <h2>{title}</h2>
-      <p>{subtitle}</p>
+      <div>
+        <h2>{title}</h2>
+        <p>{subtitle}</p>
+      </div>
+      {action && <div>{action}</div>}
     </header>
   );
 }
