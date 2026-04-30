@@ -185,6 +185,7 @@
   border-radius: 8px;
   border: none;
   background: #ddd;
+  color: #636363;
   font-size: 14px;
 }
 
@@ -243,26 +244,41 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 9999; /* 🔥 FICA NA FRENTE DE TUDO */
 }
 
-/* CAIXA DO MODAL */
-.modal-List {
-  background: #f3f3f3;
-  padding: 20px;
-  border-radius: 12px;
-  width: 1000px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-  animation: popup 0.2s ease;
+
+.form-listproduto{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 15px;
+  border: 2px solid;
+  border-color: #636363;
+  border-radius: 20px;
+  padding: 10px;
+}
+.form-header{
+border-radius: 20px;
+padding: 20px;
+}
+.modal-header{
+  margin-top:  20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  display: flex;
+  justify-content: space-between;
+  
 }
 
 /* INPUT GRANDE */
-.full-List {
-  width: 500px;
+.full-list {
+  border-radius: 20px;
+  width: 300px;
+  padding: 10px;
 }
 
-.btn-Voltar {
+.btn-voltar {
   background: linear-gradient(90deg, #2d7df6, #1a5edb);
   color: white;
   border: none;

@@ -9,6 +9,20 @@ import { ListProduto } from "../components/EStoque/ListProduto";
 
 function Estoque() {
   const [modal, setModal] = useState(null);
+  const [produtos, setProdutos] = useState([]);
+
+  function adicionarProduto(produto) {
+    const novo = {
+      ...produto,
+      id: Date.now(), // ✅ ID único
+    };
+
+    setProdutos((prev) => [...prev, novo]);
+  }
+
+  function removerProduto(id) {
+    setProdutos((prev) => prev.filter((p) => p.id !== id));
+  }
 
   return (
     <>
@@ -19,20 +33,27 @@ function Estoque() {
           <HeaderEstoque
             onNovoProduto={() => setModal("novo")}
             onRetirada={() => setModal("retirada")}
-            onListProduto={() => setModal("List")}
+            onListProduto={() => setModal("list")}
           />
-          <CardEstoque />
-          <ListEstoque />
+
+          <CardEstoque total={produtos.length} />
+          <ListEstoque produtos={produtos} />
         </div>
       </div>
-      <ListProduto
-        open={modal === "List"}
-        onClose={() => setModal(null)}
-      />
+
       <NovoProduto
         open={modal === "novo"}
         onClose={() => setModal(null)}
+        onAdd={adicionarProduto}
       />
+
+      <ListProduto
+        open={modal === "list"}
+        onClose={() => setModal(null)}
+        produtos={produtos}
+        onDelete={removerProduto}
+      />
+
       <Retirada
         open={modal === "retirada"}
         onClose={() => setModal(null)}
