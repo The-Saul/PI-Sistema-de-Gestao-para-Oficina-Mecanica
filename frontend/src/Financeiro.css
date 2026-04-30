@@ -1,0 +1,675 @@
+/* ══════════════════════════════════════════════
+   SISTEMA DE GESTÃO — estilo.css
+   Contém: variáveis de cor, tipografia, layout,
+   componentes e animações. Zero HTML aqui.
+══════════════════════════════════════════════ */
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Variáveis globais ── */
+:root {
+  /* Fonte */
+  --font: 'Sora', sans-serif;
+
+  /* Sidebar */
+  --sidebar-bg:     #1a1a2e;
+  --sidebar-text:   #c9d1e0;
+  --sidebar-active: #4f7cff;
+
+  /* Fundo geral */
+  --body-bg:   #f3f5fa;
+  --text-main: #1a1d2e;
+  --text-sub:  #7b8299;
+
+  /* Botão primário */
+  --btn-primary-bg:   #4f7cff;
+  --btn-primary-text: #ffffff;
+
+  /* Cards */
+  --card-red-bg:     #fdecea;
+  --card-red-text:   #c0392b;
+  --card-green-bg:   #e8f8f0;
+  --card-green-text: #1e9b5b;
+  --card-orange-bg:  #fff3e8;
+  --card-orange-text:#c95a00;
+
+  /* Barras do gráfico */
+  --bar-entradas: #c0392b;   /* vermelho — gastos */
+  --bar-vendas:   #1db863;   /* verde    — vendas  */
+  --bar-lucro:    #e07b2a;   /* laranja  — lucro   */
+  --bar-height:   62.5%;     /* altura igual para todas */
+
+  /* Superfícies */
+  --surface-white:  #ffffff;
+  --surface-light:  #f8f9fd;
+  --surface-subtle: #f0f2f8;
+  --border-light:   #eaeef5;
+  --border-subtle:  #f0f2f8;
+
+  /* Avatares */
+  --avatar-a: #4f7cff;
+  --avatar-b: #1db863;
+  --avatar-g: #a259ff;
+
+  /* Destaque verde (sparklines / badge) */
+  --accent-green: #1db863;
+}
+
+/* ── Base ── */
+body {
+  font-family: var(--font);
+  background: var(--body-bg);
+  color: var(--text-main);
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ══════════════════════════════
+   SIDEBAR
+══════════════════════════════ */
+.sidebar {
+  width: 210px;
+  min-width: 210px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 24px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 28px;
+}
+
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brand-icon img {
+  border-radius: 9px;
+  display: block;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 13.5px;
+  line-height: 1.2;
+}
+
+.brand-sub {
+  color: var(--sidebar-text);
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Navegação */
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  padding: 0 10px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 14px;
+  border-radius: 10px;
+  color: var(--sidebar-text);
+  font-size: 13.5px;
+  font-weight: 500;
+  user-select: none;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer ao passar o mouse nos itens inativos */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+.nav-item:not(.active):not(.clickable)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.13) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-position: -200% center;
+  pointer-events: none;
+}
+
+.nav-item:not(.active):not(.clickable):hover::after {
+  animation: shimmer 0.6s linear forwards;
+}
+
+/* Item clicável (ex: Sair) */
+.nav-item.clickable {
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.nav-item.clickable:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #ffffff;
+}
+
+/* Item ativo */
+.nav-item.active {
+  background: var(--sidebar-active);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.nav-icon {
+  font-size: 17px;
+  width: 22px;
+  text-align: center;
+}
+
+.nav-arrow {
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.nav-spacer {
+  flex: 1;
+}
+
+/* ══════════════════════════════
+   PÁGINAS
+══════════════════════════════ */
+.page {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 36px 40px;
+}
+
+.page.active {
+  display: flex;
+}
+
+/* ── Cabeçalho da página ── */
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.page-sub {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+/* ══════════════════════════════
+   BOTÕES
+══════════════════════════════ */
+
+/* Ver Receita / Voltar ao Painel */
+.btn-goto-receita,
+.btn-voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1.5px solid var(--sidebar-active);
+  color: var(--sidebar-active);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-family: var(--font);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 22px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.btn-goto-receita:hover,
+.btn-voltar:hover {
+  background: var(--sidebar-active);
+  color: #ffffff;
+}
+
+/* Nova Venda */
+.btn-nova-venda {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-family: var(--font);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+
+.btn-nova-venda:hover {
+  opacity: 0.88;
+}
+
+/* Exportar PDF/Excel */
+.btn-export {
+  background: var(--surface-subtle);
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+
+.btn-export:hover {
+  background: #e2e6f0;
+}
+
+/* ══════════════════════════════
+   CARDS DE MÉTRICAS
+══════════════════════════════ */
+.cards {
+  display: flex;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+.card {
+  flex: 1;
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.card.red    { background: var(--card-red-bg); }
+.card.green  { background: var(--card-green-bg); }
+.card.orange { background: var(--card-orange-bg); }
+
+.card-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card.red    .card-label { color: var(--card-red-text); }
+.card.green  .card-label { color: var(--card-green-text); }
+.card.orange .card-label { color: var(--card-orange-text); }
+
+.card-value {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.card.red    .card-value { color: var(--card-red-text); }
+.card.green  .card-value { color: var(--card-green-text); }
+.card.orange .card-value { color: var(--card-orange-text); }
+
+/* ══════════════════════════════
+   GRÁFICO DE BARRAS
+══════════════════════════════ */
+.chart-section {
+  background: var(--surface-white);
+  border-radius: 16px;
+  padding: 28px 30px;
+}
+
+.chart-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 12px;
+  color: var(--text-sub);
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  width: 16px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.legend-dot.red    { background: var(--bar-entradas); }
+.legend-dot.green  { background: var(--bar-vendas); }
+.legend-dot.orange { background: var(--bar-lucro); }
+
+.chart-wrap {
+  display: flex;
+  align-items: flex-end;
+  height: 240px;
+}
+
+.y-axis {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  height: 100%;
+  padding-bottom: 28px;
+  margin-right: 12px;
+  min-width: 46px;
+}
+
+.y-label {
+  font-size: 11px;
+  color: var(--text-sub);
+  text-align: right;
+}
+
+.bars-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.grid-lines {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: calc(100% - 28px);
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.grid-line {
+  width: 100%;
+  height: 1px;
+  background: var(--border-light);
+}
+
+.bars {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: calc(100% - 28px);
+  position: relative;
+  z-index: 1;
+}
+
+.bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.bar {
+  width: 64px;
+  height: var(--bar-height);
+  border-radius: 6px 6px 0 0;
+  transition: opacity 0.15s;
+}
+
+.bar:hover         { opacity: 0.82; }
+.bar.entradas      { background: var(--bar-entradas); }
+.bar.vendas        { background: var(--bar-vendas); }
+.bar.lucro         { background: var(--bar-lucro); }
+
+.bar-label {
+  font-size: 12px;
+  color: var(--text-sub);
+  height: 28px;
+  display: flex;
+  align-items: center;
+}
+
+/* ══════════════════════════════
+   PÁGINA RECEITA
+══════════════════════════════ */
+.receita-box {
+  background: var(--surface-white);
+  border-radius: 16px;
+  padding: 24px 28px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.receita-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.receita-graph-title {
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* Filtros */
+.filtros-rapidos {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+}
+
+.filtros-label {
+  color: var(--text-sub);
+  font-weight: 600;
+  margin-right: 2px;
+}
+
+.filtro-btn {
+  padding: 4px 11px;
+  border-radius: 6px;
+  border: none;
+  font-family: var(--font);
+  font-size: 11.5px;
+  font-weight: 500;
+  cursor: pointer;
+  background: var(--surface-subtle);
+  color: var(--text-sub);
+  transition: background 0.12s, color 0.12s;
+}
+
+.filtro-btn.active,
+.filtro-btn:hover {
+  background: var(--sidebar-active);
+  color: #ffffff;
+}
+
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--text-sub);
+  font-size: 11.5px;
+  background: var(--surface-subtle);
+  border-radius: 6px;
+  padding: 4px 10px;
+}
+
+/* Card total */
+.total-receita-card {
+  text-align: right;
+  background: var(--surface-light);
+  border-radius: 10px;
+  padding: 10px 16px;
+  min-width: 160px;
+}
+
+.total-receita-label {
+  font-size: 10.5px;
+  color: var(--text-sub);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.total-receita-value {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.total-receita-sub {
+  font-size: 10.5px;
+  color: var(--text-sub);
+  margin-top: 2px;
+}
+
+.total-receita-sub span {
+  color: var(--accent-green);
+  font-weight: 600;
+}
+
+/* Tabela */
+.receita-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.receita-table thead tr {
+  border-bottom: 1.5px solid var(--border-light);
+}
+
+.receita-table th {
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--text-sub);
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.receita-table tbody tr {
+  border-bottom: 1px solid var(--border-subtle);
+  transition: background 0.12s;
+}
+
+.receita-table tbody tr:hover {
+  background: var(--surface-light);
+}
+
+.receita-table td {
+  padding: 11px 12px;
+  font-size: 13px;
+}
+
+/* Avatar de cliente */
+.client-cell {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.avatar.a { background: var(--avatar-a); }
+.avatar.b { background: var(--avatar-b); }
+.avatar.g { background: var(--avatar-g); }
+
+.service-cell {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.value-cell {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.spark svg {
+  opacity: 0.55;
+  display: block;
+}
+
+/* Rodapé da tabela */
+.receita-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.receita-footer-left {
+  font-size: 11px;
+  color: var(--text-sub);
+}
