@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
 
 
 
@@ -389,21 +388,19 @@ function Painel({ onVerReceita }) {
       <style>{GLOBAL_CSS}</style>
 
       {/* Header */}
-      <Header
-  title="Painel"
-  subtitle="20 vendas hoje"
-  action={
-    <div style={{ display: "flex", gap: 10 }}>
-      <BtnGhost onClick={onVerReceita}>
-        📊 Ver Receita <Ico.Arrow />
-      </BtnGhost>
-
-      <BtnAccent onClick={() => setShowNovaVenda(true)}>
-        <Ico.Plus /> Nova Venda
-      </BtnAccent>
-    </div>
-  }
-/>
+      <div className="fade-up" style={{ display: "flex", alignItems: "flex-start",
+        justifyContent: "space-between", marginBottom: 32 }}>
+        <div>
+          <h1 style={{ fontSize: 26, fontWeight: 700, color: T.textHi, lineHeight: 1 }}>Painel</h1>
+          <p style={{ fontSize: 13, color: T.textLo, marginTop: 6 }}>
+            <span style={{ color: T.accent, fontWeight: 600 }}>20</span> vendas hoje
+          </p>
+        </div>
+        <div style={{ display: "flex", gap: 10 }}>
+          <BtnGhost onClick={onVerReceita}>📊 Ver Receita <Ico.Arrow /></BtnGhost>
+          <BtnAccent onClick={() => setShowNovaVenda(true)}><Ico.Plus /> Nova Venda</BtnAccent>
+        </div>
+      </div>
 
       {/* Stat cards */}
       <div style={{ display: "flex", gap: 16, marginBottom: 28 }}>
