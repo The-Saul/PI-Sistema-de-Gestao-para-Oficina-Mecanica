@@ -1,8 +1,9 @@
 import { useState } from "react";
+import Sidebar from "../components/Sidebar";
 
-/* ── Logo base64 ── */
-const LOGO_SRC =
-  "data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAAdACADASIAAhEBAxEB/8QAGgAAAgIDAAAAAAAAAAAAAAAABgcCBQAECP/EAC0QAAEEAQMBBwIHAAAAAAAAAAECAwQRBQAGIRIHEyIxQUJRcbEjYoGRodHh/8QAFwEAAwEAAAAAAAAAAAAAAAAAAgMFBP/EAB4RAAICAgMBAQAAAAAAAAAAAAECAAMEERITITGx/9oADAMBAAIRAxEAPwDlBkfho+g0Z7Z2JJy+HRlHZ8aEwJPduJetKggVaxfHrXxeh3abCZOdxzDktmGlTiSX3q6EVzZvTk3TLhNvHKZtbLrJpuOy+glPiPLhQPWjSR6JF+Z1bxKFsXk0n3uwOlgPK7P0u5EoxGVZnRlOhDQbWla1j3cjwihZs8aj2j7Rwu2YUcwcjJmPuuFB6+kJAA58vqP31cnMYTD5BnBbbi0qY+hD76XAtSUqUPdVEi+B5fN6EO0JlDG4VttTUyWiO8SkKvuyeCD+agL/AE1ourqSskD38gVly3plr2WZXFwVR4qtvsZOa89anXQOllsJHIBBF3yf90R5OZh8znzPdzbLUuLNCItnqQaSPaD6q6vECNKJkkNIINGh9tS0mjL66whG4xqNsWB1GpnXcbDzczM5CfHk5SKyOhgWlN1QAsk2f4+y3zWQOTyb07uEMF02UI5A/vWkeSSfPWAc6Vdkdg4gaEJKwv32f//Z";
+
+
+
 
 /* ── Design Tokens ── */
 const T = {
@@ -11,7 +12,7 @@ const T = {
   surfaceUp:  "#f8f9fd",
   border:     "#eaeef5",
   borderHi:   "#d4dae8",
-  accent:     "#4f7cff",
+  accent:     "#4f7cff",   /* blue */
   accentDim:  "#3b6bef",
   accentGlow: "rgba(79,124,255,0.10)",
   red:        "#e53e3e",
@@ -32,59 +33,59 @@ const T = {
 /* ── Dados ── */
 const DADOS_FILTRO = {
   Mensal: {
-    dateRange: "01/10/2023 \u2013 31/10/2023",
+    dateRange: "01/10/2023 – 31/10/2023",
     total: "R$ 29.500",
     servicos: 6,
     variacao: "+12,5%",
     variacaoLabel: "vs Set",
-    ultimaAtt: "31/10/2023 \u2013 17:45",
+    ultimaAtt: "31/10/2023 – 17:45",
     rows: [
-      { data: "01/10", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDD0D Consultoria",    valor: "10.000", spark: "0,14 11,8 22,10 33,4 44,6"  },
-      { data: "01/10", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDC65 Treinamento",    valor: "3.000",  spark: "0,10 11,12 22,6 33,9 44,5"  },
-      { data: "15/10", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDD27 Manuten\u00E7\u00E3o",     valor: "4.500",  spark: "0,12 11,7 22,9 33,5 44,8"   },
-      { data: "15/10", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDD11 Licenciamento",  valor: "1.500",  spark: "0,8 11,13 22,7 33,10 44,6"  },
-      { data: "15/10", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDEE0\uFE0F Suporte",        valor: "1.000",  spark: "0,14 11,9 22,11 33,7 44,9"  },
-      { data: "30/10", avatar: "G", cliente: "Ant\u00F3nio", servico: "</> Desenvolvimento",valor: "9.500",  spark: "0,13 11,8 22,5 33,7 44,4"   },
+      { data: "01/10", avatar: "A", cliente: "Pedro",   servico: "🔍 Consultoria",    valor: "10.000", spark: "0,14 11,8 22,10 33,4 44,6"  },
+      { data: "01/10", avatar: "A", cliente: "Pedro",   servico: "👥 Treinamento",    valor: "3.000",  spark: "0,10 11,12 22,6 33,9 44,5"  },
+      { data: "15/10", avatar: "B", cliente: "João",    servico: "🔧 Manutenção",     valor: "4.500",  spark: "0,12 11,7 22,9 33,5 44,8"   },
+      { data: "15/10", avatar: "B", cliente: "João",    servico: "🔑 Licenciamento",  valor: "1.500",  spark: "0,8 11,13 22,7 33,10 44,6"  },
+      { data: "15/10", avatar: "B", cliente: "João",    servico: "🛠️ Suporte",        valor: "1.000",  spark: "0,14 11,9 22,11 33,7 44,9"  },
+      { data: "30/10", avatar: "G", cliente: "António", servico: "</> Desenvolvimento",valor: "9.500",  spark: "0,13 11,8 22,5 33,7 44,4"   },
     ],
   },
   Trimestral: {
-    dateRange: "01/08/2023 \u2013 31/10/2023",
+    dateRange: "01/08/2023 – 31/10/2023",
     total: "R$ 84.200",
     servicos: 14,
     variacao: "+8,3%",
     variacaoLabel: "vs Trim. Ant.",
-    ultimaAtt: "31/10/2023 \u2013 18:00",
+    ultimaAtt: "31/10/2023 – 18:00",
     rows: [
-      { data: "05/08", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDD0D Consultoria",    valor: "12.000", spark: "0,12 11,6 22,8 33,3 44,5"   },
-      { data: "20/08", avatar: "G", cliente: "Ant\u00F3nio", servico: "</> Desenvolvimento",valor: "15.000", spark: "0,14 11,9 22,6 33,4 44,3"   },
-      { data: "10/09", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDEE0\uFE0F Suporte",        valor: "2.200",  spark: "0,11 11,14 22,9 33,12 44,7"  },
-      { data: "18/09", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDC65 Treinamento",    valor: "5.000",  spark: "0,13 11,8 22,11 33,6 44,8"   },
-      { data: "01/10", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDD11 Licenciamento",  valor: "1.500",  spark: "0,8 11,13 22,7 33,10 44,6"   },
-      { data: "15/10", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDD27 Manuten\u00E7\u00E3o",     valor: "4.500",  spark: "0,12 11,7 22,9 33,5 44,8"    },
-      { data: "30/10", avatar: "G", cliente: "Ant\u00F3nio", servico: "</> Desenvolvimento",valor: "9.500",  spark: "0,13 11,8 22,5 33,7 44,4"   },
-      { data: "30/10", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDD0D Consultoria",    valor: "34.500", spark: "0,10 11,5 22,7 33,2 44,4"    },
+      { data: "05/08", avatar: "A", cliente: "Pedro",   servico: "🔍 Consultoria",    valor: "12.000", spark: "0,12 11,6 22,8 33,3 44,5"   },
+      { data: "20/08", avatar: "G", cliente: "António", servico: "</> Desenvolvimento",valor: "15.000", spark: "0,14 11,9 22,6 33,4 44,3"   },
+      { data: "10/09", avatar: "B", cliente: "João",    servico: "🛠️ Suporte",        valor: "2.200",  spark: "0,11 11,14 22,9 33,12 44,7"  },
+      { data: "18/09", avatar: "A", cliente: "Pedro",   servico: "👥 Treinamento",    valor: "5.000",  spark: "0,13 11,8 22,11 33,6 44,8"   },
+      { data: "01/10", avatar: "B", cliente: "João",    servico: "🔑 Licenciamento",  valor: "1.500",  spark: "0,8 11,13 22,7 33,10 44,6"   },
+      { data: "15/10", avatar: "B", cliente: "João",    servico: "🔧 Manutenção",     valor: "4.500",  spark: "0,12 11,7 22,9 33,5 44,8"    },
+      { data: "30/10", avatar: "G", cliente: "António", servico: "</> Desenvolvimento",valor: "9.500",  spark: "0,13 11,8 22,5 33,7 44,4"   },
+      { data: "30/10", avatar: "A", cliente: "Pedro",   servico: "🔍 Consultoria",    valor: "34.500", spark: "0,10 11,5 22,7 33,2 44,4"    },
     ],
   },
   Anual: {
-    dateRange: "01/01/2023 \u2013 31/12/2023",
+    dateRange: "01/01/2023 – 31/12/2023",
     total: "R$ 312.750",
     servicos: 48,
     variacao: "+21,4%",
     variacaoLabel: "vs 2022",
-    ultimaAtt: "31/12/2023 \u2013 23:59",
+    ultimaAtt: "31/12/2023 – 23:59",
     rows: [
-      { data: "Jan", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDD0D Consultoria",    valor: "18.000", spark: "0,14 11,10 22,7 33,5 44,3"  },
-      { data: "Fev", avatar: "G", cliente: "Ant\u00F3nio", servico: "</> Desenvolvimento",valor: "22.500", spark: "0,13 11,9 22,6 33,4 44,2"   },
-      { data: "Mar", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDD27 Manuten\u00E7\u00E3o",     valor: "9.000",  spark: "0,11 11,8 22,10 33,6 44,7"  },
-      { data: "Abr", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDC65 Treinamento",    valor: "14.500", spark: "0,12 11,7 22,9 33,5 44,4"   },
-      { data: "Mai", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDEE0\uFE0F Suporte",        valor: "6.200",  spark: "0,10 11,13 22,8 33,11 44,7" },
-      { data: "Jun", avatar: "G", cliente: "Ant\u00F3nio", servico: "\uD83D\uDD11 Licenciamento",  valor: "28.000", spark: "0,9 11,6 22,4 33,3 44,2"    },
-      { data: "Jul", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDD0D Consultoria",    valor: "31.000", spark: "0,13 11,8 22,5 33,3 44,2"   },
-      { data: "Ago", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDD27 Manuten\u00E7\u00E3o",     valor: "11.050", spark: "0,12 11,9 22,7 33,5 44,6"   },
-      { data: "Set", avatar: "G", cliente: "Ant\u00F3nio", servico: "</> Desenvolvimento",valor: "42.000", spark: "0,14 11,10 22,7 33,4 44,3"  },
-      { data: "Out", avatar: "A", cliente: "Pedro",   servico: "\uD83D\uDC65 Treinamento",    valor: "29.500", spark: "0,11 11,7 22,9 33,5 44,4"   },
-      { data: "Nov", avatar: "B", cliente: "Jo\u00E3o",    servico: "\uD83D\uDEE0\uFE0F Suporte",        valor: "52.000", spark: "0,13 11,8 22,6 33,4 44,3"   },
-      { data: "Dez", avatar: "G", cliente: "Ant\u00F3nio", servico: "\uD83D\uDD11 Licenciamento",  valor: "49.000", spark: "0,12 11,7 22,5 33,3 44,2"   },
+      { data: "Jan", avatar: "A", cliente: "Pedro",   servico: "🔍 Consultoria",    valor: "18.000", spark: "0,14 11,10 22,7 33,5 44,3"  },
+      { data: "Fev", avatar: "G", cliente: "António", servico: "</> Desenvolvimento",valor: "22.500", spark: "0,13 11,9 22,6 33,4 44,2"   },
+      { data: "Mar", avatar: "B", cliente: "João",    servico: "🔧 Manutenção",     valor: "9.000",  spark: "0,11 11,8 22,10 33,6 44,7"  },
+      { data: "Abr", avatar: "A", cliente: "Pedro",   servico: "👥 Treinamento",    valor: "14.500", spark: "0,12 11,7 22,9 33,5 44,4"   },
+      { data: "Mai", avatar: "B", cliente: "João",    servico: "🛠️ Suporte",        valor: "6.200",  spark: "0,10 11,13 22,8 33,11 44,7" },
+      { data: "Jun", avatar: "G", cliente: "António", servico: "🔑 Licenciamento",  valor: "28.000", spark: "0,9 11,6 22,4 33,3 44,2"    },
+      { data: "Jul", avatar: "A", cliente: "Pedro",   servico: "🔍 Consultoria",    valor: "31.000", spark: "0,13 11,8 22,5 33,3 44,2"   },
+      { data: "Ago", avatar: "B", cliente: "João",    servico: "🔧 Manutenção",     valor: "11.050", spark: "0,12 11,9 22,7 33,5 44,6"   },
+      { data: "Set", avatar: "G", cliente: "António", servico: "</> Desenvolvimento",valor: "42.000", spark: "0,14 11,10 22,7 33,4 44,3"  },
+      { data: "Out", avatar: "A", cliente: "Pedro",   servico: "👥 Treinamento",    valor: "29.500", spark: "0,11 11,7 22,9 33,5 44,4"   },
+      { data: "Nov", avatar: "B", cliente: "João",    servico: "🛠️ Suporte",        valor: "52.000", spark: "0,13 11,8 22,6 33,4 44,3"   },
+      { data: "Dez", avatar: "G", cliente: "António", servico: "🔑 Licenciamento",  valor: "49.000", spark: "0,12 11,7 22,5 33,3 44,2"   },
     ],
   },
 };
@@ -189,101 +190,10 @@ const Ico = {
   ),
 };
 
-/* ════════════════════════════════
-   SIDEBAR
-════════════════════════════════ */
-const NAV = [
-  { label: "Dashboard",    Icon: Ico.Grid    },
-  { label: "Clientes",     Icon: Ico.Users   },
-  { label: "Fornecedores", Icon: Ico.Truck   },
-  { label: "Estoque",      Icon: Ico.Box     },
-  { label: "Financeiro",   Icon: Ico.Finance, active: true },
-];
 
-function NavItem({ item }) {
-  const [hov, setHov] = useState(false);
-  const on = item.active;
-  return (
-    <div
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        display: "flex", alignItems: "center", gap: 11,
-        padding: "10px 14px", borderRadius: 10,
-        color: on ? "#fff" : hov ? "#c9d1e0" : "#7b8db0",
-        background: on ? T.accent : hov ? "rgba(255,255,255,0.06)" : "transparent",
-        border: on ? "none" : "1px solid transparent",
-        fontSize: 13.5, fontWeight: on ? 600 : 400,
-        cursor: "default", userSelect: "none",
-        transition: "all 0.18s",
-        letterSpacing: "0.01em",
-      }}
-    >
-      <item.Icon />
-      <span>{item.label}</span>
-      {on && (
-        <span style={{ marginLeft: "auto" }}><Ico.Arrow /></span>
-      )}
-    </div>
-  );
-}
 
-function Sidebar() {
-  return (
-    <aside style={{
-      width: 220, minWidth: 220, background: "#1a1a2e",
-      borderRight: "1px solid #0d0f1e",
-      display: "flex", flexDirection: "column",
-      padding: "0 0 20px",
-    }}>
-      <div style={{
-        display: "flex", alignItems: "center", gap: 11,
-        padding: "24px 20px 32px",
-        borderBottom: "1px solid rgba(255,255,255,0.07)",
-        marginBottom: 12,
-      }}>
-        <div style={{ position: "relative" }}>
-          <img src={LOGO_SRC} alt="Logo" width={36} height={36}
-            style={{ borderRadius: 10, display: "block", flexShrink: 0 }}/>
-          <div style={{
-            position: "absolute", bottom: -1, right: -1,
-            width: 9, height: 9, borderRadius: "50%",
-            background: "#6ee7b7", border: "2px solid #1a1a2e",
-            animation: "pulse-dot 2.5s ease-in-out infinite",
-          }}/>
-        </div>
-        <div>
-          <div style={{ color: "#fff", fontWeight: 700, fontSize: 14, letterSpacing: "0.02em" }}>CODEMEC</div>
-          <div style={{ color: "#7b8db0", fontSize: 10.5, marginTop: 1 }}>Nome da Empresa</div>
-        </div>
-      </div>
 
-      <div style={{ padding: "0 20px 8px", fontSize: 10, fontWeight: 600,
-        color: "#4a5878", letterSpacing: "0.08em", textTransform: "uppercase" }}>
-        Menu
-      </div>
 
-      <nav style={{ display: "flex", flexDirection: "column", gap: 2,
-        flex: 1, padding: "0 10px" }}>
-        {NAV.map(item => <NavItem key={item.label} item={item} />)}
-      </nav>
-
-      <div style={{ padding: "0 10px" }}>
-        <div style={{
-          display: "flex", alignItems: "center", gap: 11,
-          padding: "10px 14px", borderRadius: 10, color: "#4a5878",
-          fontSize: 13.5, cursor: "pointer",
-          transition: "all 0.18s",
-        }}
-          onMouseEnter={e => { e.currentTarget.style.color = "#f87171"; e.currentTarget.style.background = "rgba(248,113,113,0.12)"; }}
-          onMouseLeave={e => { e.currentTarget.style.color = "#4a5878"; e.currentTarget.style.background = "transparent"; }}
-        >
-          <Ico.Logout /> Sair
-        </div>
-      </div>
-    </aside>
-  );
-}
 
 /* ════════════════════════════════
    BOTÕES
@@ -339,22 +249,21 @@ function PillBtn({ children, active, onClick }) {
 
 /* ════════════════════════════════
    PAINEL (HOME)
-   Entradas=vermelho, Vendas=verde, Saldo=laranja
 ════════════════════════════════ */
 const CARDS_DATA = [
   {
     label: "Entradas (Gastos)",
     value: "R$ 20,00",
-    icon: "\u2198",
+    icon: "↘",
     color: T.red,
     glow: T.redGlow,
     trend: "-2,4%",
     trendDown: true,
   },
   {
-    label: "Vendas (Sa\u00EDda)",
+    label: "Vendas (Saída)",
     value: "R$ 20,00",
-    icon: "\u2197",
+    icon: "↗",
     color: T.green,
     glow: T.greenGlow,
     trend: "+8,1%",
@@ -381,7 +290,7 @@ function StatCard({ card, delay }) {
       style={{
         flex: 1, borderRadius: 16,
         background: hov ? T.surfaceUp : T.surface,
-        border: `1px solid ${hov ? card.color + "55" : T.border}`,
+        border: `1px solid ${hov ? T.borderHi : T.border}`,
         padding: "22px 24px",
         transition: "all 0.22s",
         cursor: "default",
@@ -398,22 +307,21 @@ function StatCard({ card, delay }) {
           fontSize: 15, fontWeight: 700,
         }}>{card.icon}</div>
       </div>
-      <div style={{ fontSize: 26, fontWeight: 700, color: card.color, lineHeight: 1, marginBottom: 10 }}>
+      <div style={{ fontSize: 26, fontWeight: 700, color: T.textHi, lineHeight: 1, marginBottom: 10 }}>
         {card.value}
       </div>
       <div style={{
         fontSize: 11, fontWeight: 500,
-        color: card.trendDown ? T.red : T.green,
-        background: card.trendDown ? T.redGlow : T.greenGlow,
+        color: card.trendDown ? T.red : T.accent,
+        background: card.trendDown ? T.redGlow : T.accentGlow,
         display: "inline-block", padding: "2px 8px", borderRadius: 20,
       }}>
-        {card.trend} este m\u00EAs
+        {card.trend} este mês
       </div>
     </div>
   );
 }
 
-/* Entradas=vermelho, Vendas=verde, Lucro=laranja (mantido) */
 const BAR_DATA = [
   { label: "Entradas", pct: 62.5, color: T.red   },
   { label: "Vendas",   pct: 62.5, color: T.green },
@@ -423,6 +331,7 @@ const BAR_DATA = [
 function BarChart() {
   return (
     <div style={{ display: "flex", gap: 28, alignItems: "flex-end", height: 180 }}>
+      {/* Y axis */}
       <div style={{
         display: "flex", flexDirection: "column-reverse", justifyContent: "space-between",
         height: "100%", paddingBottom: 26,
@@ -431,7 +340,9 @@ function BarChart() {
           <span key={v} style={{ fontSize: 10, color: T.textLo, textAlign: "right", minWidth: 28 }}>{v}</span>
         ))}
       </div>
+      {/* Bars area */}
       <div style={{ flex: 1, height: "100%", position: "relative" }}>
+        {/* Grid lines */}
         <div style={{ position: "absolute", inset: 0, paddingBottom: 26,
           display: "flex", flexDirection: "column-reverse", justifyContent: "space-between", pointerEvents: "none" }}>
           {[0,1,2,3,4].map(i => (
@@ -439,6 +350,7 @@ function BarChart() {
               background: `linear-gradient(90deg, ${T.border} 0%, transparent 100%)` }}/>
           ))}
         </div>
+        {/* Columns */}
         <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-around",
           height: "calc(100% - 26px)", position: "relative", zIndex: 1 }}>
           {BAR_DATA.map(b => <BarItem key={b.label} bar={b} />)}
@@ -475,6 +387,7 @@ function Painel({ onVerReceita }) {
     <main style={{ flex: 1, overflowY: "auto", padding: "36px 44px", background: T.bg }}>
       <style>{GLOBAL_CSS}</style>
 
+      {/* Header */}
       <div className="fade-up" style={{ display: "flex", alignItems: "flex-start",
         justifyContent: "space-between", marginBottom: 32 }}>
         <div>
@@ -484,20 +397,22 @@ function Painel({ onVerReceita }) {
           </p>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
-          <BtnGhost onClick={onVerReceita}>\uD83D\uDCCA Ver Receita <Ico.Arrow /></BtnGhost>
+          <BtnGhost onClick={onVerReceita}>📊 Ver Receita <Ico.Arrow /></BtnGhost>
           <BtnAccent onClick={() => setShowNovaVenda(true)}><Ico.Plus /> Nova Venda</BtnAccent>
         </div>
       </div>
 
+      {/* Stat cards */}
       <div style={{ display: "flex", gap: 16, marginBottom: 28 }}>
         {CARDS_DATA.map((c, i) => <StatCard key={c.label} card={c} delay={i + 1} />)}
       </div>
 
+      {/* Chart card */}
       <div className="fade-up fade-up-4"
         style={{ background: T.surface, borderRadius: 16,
           border: `1px solid ${T.border}`, padding: "28px 32px" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
-          <h2 style={{ fontSize: 15, fontWeight: 600, color: T.textHi }}>Resumo do M\u00EAs</h2>
+          <h2 style={{ fontSize: 15, fontWeight: 600, color: T.textHi }}>Resumo do Mês</h2>
           <div style={{ display: "flex", gap: 16 }}>
             {BAR_DATA.map(b => (
               <div key={b.label} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 11.5, color: T.textMid }}>
@@ -523,11 +438,11 @@ function NovaVendaModal({ onClose }) {
   const [saved, setSaved] = useState(false);
 
   const SERVICOS = [
-    "\uD83D\uDD0D Consultoria",
-    "\uD83D\uDC65 Treinamento",
-    "\uD83D\uDD27 Manuten\u00E7\u00E3o",
-    "\uD83D\uDD11 Licenciamento",
-    "\uD83D\uDEE0\uFE0F Suporte",
+    "🔍 Consultoria",
+    "👥 Treinamento",
+    "🔧 Manutenção",
+    "🔑 Licenciamento",
+    "🛠️ Suporte",
     "</> Desenvolvimento",
   ];
 
@@ -558,6 +473,7 @@ function NovaVendaModal({ onClose }) {
         boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
         fontFamily: T.font,
       }}>
+        {/* Header */}
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 22 }}>
           <div>
             <div style={{ fontSize: 17, fontWeight: 700, color: T.textHi }}>Nova Venda</div>
@@ -568,10 +484,12 @@ function NovaVendaModal({ onClose }) {
             borderRadius: 8, width: 32, height: 32, cursor: "pointer",
             color: T.textMid, fontSize: 16,
             display: "flex", alignItems: "center", justifyContent: "center",
-          }}>\u2715</button>
+          }}>✕</button>
         </div>
 
+        {/* Form */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* Cliente */}
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: T.textLo,
               textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: 6 }}>
@@ -587,10 +505,11 @@ function NovaVendaModal({ onClose }) {
             />
           </div>
 
+          {/* Serviço */}
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: T.textLo,
               textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: 6 }}>
-              Servi\u00E7o
+              Serviço
             </label>
             <select
               style={{ ...inputStyle, cursor: "pointer" }}
@@ -599,11 +518,12 @@ function NovaVendaModal({ onClose }) {
               onFocus={e => e.target.style.borderColor = T.accent}
               onBlur={e => e.target.style.borderColor = T.border}
             >
-              <option value="">Selecione um servi\u00E7o</option>
+              <option value="">Selecione um serviço</option>
               {SERVICOS.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
 
+          {/* Valor + Data lado a lado */}
           <div style={{ display: "flex", gap: 12 }}>
             <div style={{ flex: 1 }}>
               <label style={{ fontSize: 11, fontWeight: 600, color: T.textLo,
@@ -635,10 +555,11 @@ function NovaVendaModal({ onClose }) {
             </div>
           </div>
 
+          {/* Observações */}
           <div>
             <label style={{ fontSize: 11, fontWeight: 600, color: T.textLo,
               textTransform: "uppercase", letterSpacing: "0.07em", display: "block", marginBottom: 6 }}>
-              Observa\u00E7\u00F5es <span style={{ fontWeight: 400, color: T.textLo }}>(opcional)</span>
+              Observações <span style={{ fontWeight: 400, color: T.textLo }}>(opcional)</span>
             </label>
             <textarea
               style={{ ...inputStyle, resize: "none", height: 72 }}
@@ -651,6 +572,7 @@ function NovaVendaModal({ onClose }) {
           </div>
         </div>
 
+        {/* Footer */}
         <div style={{ display: "flex", gap: 10, marginTop: 22, justifyContent: "flex-end" }}>
           <BtnGhost onClick={onClose}>Cancelar</BtnGhost>
           {saved ? (
@@ -659,7 +581,7 @@ function NovaVendaModal({ onClose }) {
               background: T.greenGlow, border: `1px solid ${T.green}44`,
               color: T.green, borderRadius: 10, padding: "10px 20px",
               font: `600 13.5px ${T.font}`,
-            }}>\u2705 Venda registrada!</div>
+            }}>✅ Venda registrada!</div>
           ) : (
             <BtnAccent onClick={handleSalvar}><Ico.Plus /> Salvar Venda</BtnAccent>
           )}
@@ -669,9 +591,7 @@ function NovaVendaModal({ onClose }) {
   );
 }
 
-/* ════════════════════════════════
-   MODAL EXPORTAÇÃO
-════════════════════════════════ */
+
 function ExportModal({ filtro, onClose }) {
   const [downloading, setDownloading] = useState(null);
   const [done, setDone] = useState(null);
@@ -683,8 +603,8 @@ function ExportModal({ filtro, onClose }) {
   }
 
   const tipos = [
-    { key: "pdf",   label: "PDF",   desc: "Relat\u00F3rio formatado para impress\u00E3o", color: T.red,    glow: T.redGlow    },
-    { key: "excel", label: "Excel", desc: "Planilha edit\u00E1vel (.xlsx)",                color: T.accent, glow: T.accentGlow },
+    { key: "pdf",   label: "PDF",   desc: "Relatório formatado para impressão", color: T.red,   glow: T.redGlow   },
+    { key: "excel", label: "Excel", desc: "Planilha editável (.xlsx)",           color: T.accent, glow: T.accentGlow },
   ];
 
   return (
@@ -702,9 +622,9 @@ function ExportModal({ filtro, onClose }) {
       }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
           <div>
-            <div style={{ fontSize: 17, fontWeight: 700, color: T.textHi }}>Exportar Relat\u00F3rio</div>
+            <div style={{ fontSize: 17, fontWeight: 700, color: T.textHi }}>Exportar Relatório</div>
             <div style={{ fontSize: 12, color: T.textLo, marginTop: 4 }}>
-              {filtro} \u00B7 {dados.dateRange}
+              {filtro} · {dados.dateRange}
             </div>
           </div>
           <button onClick={onClose} style={{
@@ -712,17 +632,18 @@ function ExportModal({ filtro, onClose }) {
             borderRadius: 8, width: 32, height: 32, cursor: "pointer",
             color: T.textMid, fontSize: 16,
             display: "flex", alignItems: "center", justifyContent: "center",
-          }}>\u2715</button>
+          }}>✕</button>
         </div>
 
+        {/* Resumo */}
         <div style={{ background: T.surfaceUp, borderRadius: 12,
           border: `1px solid ${T.border}`,
           padding: "14px 16px", margin: "18px 0", lineHeight: 1.8 }}>
           <div style={{ fontSize: 12, color: T.textMid }}>
-            <span style={{ color: T.textHi, fontWeight: 600 }}>{dados.servicos} servi\u00E7os</span>
-            <span style={{ color: T.textLo }}> \u00B7 </span>
+            <span style={{ color: T.textHi, fontWeight: 600 }}>{dados.servicos} serviços</span>
+            <span style={{ color: T.textLo }}> · </span>
             Total: <span style={{ color: T.accent, fontWeight: 600 }}>{dados.total}</span>
-            <span style={{ color: T.textLo }}> \u00B7 </span>
+            <span style={{ color: T.textLo }}> · </span>
             <span style={{ color: T.accent }}>{dados.variacao}</span> {dados.variacaoLabel}
           </div>
         </div>
@@ -746,7 +667,7 @@ function ExportModal({ filtro, onClose }) {
             background: T.accentGlow, border: `1px solid ${T.accent}44`,
             color: T.accent, fontSize: 12.5, fontWeight: 600,
             display: "flex", alignItems: "center", gap: 8 }}>
-            \u2705 Arquivo {done.toUpperCase()} gerado! Verifique os downloads.
+            ✅ Arquivo {done.toUpperCase()} gerado! Verifique os downloads.
           </div>
         )}
       </div>
@@ -781,7 +702,7 @@ function ExportOption({ tipo, isLoading, isDone, onClick }) {
       </div>
       <div style={{ fontSize: 12, fontWeight: 600, color: isDone ? tipo.color : isLoading ? T.textLo : tipo.color,
         display: "flex", alignItems: "center", gap: 5 }}>
-        {isDone ? "\u2713 Baixado" : isLoading ? "Gerando\u2026" : <><Ico.Download /> Baixar</>}
+        {isDone ? "✓ Baixado" : isLoading ? "Gerando…" : <><Ico.Download /> Baixar</>}
       </div>
     </div>
   );
@@ -789,7 +710,6 @@ function ExportOption({ tipo, isLoading, isDone, onClick }) {
 
 /* ════════════════════════════════
    RECEITA
-   Valores na tabela em verde (vendas)
 ════════════════════════════════ */
 function TableRow({ row }) {
   const [hov, setHov] = useState(false);
@@ -821,14 +741,14 @@ function TableRow({ row }) {
       <td style={{ padding: "12px 16px", fontSize: 13, color: T.textMid }}>{row.servico}</td>
       <td style={{ padding: "12px 16px" }}>
         <span style={{
-          fontSize: 13, fontWeight: 600, color: T.green,
-          background: T.greenGlow, borderRadius: 6, padding: "3px 10px",
+          fontSize: 13, fontWeight: 600, color: T.accent,
+          background: T.accentGlow, borderRadius: 6, padding: "3px 10px",
           whiteSpace: "nowrap",
         }}>R$ {row.valor}</span>
       </td>
       <td style={{ padding: "12px 16px" }}>
         <svg width="48" height="18" viewBox="0 0 44 18" style={{ display: "block" }}>
-          <polyline points={row.spark} fill="none" stroke={T.green} strokeWidth="1.8"
+          <polyline points={row.spark} fill="none" stroke={T.accent} strokeWidth="1.8"
             strokeLinejoin="round" opacity="0.6"/>
         </svg>
       </td>
@@ -846,12 +766,13 @@ function Receita({ onVoltar }) {
       padding: "36px 44px", background: T.bg, fontFamily: T.font }}>
       <style>{GLOBAL_CSS}</style>
 
+      {/* Header */}
       <div className="fade-up" style={{ display: "flex", alignItems: "flex-start",
         justifyContent: "space-between", marginBottom: 28 }}>
         <div>
           <h1 style={{ fontSize: 26, fontWeight: 700, color: T.textHi }}>Receita</h1>
           <p style={{ fontSize: 13, color: T.textLo, marginTop: 6 }}>
-            Detalhamento de entradas por per\u00EDodo
+            Detalhamento de entradas por período
           </p>
         </div>
         <div style={{ display: "flex", gap: 10 }}>
@@ -872,41 +793,45 @@ function Receita({ onVoltar }) {
         </div>
       </div>
 
+      {/* KPI strip */}
       <div className="fade-up fade-up-1" style={{ display: "flex", gap: 14, marginBottom: 24 }}>
+        {/* Total */}
         <div style={{ background: T.surface, border: `1px solid ${T.border}`,
           borderRadius: 14, padding: "18px 22px", flex: 1 }}>
           <div style={{ fontSize: 10.5, color: T.textLo, fontWeight: 600,
             textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 8 }}>Total de Receitas</div>
           <div style={{ fontSize: 28, fontWeight: 700, color: T.textHi, lineHeight: 1 }}>{dados.total}</div>
           <div style={{ fontSize: 11.5, color: T.textLo, marginTop: 6 }}>
-            {dados.servicos} servi\u00E7os &nbsp;
+            {dados.servicos} serviços &nbsp;
             <span style={{ color: T.accent, fontWeight: 600 }}>{dados.variacao}</span>
             {" "}<span style={{ color: T.textLo }}>{dados.variacaoLabel}</span>
           </div>
         </div>
+        {/* Filters + date */}
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between",
           background: T.surface, border: `1px solid ${T.border}`,
           borderRadius: 14, padding: "18px 22px", minWidth: 260 }}>
           <div style={{ fontSize: 10.5, color: T.textLo, fontWeight: 600,
-            textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 10 }}>Per\u00EDodo</div>
+            textTransform: "uppercase", letterSpacing: "0.07em", marginBottom: 10 }}>Período</div>
           <div style={{ display: "flex", gap: 6, marginBottom: 12 }}>
             {["Mensal", "Trimestral", "Anual"].map(f => (
               <PillBtn key={f} active={filtro === f} onClick={() => setFiltro(f)}>{f}</PillBtn>
             ))}
           </div>
           <div style={{ fontSize: 11.5, color: T.textLo }}>
-            \uD83D\uDCC5 {dados.dateRange}
+            📅 {dados.dateRange}
           </div>
         </div>
       </div>
 
+      {/* Table card */}
       <div className="fade-up fade-up-2"
         style={{ background: T.surface, border: `1px solid ${T.border}`,
           borderRadius: 16, flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: `1px solid ${T.borderHi}`, background: T.surfaceUp }}>
-              {["Data", "Cliente", "Servi\u00E7o", "Valor", ""].map((h, i) => (
+              {["Data", "Cliente", "Serviço", "Valor", ""].map((h, i) => (
                 <th key={i} style={{ padding: "12px 16px", fontSize: 11, color: T.textLo,
                   fontWeight: 600, textAlign: "left", textTransform: "uppercase",
                   letterSpacing: "0.06em", whiteSpace: "nowrap" }}>{h}</th>
@@ -920,11 +845,12 @@ function Receita({ onVoltar }) {
           </tbody>
         </table>
 
+        {/* Footer */}
         <div style={{ marginTop: "auto", display: "flex", alignItems: "center",
           justifyContent: "space-between", padding: "14px 16px",
           borderTop: `1px solid ${T.border}` }}>
           <span style={{ fontSize: 11, color: T.textLo }}>
-            \u00DAltima atualiza\u00E7\u00E3o: {dados.ultimaAtt}
+            Última atualização: {dados.ultimaAtt}
           </span>
           <button onClick={() => setShowExport(true)}
             style={{
