@@ -255,8 +255,8 @@ const CARDS_DATA = [
     label: "Entradas (Gastos)",
     value: "R$ 20,00",
     icon: "↘",
-    color: T.red,
-    glow: T.redGlow,
+    color: "#B91C1C",
+    glow: "#FEE2E2",
     trend: "-2,4%",
     trendDown: true,
   },
@@ -264,8 +264,8 @@ const CARDS_DATA = [
     label: "Vendas (Saída)",
     value: "R$ 20,00",
     icon: "↗",
-    color: T.green,
-    glow: T.greenGlow,
+    color: "#16A34A",
+    glow: "#D1FAE5",
     trend: "+8,1%",
     trendDown: false,
   },
@@ -273,8 +273,8 @@ const CARDS_DATA = [
     label: "Saldo Atual",
     value: "R$ -20,00",
     icon: "$",
-    color: T.amber,
-    glow: T.amberGlow,
+    color: "#D97706",
+    glow: "#FDE688",
     trend: "0,0%",
     trendDown: false,
   },
@@ -289,7 +289,7 @@ function StatCard({ card, delay }) {
       onMouseLeave={() => setHov(false)}
       style={{
         flex: 1, borderRadius: 16,
-        background: hov ? T.surfaceUp : T.surface,
+        background: hov ? `${card.color}22` : `${card.color}14`,
         border: `1px solid ${hov ? T.borderHi : T.border}`,
         padding: "22px 24px",
         transition: "all 0.22s",
@@ -307,7 +307,7 @@ function StatCard({ card, delay }) {
           fontSize: 15, fontWeight: 700,
         }}>{card.icon}</div>
       </div>
-      <div style={{ fontSize: 26, fontWeight: 700, color: T.textHi, lineHeight: 1, marginBottom: 10 }}>
+      <div style={{ fontSize: 26, fontWeight: 700, color: card.color, lineHeight: 1, marginBottom: 10 }}>
         {card.value}
       </div>
       <div style={{
