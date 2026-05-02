@@ -22,34 +22,36 @@ const ESTADOS = [
   "RS","RO","RR","SC","SP","SE","TO",
 ];
 
-function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
-  const [form, setForm] = useState(FORM_VAZIO);
+function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
+  const [form, setForm]               = useState(FORM_VAZIO);
+  const [editando, setEditando]       = useState(false);
   const [buscandoCep, setBuscandoCep] = useState(false);
-  const [erroCep, setErroCep] = useState("");
+  const [erroCep, setErroCep]         = useState("");
 
   useEffect(() => {
-    if (clienteEditando) {
-      setForm(clienteEditando);
+    if (!aberto) return;
+    if (clienteSelecionado) {
+      setForm(clienteSelecionado);
+      setEditando(false); // abre sempre em visualização
     } else {
       setForm(FORM_VAZIO);
+      setEditando(true);  // novo cadastro já começa editável
     }
     setErroCep("");
-  }, [clienteEditando, aberto]);
+  }, [clienteSelecionado, aberto]);
 
   if (!aberto) return null;
 
+  const somenteLeitura = !editando;
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }));
 
   const buscarCep = async () => {
     const cepLimpo = form.cep.replace(/\D/g, "");
-    if (cepLimpo.length !== 8) {
-      setErroCep("CEP deve ter 8 dígitos.");
-      return;
-    }
+    if (cepLimpo.length !== 8) { setErroCep("CEP deve ter 8 dígitos."); return; }
     setBuscandoCep(true);
     setErroCep("");
     try {
-      const res = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
+      const res   = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`);
       const dados = await res.json();
       if (dados.erro) {
         setErroCep("CEP não encontrado.");
@@ -69,10 +71,15 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSalvar = (e) => {
     e.preventDefault();
     onSalvar(form);
+    setEditando(false); // volta para visualização após salvar
   };
+
+  const titulo = clienteSelecionado
+    ? (editando ? "Editar Cliente" : "Detalhes do Cliente")
+    : "Novo Cliente";
 
   return (
     <div className="modal-overlay" onClick={onFechar}>
@@ -80,13 +87,11 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
 
         {/* Cabeçalho */}
         <div className="modal__header">
-          <h2 className="modal__titulo">
-            {clienteEditando ? "Editar Cliente" : "Novo Cliente"}
-          </h2>
+          <h2 className="modal__titulo">{titulo}</h2>
           <button className="modal__fechar" onClick={onFechar}>×</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSalvar}>
 
           {/* Linha 1: Nome + CPF */}
           <div className="modal__row">
@@ -94,9 +99,10 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
               <label>Nome do Cliente <span className="obrigatorio">*</span></label>
               <input
                 type="text"
-                placeholder="Nome da empresa"
+                placeholder="Nome do cliente"
                 value={form.nome}
                 onChange={(e) => set("nome", e.target.value)}
+                readOnly={somenteLeitura}
                 required
               />
             </div>
@@ -104,9 +110,10 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
               <label>CPF <span className="obrigatorio">*</span></label>
               <input
                 type="text"
-                placeholder="00.000.000/0000-00"
+                placeholder="000.000.000-00"
                 value={form.cpf}
                 onChange={(e) => set("cpf", e.target.value)}
+                readOnly={somenteLeitura}
                 required
               />
             </div>
@@ -121,6 +128,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="(00) 00000-0000"
                 value={form.telefone}
                 onChange={(e) => set("telefone", e.target.value)}
+                readOnly={somenteLeitura}
               />
             </div>
             <div className="modal__field">
@@ -130,6 +138,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="email@exemplo.com"
                 value={form.email}
                 onChange={(e) => set("email", e.target.value)}
+                readOnly={somenteLeitura}
               />
             </div>
           </div>
@@ -148,29 +157,33 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                   value={form.cep}
                   maxLength={9}
                   onChange={(e) => set("cep", e.target.value)}
+                  readOnly={somenteLeitura}
                 />
-                <button
-                  type="button"
-                  className="btn-buscar-cep"
-                  onClick={buscarCep}
-                  disabled={buscandoCep}
-                >
-                  {buscandoCep ? "..." : "Buscar"}
-                </button>
+                {!somenteLeitura && (
+                  <button
+                    type="button"
+                    className="btn-buscar-cep"
+                    onClick={buscarCep}
+                    disabled={buscandoCep}
+                  >
+                    {buscandoCep ? "..." : "Buscar"}
+                  </button>
+                )}
               </div>
               {erroCep && <span className="erro-cep">{erroCep}</span>}
             </div>
             <div className="modal__field">
               <label>Estado</label>
-              <select
-                value={form.estado}
-                onChange={(e) => set("estado", e.target.value)}
-              >
-                <option value="">UF</option>
-                {ESTADOS.map((uf) => (
-                  <option key={uf} value={uf}>{uf}</option>
-                ))}
-              </select>
+              {somenteLeitura ? (
+                <input type="text" value={form.estado} readOnly />
+              ) : (
+                <select value={form.estado} onChange={(e) => set("estado", e.target.value)}>
+                  <option value="">UF</option>
+                  {ESTADOS.map((uf) => (
+                    <option key={uf} value={uf}>{uf}</option>
+                  ))}
+                </select>
+              )}
             </div>
             <div className="modal__field">
               <label>Complemento</label>
@@ -179,6 +192,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="Apto, Sala, etc..."
                 value={form.complemento}
                 onChange={(e) => set("complemento", e.target.value)}
+                readOnly={somenteLeitura}
               />
             </div>
           </div>
@@ -192,6 +206,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="Nome da rua"
                 value={form.rua}
                 onChange={(e) => set("rua", e.target.value)}
+                readOnly={somenteLeitura}
               />
             </div>
             <div className="modal__field">
@@ -201,6 +216,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="Ex: 123"
                 value={form.numero}
                 onChange={(e) => set("numero", e.target.value)}
+                readOnly={somenteLeitura}
               />
             </div>
             <div className="modal__field">
@@ -210,6 +226,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="Nome do Bairro"
                 value={form.bairro}
                 onChange={(e) => set("bairro", e.target.value)}
+                readOnly={somenteLeitura}
               />
             </div>
           </div>
@@ -226,6 +243,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
                 placeholder="Ex: RIO2A18"
                 value={form.placaCarro}
                 onChange={(e) => set("placaCarro", e.target.value.toUpperCase())}
+                readOnly={somenteLeitura}
                 required
               />
             </div>
@@ -233,9 +251,10 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
               <label>Marca do Carro <span className="obrigatorio">*</span></label>
               <input
                 type="text"
-                placeholder="Ex: Corolla"
+                placeholder="Ex: Toyota"
                 value={form.marcaCarro}
                 onChange={(e) => set("marcaCarro", e.target.value)}
+                readOnly={somenteLeitura}
                 required
               />
             </div>
@@ -243,9 +262,10 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
               <label>Modelo do Carro <span className="obrigatorio">*</span></label>
               <input
                 type="text"
-                placeholder="Ex: RIO2A18"
+                placeholder="Ex: Corolla"
                 value={form.modeloCarro}
                 onChange={(e) => set("modeloCarro", e.target.value)}
+                readOnly={somenteLeitura}
                 required
               />
             </div>
@@ -256,9 +276,32 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteEditando }) {
             <button type="button" className="btn-cancelar" onClick={onFechar}>
               Cancelar
             </button>
-            <button type="submit" className="btn-salvar">
-              {clienteEditando ? "Salvar alterações" : "Cadastrar"}
-            </button>
+
+            {/* Novo cadastro */}
+            {!clienteSelecionado && (
+              <button type="submit" className="btn-salvar">
+                Cadastrar
+              </button>
+            )}
+
+            {/* Visualizando: botão Editar */}
+            {clienteSelecionado && !editando && (
+              <button
+                type="button"
+                className="btn-editar-modal"
+                onClick={() => setEditando(true)}
+              >
+                <img src="./icons/pencil-svgrepo-com.svg" alt="" className="icon icon-btn-editar" />
+                Editar
+              </button>
+            )}
+
+            {/* Editando registro existente: botão Salvar */}
+            {clienteSelecionado && editando && (
+              <button type="submit" className="btn-salvar">
+                Salvar alterações
+              </button>
+            )}
           </div>
 
         </form>

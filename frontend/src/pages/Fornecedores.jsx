@@ -5,7 +5,6 @@ import FornecedorCard from "../components/FornecedorCard";
 import FornecedorModal from "../components/FornecedorModal";
 import "../Fornecedores.css";
 
-// Dados de exemplo — substituir pela chamada à API quando o backend estiver pronto
 const DADOS_INICIAIS = [
   {
     id: 1,
@@ -17,12 +16,11 @@ const DADOS_INICIAIS = [
 ];
 
 function Fornecedores() {
-  const [fornecedores, setFornecedores] = useState(DADOS_INICIAIS);
-  const [busca, setBusca] = useState("");
-  const [modalAberto, setModalAberto] = useState(false);
-  const [fornecedorEditando, setFornecedorEditando] = useState(null);
+  const [fornecedores, setFornecedores]           = useState(DADOS_INICIAIS);
+  const [busca, setBusca]                         = useState("");
+  const [modalAberto, setModalAberto]             = useState(false);
+  const [fornecedorSelecionado, setFornecedorSelecionado] = useState(null);
 
-  // Filtra a lista conforme o texto de busca
   const listaFiltrada = fornecedores.filter((f) => {
     const termo = busca.toLowerCase();
     return (
@@ -32,40 +30,34 @@ function Fornecedores() {
     );
   });
 
-  // Abre o modal limpo para novo cadastro
+  // Abre modal de novo cadastro (sem fornecedor selecionado)
   const handleNovoFornecedor = () => {
-    setFornecedorEditando(null);
+    setFornecedorSelecionado(null);
     setModalAberto(true);
   };
 
-  // Abre o modal preenchido para edição
-  const handleEditar = (fornecedor) => {
-    setFornecedorEditando(fornecedor);
+  // Abre modal em modo visualização
+  const handleVisualizar = (fornecedor) => {
+    setFornecedorSelecionado(fornecedor);
     setModalAberto(true);
   };
 
-  // Remove da lista
   const handleExcluir = (id) => {
     if (!window.confirm("Deseja excluir este fornecedor?")) return;
     setFornecedores((prev) => prev.filter((f) => f.id !== id));
   };
 
-  // Salva (cria ou atualiza)
   const handleSalvar = (form) => {
-    if (fornecedorEditando) {
-      // Edição
+    if (fornecedorSelecionado) {
       setFornecedores((prev) =>
-        prev.map((f) => (f.id === fornecedorEditando.id ? { ...form, id: f.id } : f))
+        prev.map((f) => (f.id === fornecedorSelecionado.id ? { ...form, id: f.id } : f))
       );
     } else {
-      // Novo — gera id temporário; o backend retornará o id real
-      const novoId = Date.now();
-      setFornecedores((prev) => [...prev, { ...form, id: novoId }]);
+      setFornecedores((prev) => [...prev, { ...form, id: Date.now() }]);
+      setModalAberto(false); // fecha só no novo cadastro
     }
-    setModalAberto(false);
+    // no editar, o modal permanece aberto em modo visualização (controlado pelo modal)
   };
-
-  const handleFecharModal = () => setModalAberto(false);
 
   return (
     <div className="app">
@@ -82,7 +74,6 @@ function Fornecedores() {
           }
         />
 
-        {/* Busca */}
         <div className="busca-wrapper">
           <img src="./icons/lupa-svgrepo-com.svg" alt="" className="icon busca-icon" />
           <input
@@ -94,7 +85,6 @@ function Fornecedores() {
           />
         </div>
 
-        {/* Lista */}
         <div className="fornecedores-lista">
           {listaFiltrada.length === 0 ? (
             <p className="lista-vazia">Nenhum fornecedor encontrado.</p>
@@ -103,7 +93,7 @@ function Fornecedores() {
               <FornecedorCard
                 key={f.id}
                 fornecedor={f}
-                onEditar={handleEditar}
+                onVisualizar={handleVisualizar}
                 onExcluir={handleExcluir}
               />
             ))
@@ -111,12 +101,11 @@ function Fornecedores() {
         </div>
       </main>
 
-      {/* Modal */}
       <FornecedorModal
         aberto={modalAberto}
-        onFechar={handleFecharModal}
+        onFechar={() => setModalAberto(false)}
         onSalvar={handleSalvar}
-        fornecedorEditando={fornecedorEditando}
+        fornecedorSelecionado={fornecedorSelecionado}
       />
     </div>
   );

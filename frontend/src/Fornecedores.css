@@ -1,11 +1,12 @@
-/* ── Botão "+ Novo Fornecedor" no header ─────────────────────── */
-.header{
+/* ── Header ──────────────────────────────────────────────────── */
+.header {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
 
+/* ── Botão "+ Novo Fornecedor" ───────────────────────────────── */
 .btn-novo {
   background: #383FC8;
   color: #fff;
@@ -51,7 +52,7 @@
 }
 .busca-input:focus { border-color: #2563eb; }
 
-/* ── Lista de fornecedores ───────────────────────────────────── */
+/* ── Lista ───────────────────────────────────────────────────── */
 .fornecedores-lista {
   display: flex;
   flex-direction: column;
@@ -122,7 +123,9 @@
   gap: 8px;
   flex-shrink: 0;
 }
-.btn-editar {
+
+/* Botão "Visualizar detalhes" — branco com borda, texto/ícone escuros */
+.btn-visualizar {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -132,13 +135,18 @@
   background: #fff;
   font-family: inherit;
   font-size: 13px;
-  color: #374151;
+  color: #111827;
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
 }
-.btn-editar:hover { background: #f3f4f6; border-color: #d1d5db; }
-.btn-editar .icon { width: 14px; height: 14px; opacity: 0.6; }
+.btn-visualizar:hover { background: #f3f4f6; border-color: #d1d5db; }
+.icon-eye {
+  width: 15px;
+  height: 15px;
+  opacity: 0.75;
+}
 
+/* Botão excluir */
 .btn-excluir {
   display: flex;
   align-items: center;
@@ -199,6 +207,15 @@
   transition: color 0.15s;
 }
 .modal__fechar:hover { color: #374151; }
+
+/* Campos somente leitura — aparência visual diferenciada */
+.modal input[readonly],
+.modal input:read-only {
+  background: #f9fafb;
+  color: #374151;
+  cursor: default;
+  border-color: #e5e7eb;
+}
 
 /* ── Separador de seção ──────────────────────────────────────── */
 .modal__secao {
@@ -284,6 +301,7 @@
   padding-top: 16px;
   border-top: 1px solid #f3f4f6;
 }
+
 .btn-cancelar {
   padding: 9px 20px;
   border: 1px solid #e5e7eb;
@@ -297,11 +315,15 @@
 }
 .btn-cancelar:hover { background: #f9fafb; }
 
-.btn-salvar {
+/* Botão "Editar" dentro do modal — roxo escuro, texto e ícone brancos */
+.btn-editar-modal {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   padding: 9px 20px;
   border: none;
   border-radius: 8px;
-  background: #2563eb;
+  background: #383FC8;
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -309,7 +331,27 @@
   cursor: pointer;
   transition: background 0.15s;
 }
-.btn-salvar:hover { background: #1d4ed8; }
+.btn-editar-modal:hover { background: #5345f3; }
+.icon-btn-editar {
+  width: 14px;
+  height: 14px;
+  filter: brightness(0) invert(1); /* força o SVG ficar branco */
+}
+
+/* Botão "Salvar" / "Cadastrar" */
+.btn-salvar {
+  padding: 9px 20px;
+  border: none;
+  border-radius: 8px;
+  background: #383FC8;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-salvar:hover { background: #5345f3; }
 
 /* ── Responsivo ──────────────────────────────────────────────── */
 @media (max-width: 640px) {

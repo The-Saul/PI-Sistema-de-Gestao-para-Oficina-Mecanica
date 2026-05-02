@@ -1,4 +1,4 @@
-function FornecedorCard({ fornecedor, onEditar, onExcluir }) {
+function FornecedorCard({ fornecedor, onVisualizar, onExcluir }) {
   return (
     <div className="fornecedor-card">
       <div className="fornecedor-card__info">
@@ -19,9 +19,9 @@ function FornecedorCard({ fornecedor, onEditar, onExcluir }) {
       </div>
 
       <div className="fornecedor-card__acoes">
-        <button className="btn-editar" onClick={() => onEditar(fornecedor)}>
-          <img src="./icons/pencil-svgrepo-com.svg" alt="" className="icon" />
-          Editar
+        <button className="btn-visualizar" onClick={() => onVisualizar(fornecedor)}>
+          <img src="./icons/eye-svgrepo-com.svg" alt="" className="icon icon-eye" />
+          Visualizar detalhes
         </button>
         <button className="btn-excluir" onClick={() => onExcluir(fornecedor.id)}>
           <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon icon-trash" />

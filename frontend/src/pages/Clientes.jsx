@@ -25,10 +25,10 @@ const DADOS_INICIAIS = [
 ];
 
 function Clientes() {
-  const [clientes, setClientes] = useState(DADOS_INICIAIS);
-  const [busca, setBusca] = useState("");
-  const [modalAberto, setModalAberto] = useState(false);
-  const [clienteEditando, setClienteEditando] = useState(null);
+  const [clientes, setClientes]               = useState(DADOS_INICIAIS);
+  const [busca, setBusca]                     = useState("");
+  const [modalAberto, setModalAberto]         = useState(false);
+  const [clienteSelecionado, setClienteSelecionado] = useState(null);
 
   const listaFiltrada = clientes.filter((c) => {
     const termo = busca.toLowerCase();
@@ -40,12 +40,12 @@ function Clientes() {
   });
 
   const handleNovoCliente = () => {
-    setClienteEditando(null);
+    setClienteSelecionado(null);
     setModalAberto(true);
   };
 
-  const handleEditar = (cliente) => {
-    setClienteEditando(cliente);
+  const handleVisualizar = (cliente) => {
+    setClienteSelecionado(cliente);
     setModalAberto(true);
   };
 
@@ -55,14 +55,14 @@ function Clientes() {
   };
 
   const handleSalvar = (form) => {
-    if (clienteEditando) {
+    if (clienteSelecionado) {
       setClientes((prev) =>
-        prev.map((c) => (c.id === clienteEditando.id ? { ...form, id: c.id } : c))
+        prev.map((c) => (c.id === clienteSelecionado.id ? { ...form, id: c.id } : c))
       );
     } else {
       setClientes((prev) => [...prev, { ...form, id: Date.now() }]);
+      setModalAberto(false); // fecha só no novo cadastro
     }
-    setModalAberto(false);
   };
 
   return (
@@ -80,7 +80,6 @@ function Clientes() {
           }
         />
 
-        {/* Busca */}
         <div className="busca-wrapper">
           <img src="./icons/lupa-svgrepo-com.svg" alt="" className="icon busca-icon" />
           <input
@@ -92,7 +91,6 @@ function Clientes() {
           />
         </div>
 
-        {/* Lista */}
         <div className="clientes-lista">
           {listaFiltrada.length === 0 ? (
             <p className="lista-vazia">Nenhum cliente encontrado.</p>
@@ -101,7 +99,7 @@ function Clientes() {
               <ClienteCard
                 key={c.id}
                 cliente={c}
-                onEditar={handleEditar}
+                onVisualizar={handleVisualizar}
                 onExcluir={handleExcluir}
               />
             ))
@@ -113,7 +111,7 @@ function Clientes() {
         aberto={modalAberto}
         onFechar={() => setModalAberto(false)}
         onSalvar={handleSalvar}
-        clienteEditando={clienteEditando}
+        clienteSelecionado={clienteSelecionado}
       />
     </div>
   );

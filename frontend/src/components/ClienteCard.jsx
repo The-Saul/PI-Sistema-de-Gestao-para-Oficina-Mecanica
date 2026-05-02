@@ -1,4 +1,4 @@
-function ClienteCard({ cliente, onEditar, onExcluir }) {
+function ClienteCard({ cliente, onVisualizar, onExcluir }) {
   return (
     <div className="cliente-card">
       <div className="cliente-card__info">
@@ -22,9 +22,9 @@ function ClienteCard({ cliente, onEditar, onExcluir }) {
       </div>
 
       <div className="cliente-card__acoes">
-        <button className="btn-editar" onClick={() => onEditar(cliente)}>
-          <img src="./icons/pencil-svgrepo-com.svg" alt="" className="icon" />
-          Editar
+        <button className="btn-visualizar" onClick={() => onVisualizar(cliente)}>
+          <img src="./icons/eye-svgrepo-com.svg" alt="" className="icon icon-eye" />
+          Visualizar detalhes
         </button>
         <button className="btn-excluir" onClick={() => onExcluir(cliente.id)}>
           <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon icon-trash" />
