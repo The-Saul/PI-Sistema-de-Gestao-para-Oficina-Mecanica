@@ -43,7 +43,7 @@ export function ListProduto({ open, onClose, produtos, onDelete }) {
                 <p><strong>Data:</strong> {p.data}</p>
                 <p><strong>Obs.:</strong> {p.observacao}</p>
 
-                <button
+                <button className="btn-listExcluir"
                   onClick={() => {
                     if (window.confirm("Deseja excluir este produto?")) {
                       onDelete(p.id);

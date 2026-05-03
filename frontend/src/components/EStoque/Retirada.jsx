@@ -52,8 +52,8 @@ export function Retirada({ open, onClose, onRetirar, historico }) {
         </div>
 
         <div className="modal-actions">
-          <button onClick={onClose}>Cancelar</button>
-          <button onClick={handleSubmit}>Retirar</button>
+          <button className="btn-cancel" onClick={onClose}>Cancelar</button>
+          <button className="btn-add" onClick={handleSubmit}>Retirar</button>
         </div>
 
         {/* 🔥 HISTÓRICO */}
