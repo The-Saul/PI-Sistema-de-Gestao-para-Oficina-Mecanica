@@ -15,7 +15,7 @@ export function ListProduto({ open, onClose, produtos, onDelete }) {
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
+      <div className="modal-listpro">
         <h2>Estoque</h2>
 
         <div className="modal-header">
@@ -43,35 +43,35 @@ export function ListProduto({ open, onClose, produtos, onDelete }) {
                   key={p.id}
                   className={`form-listproduto ${
                     baixo ? "estoque-baixo" : ""
-                  }`}
-                >
-                  {/* 🔥 NOME + ALERTA */}
-                  <p>
-                    <strong>{p.peca}</strong>
-                    {baixo && (
-                      <span className="alerta"> ⚠ Estoque baixo</span>
-                    )}
-                  </p>
+                  }`}>
+                      <div className="list-produto">
+                          {/* 🔥 NOME + ALERTA */}
+                          <p>
+                            {p.peca}
+                            {baixo && (
+                              <span className="alerta"> ⚠ Estoque baixo</span>
+                            )}
+                          </p>
 
-                  {/* 🔥 TODAS AS INFORMAÇÕES */}
-                  <p><strong>Fornecedor:</strong> {p.fornecedor}</p>
-                  <p><strong>Código:</strong> {p.codigo}</p>
-                  <p><strong>Quantidade:</strong> {p.quantidade}</p>
-                  <p><strong>Valor:</strong> R$ {p.valor}</p>
-                  <p><strong>Data:</strong> {p.data}</p>
-                  <p><strong>Observação:</strong> {p.observacao}</p>
-
+                          {/* 🔥 TODAS AS INFORMAÇÕES */}
+                          <p>Fornecedor: {p.fornecedor}</p>
+                          <p>cod: {p.codigo}</p>
+                          <p>Qtd: {p.quantidade}</p>
+                          <p>R$: {p.valor}</p>
+                          <p>Data: {p.data}</p>
+                          <p>OBS.: {p.observacao}</p>
+                      </div>
                   {/* 🔥 BOTÃO */}
-                  <button
-                    className="btn-listExcluir"
-                    onClick={() => {
-                      if (window.confirm("Deseja excluir?")) {
-                        onDelete(p.id);
-                      }
-                    }}
-                  >
-                    Excluir
-                  </button>
+                      <div>
+                        <button
+                          className="btn-listExcluir"
+                          onClick={() => {
+                            if (window.confirm("Deseja excluir?")) {
+                              onDelete(p.id);
+                            }
+                          }}>Excluir
+                        </button>
+                      </div>
                 </div>
               );
             })

@@ -253,21 +253,23 @@
   width: 100%;
   height: 100%;
   background: rgba(0,0,0,0.4);
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   z-index: 9999;
 }
 
 /* ===== CAIXA DO MODAL ===== */
-.modal {
+.modal-listpro{
+  text-align: left;
   background: #fff;
-  padding: 20px;
-  border-radius: 10px;
+  padding: 30px;          
+  border-radius: 12px;
   width: 90%;
-  max-width: 800px;
+  max-width: 1100px;
+  height: 100vh;         
+  max-height: 90vh;
+  overflow-y: auto;        
 }
 
 /* ===== HEADER ===== */
@@ -310,34 +312,25 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   padding: 10px;
-
-  display: grid;
-  grid-template-columns: 1fr 1fr; /* 🔥 corrigido */
+  display: flex;
+  justify-content: space-between;
   gap: 6px 12px;
-
   font-size: 13px;
 }
 
 /* nome */
 .form-listproduto p:first-child {
-  grid-column: span 2;
   font-weight: bold;
 }
-
-/* observação */
-.form-listproduto p:last-of-type {
-  grid-column: span 2;
+.list-produto{
+  display: flex;
+  gap: 10px;
 }
 
 /* ===== BOTÃO EXCLUIR ===== */
 .btn-listExcluir {
-  
-
-  grid-column: span 2; /* ocupa a linha toda */
- justify-self: end;   /* joga pra direita */
   padding: 4px 8px;
   font-size: 12px;
-
   background-color: #e53935;
   color: #fff;
   border: none;
