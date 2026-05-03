@@ -12,18 +12,22 @@ function Estoque() {
   const [produtos, setProdutos] = useState([]);
   const [historico, setHistorico] = useState([]);
 
+  // ✅ ADICIONAR PRODUTO
   function adicionarProduto(produto) {
     const novo = {
       ...produto,
       id: Date.now(),
     };
+
     setProdutos((prev) => [...prev, novo]);
   }
 
+  // ✅ REMOVER PRODUTO
   function removerProduto(id) {
     setProdutos((prev) => prev.filter((p) => p.id !== id));
   }
 
+  // ✅ RETIRAR PRODUTO + HISTÓRICO
   function retirarProduto(dados) {
     let encontrou = false;
 
@@ -54,7 +58,7 @@ function Estoque() {
       return;
     }
 
-    // salva histórico
+    // 🔥 salva no histórico
     setHistorico((prev) => [
       {
         ...dados,
@@ -76,10 +80,15 @@ function Estoque() {
             onListProduto={() => setModal("list")}
           />
 
-          <CardEstoque total={produtos.length} />
-          <ListEstoque produtos={produtos} />
+          {/* 🔥 CARDS DINÂMICOS */}
+          <CardEstoque produtos={produtos} historico={historico} />
+
+          {/* 🔥 DASHBOARD (entrada, saída, estoque baixo) */}
+          <ListEstoque produtos={produtos} historico={historico} />
         </div>
       </div>
+
+      {/* MODAIS */}
 
       <NovoProduto
         open={modal === "novo"}

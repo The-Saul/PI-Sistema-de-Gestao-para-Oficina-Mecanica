@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+const LIMITE_ESTOQUE = 5;
+
 export function ListProduto({ open, onClose, produtos, onDelete }) {
   const [busca, setBusca] = useState("");
 
@@ -33,27 +35,46 @@ export function ListProduto({ open, onClose, produtos, onDelete }) {
           {produtosFiltrados.length === 0 ? (
             <p>Nenhum produto encontrado</p>
           ) : (
-            produtosFiltrados.map((p) => (
-              <div key={p.id} className="form-listproduto">
-                <p><strong>{p.peca}</strong></p>
-                <p><strong>Fcd:</strong> {p.fornecedor}</p>
-                <p><strong>Cdg:</strong> {p.codigo}</p>
-                <p><strong>Qtd:</strong> {p.quantidade}</p>
-                <p><strong>R$:</strong> {p.valor}</p>
-                <p><strong>Data:</strong> {p.data}</p>
-                <p><strong>Obs.:</strong> {p.observacao}</p>
+            produtosFiltrados.map((p) => {
+              const baixo = Number(p.quantidade) <= LIMITE_ESTOQUE;
 
-                <button className="btn-listExcluir"
-                  onClick={() => {
-                    if (window.confirm("Deseja excluir este produto?")) {
-                      onDelete(p.id);
-                    }
-                  }}
+              return (
+                <div
+                  key={p.id}
+                  className={`form-listproduto ${
+                    baixo ? "estoque-baixo" : ""
+                  }`}
                 >
-                  Excluir
-                </button>
-              </div>
-            ))
+                  {/* 🔥 NOME + ALERTA */}
+                  <p>
+                    <strong>{p.peca}</strong>
+                    {baixo && (
+                      <span className="alerta"> ⚠ Estoque baixo</span>
+                    )}
+                  </p>
+
+                  {/* 🔥 TODAS AS INFORMAÇÕES */}
+                  <p><strong>Fornecedor:</strong> {p.fornecedor}</p>
+                  <p><strong>Código:</strong> {p.codigo}</p>
+                  <p><strong>Quantidade:</strong> {p.quantidade}</p>
+                  <p><strong>Valor:</strong> R$ {p.valor}</p>
+                  <p><strong>Data:</strong> {p.data}</p>
+                  <p><strong>Observação:</strong> {p.observacao}</p>
+
+                  {/* 🔥 BOTÃO */}
+                  <button
+                    className="btn-listExcluir"
+                    onClick={() => {
+                      if (window.confirm("Deseja excluir?")) {
+                        onDelete(p.id);
+                      }
+                    }}
+                  >
+                    Excluir
+                  </button>
+                </div>
+              );
+            })
           )}
         </div>
       </div>

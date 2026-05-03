@@ -1,21 +1,30 @@
-import React from "react";
-
-function Card({ title, qtd, value, color }) {
+function Card({ title, qtd, color }) {
   return (
     <div className={`card ${color}`}>
       <h3>{title}</h3>
       <p>QTD: {qtd}</p>
-      <strong>{value}</strong>
     </div>
   );
 }
 
-export default function Cards() {
+export default function CardEstoque({ produtos, historico }) {
+  const totalEstoque = produtos.reduce(
+    (acc, p) => acc + Number(p.quantidade || 0),
+    0
+  );
+
+  const totalSaida = historico.reduce(
+    (acc, h) => acc + Number(h.quantidade || 0),
+    0
+  );
+
+  const totalEntrada = produtos.length;
+
   return (
     <section className="cards">
-      <Card title="Saída" qtd={30} value="R$ 20,00" color="red" />
-      <Card title="Entrada" qtd={20} value="R$ 20,00" color="green" />
-      <Card title="Estoque" qtd={2000} value="R$ -20,00" color="orange" />
+      <Card title="Saída" qtd={totalSaida} color="red" />
+      <Card title="Entrada" qtd={totalEntrada} color="green" />
+      <Card title="Estoque" qtd={totalEstoque} color="orange" />
     </section>
   );
 }
