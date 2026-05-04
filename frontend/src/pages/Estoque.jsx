@@ -10,19 +10,16 @@ import { ListProduto } from "../components/EStoque/ListProduto";
 function Estoque() {
   const [modal, setModal] = useState(null);
 
-  // 🔥 PRODUTOS SALVOS
   const [produtos, setProdutos] = useState(() => {
     const dados = localStorage.getItem("produtos");
     return dados ? JSON.parse(dados) : [];
   });
 
-  // 🔥 HISTÓRICO SALVO
   const [historico, setHistorico] = useState(() => {
     const dados = localStorage.getItem("historico");
     return dados ? JSON.parse(dados) : [];
   });
 
-  // 🔥 SALVAR AUTOMATICAMENTE
   useEffect(() => {
     localStorage.setItem("produtos", JSON.stringify(produtos));
   }, [produtos]);
@@ -38,6 +35,16 @@ function Estoque() {
 
   function removerProduto(id) {
     setProdutos((prev) => prev.filter((p) => p.id !== id));
+  }
+
+  function atualizarQuantidade(id, novaQuantidade) {
+    if (novaQuantidade < 0) return;
+
+    setProdutos((prev) =>
+      prev.map((p) =>
+        p.id === id ? { ...p, quantidade: novaQuantidade } : p
+      )
+    );
   }
 
   function retirarProduto(dados) {
@@ -101,6 +108,7 @@ function Estoque() {
         onClose={() => setModal(null)}
         produtos={produtos}
         onDelete={removerProduto}
+        onUpdateQuantidade={atualizarQuantidade}
       />
 
       <Retirada

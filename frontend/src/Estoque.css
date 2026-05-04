@@ -265,7 +265,7 @@
   background: #fff;
   padding: 30px;          
   border-radius: 12px;
-  width: 90%;
+  width: 906320%;
   max-width: 1100px;
   height: 100vh;         
   max-height: 90vh;
@@ -325,6 +325,20 @@
 .list-produto{
   display: flex;
   gap: 10px;
+}
+.acoes-botoes{
+display: flex;
+gap: 5px;
+}
+
+.btn-listeditar{
+   padding: 4px 8px;
+  font-size: 12px;
+   background: linear-gradient(90deg, #2d7df6, #1a5edb);
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 /* ===== BOTÃO EXCLUIR ===== */
