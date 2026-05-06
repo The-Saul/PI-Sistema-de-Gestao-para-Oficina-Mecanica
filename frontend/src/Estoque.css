@@ -60,14 +60,12 @@
 .actions button:hover {
   background: linear-gradient(90deg, #1a5edb, #2d7df6);
 }
-
-/* BOTÃO ATIVO (tipo "Estoque") */
 .actions .active {
   background-color: #0062ff;
   color: white;
 }
 
-/* CARDS */
+/* === CARDS ==== */
 .cards {
   display: flex;
   gap: 20px;
@@ -95,7 +93,7 @@
   font-weight: 600;
 }
 
-/* CORES DOS CARDS */
+/* === CORES DOS CARDS === */
 .red {
   background: #fee2e2;
   color: #991b1b;
@@ -112,7 +110,7 @@
 }
 
 
-/* LISTAS */
+/* ==== LISTAS ==== */
 .list {
   display: flex;
   flex-direction: column;
@@ -147,7 +145,7 @@
 
 /* FUNDO ESCURO */
 .modal-overlay {
-  position: fixed; /* 🔥 ESSENCIAL */
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -157,10 +155,10 @@
   justify-content: center;
   align-items: center;
 
-  z-index: 9999; /* 🔥 FICA NA FRENTE DE TUDO */
+  z-index: 9999; 
 }
 
-/* CAIXA DO MODAL */
+/* === CAIXA DO MODAL ==== */
 .modal {
   background: #f3f3f3;
   padding: 20px;
@@ -172,7 +170,7 @@
   animation: popup 0.2s ease;
 }
 
-/* GRID DO FORM */
+/* ==== GRID DO FORM ==== */
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -181,7 +179,7 @@
 }
 
 .form-grid input {
-  width: 100%; /* 🔥 evita quebrar */
+  width: 100%; 
   padding: 10px;
   border-radius: 8px;
   border: none;
@@ -190,7 +188,7 @@
   font-size: 14px;
 }
 
-/* INPUT GRANDE */
+/* === INPUT GRANDE === */
 .full {
   grid-column: span 3;
 }
@@ -205,7 +203,7 @@
   grid-template-columns: repeat(3, 1fr);
   }
 
-/* BOTÕES DO MODAL */
+/* ==== BOTÕES DO MODAL ==== */
 .modal-actions {
   margin-top: 15px;
   display: flex;
@@ -230,7 +228,7 @@
   cursor: pointer;
 }
 
-/* ANIMAÇÃO */
+/* === ANIMAÇÃO ==== */
 @keyframes popup {
   from {
     opacity: 0;
@@ -318,7 +316,7 @@
   font-size: 13px;
 }
 
-/* nome */
+/*==== nome =====*/
 .form-listproduto p:first-child {
   font-weight: bold;
 }
@@ -334,7 +332,7 @@ gap: 5px;
 .btn-listeditar{
    padding: 4px 8px;
   font-size: 12px;
-   background: linear-gradient(90deg, #2d7df6, #1a5edb);
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
   color: #fff;
   border: none;
   border-radius: 5px;

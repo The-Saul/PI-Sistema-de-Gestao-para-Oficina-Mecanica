@@ -27,7 +27,7 @@
   --text-sub:  #7b8299;
 
   /* Botão primário */
-  --btn-primary-bg:   #4f7cff;
+  --btn-primary-bg:  linear-gradient(90deg, #1a5edb, #2d7df6);
   --btn-primary-text: #ffffff;
 
   /* Cards */

@@ -8,7 +8,7 @@
 
 /* ── Botão "+ Novo Fornecedor" ───────────────────────────────── */
 .btn-novo {
-  background: #383FC8;
+  background:linear-gradient(90deg, #1a5edb, #2d7df6);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -323,7 +323,7 @@
   padding: 9px 20px;
   border: none;
   border-radius: 8px;
-  background: #383FC8;
+  background:linear-gradient(90deg, #1a5edb, #2d7df6);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -343,7 +343,7 @@
   padding: 9px 20px;
   border: none;
   border-radius: 8px;
-  background: #383FC8;
+  background:linear-gradient(90deg, #1a5edb, #2d7df6);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
