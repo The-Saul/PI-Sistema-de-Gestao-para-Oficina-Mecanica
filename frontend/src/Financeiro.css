@@ -14,7 +14,7 @@
 /* ── Variáveis globais ── */
 :root {
   /* Fonte */
-  --font: 'Sora', sans-serif;
+  --font: 'inherit', sans-serif;
 
   /* Sidebar */
   --sidebar-bg:     #1a1a2e;
