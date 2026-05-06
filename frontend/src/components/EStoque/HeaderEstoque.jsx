@@ -1,7 +1,7 @@
 export default function HeaderEstoque({ onNovoProduto, onRetirada, onListProduto }) {
   return (
     <header className="top">
-      <div>
+      <div className="top-letras">
         <h1>Estoque</h1>
         <p>Produtos Cadastrados</p>
       </div>
