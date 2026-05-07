@@ -1,5 +1,7 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
+import Header from "../components/Header";
+
 
 
 
@@ -25,7 +27,7 @@ const T = {
   textLo:     "#7b8299",
   blue:       "#4f7cff",
   purple:     "#7c3aed",
-  green:      "#1db863",
+  green:      "#3ac295",
   greenGlow:  "rgba(29,184,99,0.10)",
   font:       "'DM Sans', 'Sora', sans-serif",
 };
@@ -204,31 +206,57 @@ function BtnAccent({ children, onClick }) {
     <button onClick={onClick}
       onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
       style={{
-        display: "inline-flex", alignItems: "center", gap: 7,
-        background: hov ? T.accentDim : T.accent,
-        color: "#0d1a14", border: "none",
-        borderRadius: 10, padding: "10px 20px",
-        font: `600 13.5px ${T.font}`,
-        cursor: "pointer", transition: "background 0.15s",
-        letterSpacing: "0.01em",
-      }}>{children}</button>
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 7,
+  background: hov ? T.accentDim : T.accent,
+  color: "#ffffff",
+  border: "none",
+  borderRadius: 14,
+  padding: "12px 18px",
+  font: `600 14px ${T.font}`,
+  cursor: "pointer",
+  transition: "background 0.15s",
+  letterSpacing: "0.01em",
+}}
+>{children}</button>
   );
 }
 
 function BtnGhost({ children, onClick }) {
   const [hov, setHov] = useState(false);
+
   return (
-    <button onClick={onClick}
-      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
       style={{
-        display: "inline-flex", alignItems: "center", gap: 6,
-        background: hov ? T.surfaceUp : "transparent",
-        color: hov ? T.textHi : T.textMid,
-        border: `1px solid ${hov ? T.borderHi : T.border}`,
-        borderRadius: 9, padding: "8px 14px",
-        font: `500 12.5px ${T.font}`,
-        cursor: "pointer", transition: "all 0.15s",
-      }}>{children}</button>
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 7,
+
+        background: hov ? T.accentDim : T.accent,
+
+        color: "#ffffff",
+
+        border: "none",
+
+        borderRadius: 14,
+
+        padding: "12px 18px",
+
+        font: `600 14px ${T.font}`,
+
+        cursor: "pointer",
+
+        transition: "background 0.15s",
+
+        letterSpacing: "0.01em",
+      }}
+    >
+      {children}
+    </button>
   );
 }
 
@@ -255,26 +283,34 @@ const CARDS_DATA = [
     label: "Entradas (Gastos)",
     value: "R$ 20,00",
     icon: "↘",
-    color: "#B91C1C",
-    glow: "#FEE2E2",
+
+    color: "#dc2626",
+    glow: "#fee2e2",
+
     trend: "-2,4%",
     trendDown: true,
   },
+
   {
     label: "Vendas (Saída)",
     value: "R$ 20,00",
     icon: "↗",
-    color: "#16A34A",
-    glow: "#D1FAE5",
+
+    color: "#16a34a",
+    glow: "#d1fae5",
+
     trend: "+8,1%",
     trendDown: false,
   },
+
   {
     label: "Saldo Atual",
     value: "R$ -20,00",
     icon: "$",
-    color: "#D97706",
-    glow: "#FDE688",
+
+    color: "#d97706",
+    glow: "#ffedd5",
+
     trend: "0,0%",
     trendDown: false,
   },
@@ -282,42 +318,71 @@ const CARDS_DATA = [
 
 function StatCard({ card, delay }) {
   const [hov, setHov] = useState(false);
+
   return (
     <div
       className={`fade-up fade-up-${delay}`}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
       style={{
-        flex: 1, borderRadius: 16,
-        background: hov ? `${card.color}22` : `${card.color}14`,
-        border: `1px solid ${hov ? T.borderHi : T.border}`,
-        padding: "22px 24px",
-        transition: "all 0.22s",
-        cursor: "default",
-        boxShadow: hov ? `0 0 0 1px ${card.color}22` : "none",
+        flex: 1,
+
+        borderRadius: 18,
+
+        background: card.glow,
+
+        padding: "22px",
+
+        boxShadow: "0 3px 12px rgba(0,0,0,0.06)",
+
+        transition: "0.2s",
+
+        transform: hov ? "translateY(-3px)" : "translateY(0)",
       }}
     >
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
-        <span style={{ fontSize: 10.5, fontWeight: 600, color: T.textLo,
-          textTransform: "uppercase", letterSpacing: "0.07em" }}>{card.label}</span>
-        <div style={{
-          width: 32, height: 32, borderRadius: 8,
-          background: card.glow, color: card.color,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 15, fontWeight: 700,
-        }}>{card.icon}</div>
+      <div
+        style={{
+          width: 42,
+          height: 42,
+
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+
+          borderRadius: 14,
+
+          marginBottom: 10,
+
+          background: card.glow,
+
+          color: card.color,
+
+          fontSize: 16,
+          fontWeight: 700,
+        }}
+      >
+        {card.icon}
       </div>
-      <div style={{ fontSize: 26, fontWeight: 700, color: card.color, lineHeight: 1, marginBottom: 10 }}>
+
+      <h3
+        style={{
+          fontSize: 26,
+          marginTop: 10,
+          color: card.color,
+        }}
+      >
         {card.value}
-      </div>
-      <div style={{
-        fontSize: 11, fontWeight: 500,
-        color: card.trendDown ? T.red : T.accent,
-        background: card.trendDown ? T.redGlow : T.accentGlow,
-        display: "inline-block", padding: "2px 8px", borderRadius: 20,
-      }}>
-        {card.trend} este mês
-      </div>
+      </h3>
+
+      <p
+        style={{
+          color: "#6b7280",
+          fontSize: 14,
+          marginTop: 4,
+        }}
+      >
+        {card.label}
+      </p>
     </div>
   );
 }
@@ -384,23 +449,36 @@ function BarItem({ bar }) {
 function Painel({ onVerReceita }) {
   const [showNovaVenda, setShowNovaVenda] = useState(false);
   return (
-    <main style={{ flex: 1, overflowY: "auto", padding: "36px 44px", background: T.bg }}>
+    <main className="main">
       <style>{GLOBAL_CSS}</style>
 
-      {/* Header */}
-      <div className="fade-up" style={{ display: "flex", alignItems: "flex-start",
-        justifyContent: "space-between", marginBottom: 32 }}>
-        <div>
-          <h1 style={{ fontSize: 36, fontWeight: 700, color: T.textHi, lineHeight: 1 }}>Painel</h1>
-          <p style={{ fontSize: 16, color: T.textLo, marginTop: 6 }}>
-            <span style={{ color: T.accent, fontWeight: 600 }}>20</span> vendas hoje
-          </p>
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <BtnGhost onClick={onVerReceita}> Ver Receita <Ico.Arrow /></BtnGhost>
-          <BtnAccent onClick={() => setShowNovaVenda(true)}><Ico.Plus /> Nova Venda</BtnAccent>
-        </div>
-      </div>
+   <Header
+  title="Financeiro"
+  subtitle="Controle financeiro da oficina"
+/>
+
+<div className="tab">
+  <span>$</span>
+  <p>Visão Geral</p>
+</div>
+
+<div
+  className="fade-up"
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: 28,
+    gap: 10,
+  }}
+>
+  <BtnGhost onClick={onVerReceita}>
+    Ver Receita <Ico.Arrow />
+  </BtnGhost>
+
+  <BtnAccent onClick={() => setShowNovaVenda(true)}>
+    <Ico.Plus /> Nova Venda
+  </BtnAccent>
+</div>
 
       {/* Stat cards */}
       <div style={{ display: "flex", gap: 16, marginBottom: 28 }}>
@@ -461,31 +539,47 @@ function NovaVendaModal({ onClose }) {
   };
 
   return (
-    <div onClick={onClose} style={{
-      position: "fixed", inset: 0, zIndex: 1000,
-      background: "rgba(0,0,0,0.65)", backdropFilter: "blur(6px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-    }}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: T.surface, borderRadius: 20,
+  <div
+  onClick={onClose}
+  style={{
+    position: "fixed",
+    inset: 0,
+    zIndex: 1000,
+
+    background: "rgba(0,0,0,0.65)",
+    backdropFilter: "blur(6px)",
+
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+
+    padding: "24px 0",
+
+    overflowY: "auto",
+  }}
+>
+    <div
+      onClick={e => e.stopPropagation()}
+      style={{
+        background: T.surface,
+
+        width: 620,
+        maxWidth: "92vw",
+
+        maxHeight: "92vh",
+        overflowY: "auto",
+
+        borderRadius: 24,
+
         border: `1px solid ${T.borderHi}`,
-        padding: "32px 34px", width: 460,
+
+        padding: "32px 34px",
+
         boxShadow: "0 40px 80px rgba(0,0,0,0.6)",
+
         fontFamily: T.font,
-      }}>
-        {/* Header */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 22 }}>
-          <div>
-            <div style={{ fontSize: 17, fontWeight: 700, color: T.textHi }}>Nova Venda</div>
-            <div style={{ fontSize: 12, color: T.textLo, marginTop: 4 }}>Preencha os dados da venda</div>
-          </div>
-          <button onClick={onClose} style={{
-            background: T.surfaceUp, border: `1px solid ${T.border}`,
-            borderRadius: 8, width: 32, height: 32, cursor: "pointer",
-            color: T.textMid, fontSize: 16,
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>✕</button>
-        </div>
+      }}
+    >
 
         {/* Form */}
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -522,6 +616,163 @@ function NovaVendaModal({ onClose }) {
               {SERVICOS.map(s => <option key={s} value={s}>{s}</option>)}
             </select>
           </div>
+
+          {/* Ordem de Serviço */}
+          <div
+            style={{
+              background: T.surfaceUp,
+              border: `1px solid ${T.border}`,
+              borderRadius: 14,
+              padding: "16px 16px",
+            }}
+          >
+            {/* Header */}
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                marginBottom: 14,
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: T.textLo,
+                    textTransform: "uppercase",
+                    letterSpacing: "0.08em",
+                  }}
+                >
+                  Ordem de Serviço
+                </div>
+
+                <div
+                  style={{
+                    fontSize: 12,
+                    color: T.textMid,
+                    marginTop: 4,
+                  }}
+                >
+                  Produtos utilizados e mão de obra
+                </div>
+              </div>
+
+              <div
+                style={{
+                  background: T.accentGlow,
+                  color: T.accent,
+                  borderRadius: 10,
+                  padding: "6px 10px",
+                  fontSize: 11,
+                  fontWeight: 600,
+                }}
+              >
+                OS
+              </div>
+            </div>
+
+  {/* Produtos */}
+  <div style={{ width: "100%" }}>
+
+    <label
+  style={{
+    fontSize: 11,
+    fontWeight: 600,
+    color: T.textLo,
+    textTransform: "uppercase",
+    letterSpacing: "0.07em",
+    display: "block",
+    marginBottom: 6,
+  }}
+>
+  Selecionar Produto
+</label>
+
+<div
+  style={{
+    display: "grid",
+    gridTemplateColumns: "1fr 55px",
+    gap: 10,
+    alignItems: "center",
+  }}
+>
+  <select
+    style={{
+      ...inputStyle,
+      width: "100%",
+      cursor: "pointer",
+    }}
+  >
+    <option>-</option>
+    <option>Óleo 5W30</option>
+    <option>Filtro de Ar</option>
+    <option>Pastilha de Freio</option>
+  </select>
+
+  <input
+    style={{
+      ...inputStyle,
+      width: "100%",
+      textAlign: "center",
+      padding: "9px 4px",
+      fontSize: 12,
+    }}
+    placeholder="Qtd"
+  />
+</div>
+    
+    {/* Item */}
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 55px", gap: 10, width: "100%" }}>
+      <select
+        style={{
+          ...inputStyle,
+          flex: 1,
+          cursor: "pointer",
+        }}
+      >
+        <option>-</option>
+        <option>Óleo 5W30</option>
+        <option>Filtro de Ar</option>
+        <option>Pastilha de Freio</option>
+      </select>
+
+      <input
+        style={{
+          ...inputStyle,
+          width: "100%",
+          textAlign: "center",
+        }}
+        placeholder="Qtd"
+      />
+    </div>
+
+    
+
+    {/* Mão de obra */}
+    <div style={{ marginTop: 4 }}>
+      <label
+        style={{
+          fontSize: 11,
+          fontWeight: 600,
+          color: T.textLo,
+          textTransform: "uppercase",
+          letterSpacing: "0.07em",
+          display: "block",
+          marginBottom: 6,
+        }}
+      >
+        Mão de obra
+      </label>
+
+      <input
+        style={inputStyle}
+        placeholder="Valor da mão de obra"
+      />
+    </div>
+  </div>
+</div>
 
           {/* Valor + Data lado a lado */}
           <div style={{ display: "flex", gap: 12 }}>
@@ -761,37 +1012,44 @@ function Receita({ onVoltar }) {
   const [showExport, setShowExport] = useState(false);
   const dados = DADOS_FILTRO[filtro];
 
-  return (
-    <main style={{ flex: 1, display: "flex", flexDirection: "column", overflowY: "auto",
-      padding: "36px 44px", background: T.bg, fontFamily: T.font }}>
-      <style>{GLOBAL_CSS}</style>
+ return (
+  <main
+    className="main"
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      fontFamily: T.font,
+    }}
+  >
+    <style>{GLOBAL_CSS}</style>
 
-      {/* Header */}
-      <div className="fade-up" style={{ display: "flex", alignItems: "flex-start",
-        justifyContent: "space-between", marginBottom: 28 }}>
-        <div>
-          <h1 style={{ fontSize: 26, fontWeight: 700, color: T.textHi }}>Receita</h1>
-          <p style={{ fontSize: 13, color: T.textLo, marginTop: 6 }}>
-            Detalhamento de entradas por período
-          </p>
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          <button onClick={() => setShowExport(true)}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 6,
-              background: "transparent", border: `1px solid ${T.border}`,
-              borderRadius: 9, padding: "8px 14px",
-              font: `500 12.5px ${T.font}`, color: T.textMid,
-              cursor: "pointer", transition: "all 0.15s",
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = T.accent; e.currentTarget.style.color = T.accent; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.color = T.textMid; }}
-          >
-            <Ico.Download /> Exportar PDF/Excel
-          </button>
-          <BtnGhost onClick={onVoltar}><Ico.ChevronLeft /> Voltar ao Painel</BtnGhost>
-        </div>
-      </div>
+      <Header
+  title="Receitas"
+  subtitle="Detalhamento financeiro da oficina"
+/>
+
+<div className="tab">
+  <span>$</span>
+  <p>Receitas</p>
+</div>
+
+<div
+  className="fade-up"
+  style={{
+    display: "flex",
+    justifyContent: "flex-end",
+    marginBottom: 24,
+    gap: 10,
+  }}
+>
+  <BtnGhost onClick={() => setShowExport(true)}>
+  <Ico.Download /> Exportar PDF/Excel
+</BtnGhost>
+
+  <BtnGhost onClick={onVoltar}>
+    <Ico.ChevronLeft /> Voltar ao Painel
+  </BtnGhost>
+</div>
 
       {/* KPI strip */}
       <div className="fade-up fade-up-1" style={{ display: "flex", gap: 14, marginBottom: 24 }}>
@@ -873,18 +1131,21 @@ function Receita({ onVoltar }) {
   );
 }
 
-/* ════════════════════════════════
-   APP ROOT
-════════════════════════════════ */
+
 export default function App() {
   const [page, setPage] = useState("painel");
+
   return (
-    <div style={{ display: "flex", height: "100vh", overflow: "hidden", fontFamily: T.font }}>
+    <div className="app">
       <Sidebar />
+
       {page === "painel"
-        ? <Painel  onVerReceita={() => setPage("receita")} />
-        : <Receita onVoltar={()    => setPage("painel")}   />
+        ? <Painel onVerReceita={() => setPage("receita")} />
+        : <Receita onVoltar={() => setPage("painel")} />
       }
+    </div>
+  );
+}
     </div>
   );
 }
