@@ -152,6 +152,11 @@ body {
     height: 35px;
 }
 
+.sidebar #icon-lea {
+    width: 35px;
+    height: 35px;
+}
+
 .sidebar .active .icon {
   filter: brightness(0) saturate(100%) invert(100%);
 }

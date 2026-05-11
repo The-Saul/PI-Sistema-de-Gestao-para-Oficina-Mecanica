@@ -54,7 +54,7 @@ function Sidebar() {
 
       <footer>
         <button>
-          <img src="./Img/SVG Leave.png" alt="" />
+          <img src="/icons/leave-svgrepo-com.svg" alt="" className="icon" id="icon-lea"/>
           <span>Sair</span>
         </button>
       </footer>
