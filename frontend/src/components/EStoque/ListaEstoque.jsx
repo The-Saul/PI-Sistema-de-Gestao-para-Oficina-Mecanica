@@ -59,7 +59,7 @@ export default function ListaEstoque({ produtos, historico }) {
         ) : (
           estoqueBaixo.map((p) => (
             <p key={p.id}>
-              {p.peca} QTD: {p.quantidade}
+              Qtd: {p.quantidade} {p.peca}
             </p>
           ))
         )}
