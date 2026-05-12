@@ -12,13 +12,13 @@ function Box({ title, children, alert }) {
 const LIMITE_ESTOQUE = 5;
 
 export default function ListaEstoque({ produtos, historico }) {
-  // 🔴 últimas retiradas (3)
+  // últimas retiradas (3)
   const saidasRecentes = historico.slice(0, 3);
 
-  // 🟢 últimos produtos adicionados (3)
+  // últimos produtos adicionados (3)
   const entradasRecentes = [...produtos].slice(-3).reverse();
 
-  // ⚠️ produtos com estoque baixo
+  // produtos com estoque baixo
   const estoqueBaixo = produtos.filter(
     (p) => Number(p.quantidade) <= LIMITE_ESTOQUE
   );
@@ -26,14 +26,14 @@ export default function ListaEstoque({ produtos, historico }) {
   return (
     <section className="list">
       
-      {/* 🔴 SAÍDA RECENTE */}
+      {/*  SAÍDA RECENTE */}
       <Box title="Saída recente">
         {saidasRecentes.length === 0 ? (
           <p>Nenhuma saída registrada</p>
         ) : (
           saidasRecentes.map((h) => (
             <p key={h.id}>
-              QTD: {h.quantidade} | FUNC: {h.funcionario || "-"}
+              Qtd: {h.quantidade} {h.peca} {h.funcionario || "-"}
             </p>
           ))
         )}
@@ -46,7 +46,7 @@ export default function ListaEstoque({ produtos, historico }) {
         ) : (
           entradasRecentes.map((p) => (
             <p key={p.id}>
-              QTD: {p.quantidade} | FORN: {p.fornecedor || "-"}
+               Qtd: {p.quantidade} {p.peca} {p.fornecedor || "-"}
             </p>
           ))
         )}
@@ -59,7 +59,7 @@ export default function ListaEstoque({ produtos, historico }) {
         ) : (
           estoqueBaixo.map((p) => (
             <p key={p.id}>
-              {p.peca} | QTD: {p.quantidade}
+              {p.peca} QTD: {p.quantidade}
             </p>
           ))
         )}

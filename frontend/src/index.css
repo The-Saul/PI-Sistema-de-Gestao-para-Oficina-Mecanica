@@ -127,8 +127,8 @@ body {
   align-items: center;
   gap: 10px;
 
-  text-decoration: none; /* tira o sublinhado */
-  color: rgb(202, 202, 202); /* ou a cor do teu layout */
+  text-decoration: none; 
+  color: rgb(202, 202, 202); 
 
   padding: 10px;
   border-radius: 8px;
