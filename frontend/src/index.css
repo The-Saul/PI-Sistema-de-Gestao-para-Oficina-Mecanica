@@ -12,17 +12,21 @@ body {
 /* Layout */
 .app {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* Sidebar */
 .sidebar {
   width: 260px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
   background: linear-gradient(180deg, #0f172a, #020617);
   color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow-y: auto;
 }
 
 /* Logo */

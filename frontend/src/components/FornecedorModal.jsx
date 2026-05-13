@@ -69,10 +69,14 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
     }
   };
 
-  const handleSalvar = (e) => {
+  const handleSalvar = async (e) => {
     e.preventDefault();
-    onSalvar(form);
-    setEditando(false); // volta para visualização após salvar
+    try {
+      await onSalvar(form);
+      setEditando(false);
+    } catch {
+      // mantém editável se der erro
+    }
   };
 
   const titulo = fornecedorSelecionado

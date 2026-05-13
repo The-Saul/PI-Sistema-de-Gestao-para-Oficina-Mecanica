@@ -71,11 +71,16 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
     }
   };
 
-  const handleSalvar = (e) => {
-    e.preventDefault();
-    onSalvar(form);
-    setEditando(false); // volta para visualização após salvar
-  };
+  const handleSalvar = async (e) => {
+  e.preventDefault();
+  try {
+    await onSalvar(form);
+    setEditando(false); // só trava se salvou com sucesso
+  } catch {
+    // se deu erro, mantém o form editável — o alert já foi
+    // disparado pelo Clientes.jsx
+  }
+};
 
   const titulo = clienteSelecionado
     ? (editando ? "Editar Cliente" : "Detalhes do Cliente")
