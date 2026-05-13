@@ -301,7 +301,7 @@ function Painel({ onVerReceita }) {
             key={c.label}
             className={`card-financeiro ${c.className}`}
           >
-            <div className="card-icon-financiro">
+            <div className="card-icon-financeiro">
               {c.icon}
             </div>
 
