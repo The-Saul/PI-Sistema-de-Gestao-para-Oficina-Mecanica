@@ -30,15 +30,7 @@ function Dashboard() {
         <section className="cards">
           <Card icon="/icons/people-svgrepo-com.svg" value="9999" label="Clientes" color="blue" />
           <Card icon="/icons/truck-svgrepo-com.svg" value="9999" label="Fornecedores" color="purple" />
-
-          {/* 🔥 AGORA FUNCIONA */}
-          <Card
-            icon="/icons/box-svgrepo-com.svg"
-            value={totalEstoque}
-            label="Estoque"
-            color="yellow"
-          />
-
+          <Card icon="/icons/box-svgrepo-com.svg" value={totalEstoque} label="Estoque" color="yellow" />
           <Card icon="/icons/dolar-svgrepo-com.svg" value="9999" label="Financeiro" color="green" />
         </section>
 

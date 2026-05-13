@@ -202,6 +202,7 @@ body {
 .card h3 {
   font-size: 26px;
   margin-top: 10px;
+  color: black;
 }
 
 .card p {
@@ -243,12 +244,18 @@ body {
 .card.blue .icon {
   background: #81aff9;
 }
+.card.blue h3 {
+  color: #285296;
+}
 
 .card.purple {
   background: #e3d8fe;
 }
 .card.purple .icon {
   background: #9875ec;
+}
+.card.purple h3 {
+  color: #6442b4;
 }
 
 .card.yellow {
@@ -257,12 +264,18 @@ body {
 .card.yellow .icon {
   background: #f8bb51;
 }
+.card.yellow h3 {
+  color: #a97926;
+}
 
 .card.green {
   background: #d2fef0
 }
 .card.green .icon {
   background: #3ac295;
+}
+.card.green h3 {
+  color: #268c6a;
 }
 
 
