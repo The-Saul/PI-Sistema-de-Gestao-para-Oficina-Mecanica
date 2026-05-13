@@ -15,7 +15,7 @@ const DADOS = {
         data: "01/10",
         av: "A",
         cliente: "Pedro",
-        servico: "🔍 Consultoria",
+        servico: " Consultoria",
         valor: "10.000",
       },
 
@@ -23,7 +23,7 @@ const DADOS = {
         data: "01/10",
         av: "A",
         cliente: "Pedro",
-        servico: "👥 Treinamento",
+        servico: " Treinamento",
         valor: "3.000",
       },
 
@@ -31,7 +31,7 @@ const DADOS = {
         data: "15/10",
         av: "B",
         cliente: "João",
-        servico: "🔧 Manutenção",
+        servico: " Manutenção",
         valor: "4.500",
       },
 
@@ -54,7 +54,7 @@ const DADOS = {
         data: "05/08",
         av: "A",
         cliente: "Pedro",
-        servico: "🔍 Consultoria",
+        servico: " Consultoria",
         valor: "12.000",
       },
 
@@ -77,7 +77,7 @@ const DADOS = {
         data: "Jan",
         av: "A",
         cliente: "Pedro",
-        servico: "🔍 Consultoria",
+        servico: " Consultoria",
         valor: "18.000",
       },
 
@@ -155,39 +155,103 @@ function Label({ children }) {
   return <label className="label">{children}</label>;
 }
 
-function ModalVenda({ onClose }) {
+function ModalVenda({
+  onClose,
+  setDados,
+}) {
+  const [cliente, setCliente] =
+    useState("");
+
+  const [servico, setServico] =
+    useState("");
+
+  const [valor, setValor] =
+    useState("");
+
+  const [data, setData] =
+    useState("");
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+    >
       <div
         className="modal-box"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
         <h2>Nova Venda</h2>
 
         <div className="modal-form">
           <div>
             <Label>Cliente</Label>
-            <input className="input" />
+
+            <input
+              className="input"
+              value={cliente}
+              onChange={(e) =>
+                setCliente(
+                  e.target.value
+                )
+              }
+            />
           </div>
 
           <div>
             <Label>Serviço</Label>
 
-            <select className="input">
-              <option>Orçamento</option>
-              <option>Peças</option>
-              <option>Manutenção</option>
+            <select
+              className="input"
+              value={servico}
+              onChange={(e) =>
+                setServico(
+                  e.target.value
+                )
+              }
+            >
+              <option>
+                Orçamento
+              </option>
+
+              <option>
+                Peças
+              </option>
+
+              <option>
+                Manutenção
+              </option>
             </select>
           </div>
 
           <div>
             <Label>Valor</Label>
-            <input className="input" />
+
+            <input
+              className="input"
+              value={valor}
+              onChange={(e) =>
+                setValor(
+                  e.target.value
+                )
+              }
+            />
           </div>
 
           <div>
             <Label>Data</Label>
-            <input type="date" className="input" />
+
+            <input
+              type="date"
+              className="input"
+              value={data}
+              onChange={(e) =>
+                setData(
+                  e.target.value
+                )
+              }
+            />
           </div>
         </div>
 
@@ -196,7 +260,39 @@ function ModalVenda({ onClose }) {
             Cancelar
           </Btn>
 
-          <Btn>
+          <Btn
+            onClick={() => {
+              const novaVenda = {
+                data,
+
+                av:
+                  cliente.charAt(0) ||
+                  "C",
+
+                cliente,
+
+                servico,
+
+                valor,
+              };
+
+              setDados((prev) => ({
+                ...prev,
+
+                Mensal: {
+                  ...prev.Mensal,
+
+                  rows: [
+                    ...prev.Mensal.rows,
+
+                    novaVenda,
+                  ],
+                },
+              }));
+
+              onClose();
+            }}
+          >
             Salvar Venda
           </Btn>
         </div>
@@ -260,12 +356,82 @@ function ModalOS({ onClose }) {
   );
 }
 
-function Painel({ onVerReceita }) {
+function ModalEntrada({ onClose }) {
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+    >
+      <div
+        className="modal-box"
+        onClick={(e) =>
+          e.stopPropagation()
+        }
+      >
+        <h2>Nova Entrada</h2>
+
+        <div className="modal-form">
+          <div>
+            <Label>Fornecedor</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Produto</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Quantidade</Label>
+
+            <input
+              type="number"
+              className="input"
+            />
+          </div>
+
+          <div>
+            <Label>Valor</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Data</Label>
+
+            <input
+              type="date"
+              className="input"
+            />
+          </div>
+        </div>
+
+        <div className="modal-actions">
+          <Btn onClick={onClose}>
+            Cancelar
+          </Btn>
+
+          <Btn>
+            Salvar Entrada
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Painel({
+  onVerReceita,
+  dados,
+  setDados,
+}) {
   const [showVenda, setShowVenda] =
     useState(false);
 
   const [showOS, setShowOS] =
     useState(false);
+
+  const [showEntrada, setShowEntrada] =
+  useState(false);
 
   return (
     <main className="main">
@@ -280,20 +446,26 @@ function Painel({ onVerReceita }) {
       </div>
 
       <div className="top-actions">
-        <Btn onClick={onVerReceita}>
-          Ver Receita
-        </Btn>
+  <Btn onClick={onVerReceita}>
+    Ver Receita
+  </Btn>
 
-        <Btn onClick={() => setShowOS(true)}>
-          Ordem de Serviço
-        </Btn>
+  <Btn onClick={() => setShowOS(true)}>
+    Ordem de Serviço
+  </Btn>
 
-        <Btn
-          onClick={() => setShowVenda(true)}
-        >
-          Nova Venda
-        </Btn>
-      </div>
+  <Btn
+    onClick={() => setShowVenda(true)}
+  >
+    Nova Venda
+  </Btn>
+
+  <Btn
+    onClick={() => setShowEntrada(true)}
+  >
+    Nova Entrada
+  </Btn>
+</div>
 
       <div className="cards-grid">
         {CARDS.map((c) => (
@@ -335,10 +507,11 @@ function Painel({ onVerReceita }) {
 
       {showVenda && (
         <ModalVenda
-          onClose={() =>
-            setShowVenda(false)
-          }
-        />
+  setDados={setDados}
+  onClose={() =>
+    setShowVenda(false)
+  }
+/>
       )}
 
       {showOS && (
@@ -346,15 +519,26 @@ function Painel({ onVerReceita }) {
           onClose={() => setShowOS(false)}
         />
       )}
+
+      {showEntrada && (
+        <ModalEntrada
+          onClose={() =>
+            setShowEntrada(false)
+          }
+        />
+      )}
     </main>
   );
 }
 
-function Receita({ onVoltar }) {
+function Receita({
+  onVoltar,
+  dados,
+}) {
   const [filtro, setFiltro] =
     useState("Mensal");
 
-  const d = DADOS[filtro];
+  const d = dados[filtro];
 
   return (
     <main className="main">
@@ -459,8 +643,12 @@ function Receita({ onVoltar }) {
 }
 
 export default function Financeiro() {
+  
   const [page, setPage] =
     useState("painel");
+
+  const [dados, setDados] =
+    useState(DADOS);
 
   return (
     <div className="app">
@@ -468,16 +656,19 @@ export default function Financeiro() {
 
       {page === "painel" ? (
         <Painel
-          onVerReceita={() =>
-            setPage("receita")
-          }
-        />
+  dados={dados}
+  setDados={setDados}
+  onVerReceita={() =>
+    setPage("receita")
+  }
+/>
       ) : (
         <Receita
-          onVoltar={() =>
-            setPage("painel")
-          }
-        />
+  dados={dados}
+  onVoltar={() =>
+    setPage("painel")
+  }
+/>
       )}
     </div>
   );
