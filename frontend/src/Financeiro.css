@@ -80,21 +80,16 @@ body{
   padding:22px;
 }
 
-.card-icon{
+.card-icon-financeiro{
   width:42px;
   height:42px;
-
   border-radius:14px;
-
   display:flex;
   align-items:center;
   justify-content:center;
-
   font-size:18px;
   font-weight:700;
-
   margin-bottom:12px;
-
   background:rgba(255,255,255,.5);
 }
 
