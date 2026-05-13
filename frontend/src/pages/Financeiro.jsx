@@ -174,8 +174,8 @@ function ModalVenda({ onClose }) {
             <Label>Serviço</Label>
 
             <select className="input">
-              <option>Consultoria</option>
-              <option>Treinamento</option>
+              <option>Orçamento</option>
+              <option>Peças</option>
               <option>Manutenção</option>
             </select>
           </div>
