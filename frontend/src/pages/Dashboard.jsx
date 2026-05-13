@@ -50,24 +50,28 @@ function Dashboard() {
             value={totalClientes}
             label="Clientes"
             color="blue"
+            rota="/clientes"
           />
           <Card
             icon="/icons/truck-svgrepo-com.svg"
             value={totalFornecedores}
             label="Fornecedores"
             color="purple"
+            rota="/fornecedores"
           />
           <Card
             icon="/icons/box-svgrepo-com.svg"
             value={totalEstoque}
             label="Estoque"
             color="yellow"
+            rota="/estoque"
           />
           <Card
             icon="/icons/dolar-svgrepo-com.svg"
             value="9999"
             label="Financeiro"
             color="green"
+            rota="/financeiro"
           />
         </section>
 
