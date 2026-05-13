@@ -16,7 +16,14 @@ body{
 
 .main{
   flex:1;
+  min-width:0;
+
   padding:30px;
+
+  overflow:hidden;
+
+  display:flex;
+  flex-direction:column;
 }
 
 .tab{
@@ -64,11 +71,17 @@ body{
 }
 
 .cards-grid{
-  display:flex;
-  gap:16px;
-  margin-bottom:28px;
-}
+  display:grid;
 
+  grid-template-columns:
+  repeat(auto-fit,minmax(220px,1fr));
+
+  gap:16px;
+
+  margin-bottom:28px;
+
+  width:100%;
+}
 .card-financeiro{
   flex:1;
   border-radius:18px;
@@ -113,53 +126,68 @@ body{
 }
 
 .grafico-box{
+  width:100%;
+
   background:#fff;
 
   border-radius:16px;
   border:1px solid #eaeef5;
 
-  padding:28px 32px;
-}
+  padding:18px 24px 30px;
 
-.grafico-header{
-  margin-bottom:24px;
+  height:250px;
 }
 
 .grafico-bars{
+  width:100%;
+  height:150px;
+
   display:flex;
   align-items:flex-end;
-  gap:28px;
+  justify-content:space-evenly;
 
-  height:180px;
+  gap:12px;
 }
 
 .bar-item{
-  flex:1;
-
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:10px;
+  justify-content:flex-end;
+
+  gap:8px;
+
+  padding-bottom:8px;
 }
 
 .bar{
-  width:52px;
+  width:38px;
+
   border-radius:8px 8px 0 0;
 }
 
 .bar-1{
-  height:62%;
+  height:70px;
   background:#dc2626;
 }
 
 .bar-2{
-  height:62%;
+  height:52px;
   background:#16a34a;
 }
 
 .bar-3{
-  height:62%;
+  height:38px;
   background:#d97706;
+}
+
+.bar-item span{
+  font-size:12px;
+  font-weight:600;
+
+  color:#4b5563;
+
+  text-align:center;
 }
 
 .modal-overlay{
