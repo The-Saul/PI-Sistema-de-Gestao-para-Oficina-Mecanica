@@ -29,7 +29,9 @@ body{
 .tab span{
   width:34px;
   height:34px;
+
   border-radius:10px;
+
   background:#4f7cff;
   color:#fff;
 
@@ -51,12 +53,19 @@ body{
   color:#fff;
 
   padding:12px 18px;
+
   border-radius:14px;
 
   font-size:14px;
   font-weight:600;
 
   cursor:pointer;
+
+  transition:.2s;
+}
+
+.btn:hover{
+  opacity:.9;
 }
 
 .cards-grid{
@@ -85,6 +94,8 @@ body{
   font-weight:700;
 
   margin-bottom:12px;
+
+  background:rgba(255,255,255,.5);
 }
 
 .card-financeiro h3{
@@ -113,8 +124,10 @@ body{
 
 .grafico-box{
   background:#fff;
+
   border-radius:16px;
   border:1px solid #eaeef5;
+
   padding:28px 32px;
 }
 
@@ -126,6 +139,7 @@ body{
   display:flex;
   align-items:flex-end;
   gap:28px;
+
   height:180px;
 }
 
@@ -182,12 +196,14 @@ body{
   padding:30px;
 }
 
+.modal-box h2{
+  margin-bottom:20px;
+}
+
 .modal-form{
   display:flex;
   flex-direction:column;
   gap:14px;
-
-  margin-top:20px;
 }
 
 .input{
@@ -199,6 +215,8 @@ body{
   border:1px solid #d4dae8;
 
   background:#f8f9fd;
+
+  outline:none;
 }
 
 .label{
@@ -246,6 +264,7 @@ body{
 .mini-title{
   font-size:11px;
   color:#7b8299;
+
   margin-bottom:8px;
 }
 
@@ -257,6 +276,7 @@ body{
 .pill-group{
   display:flex;
   gap:6px;
+
   margin-bottom:12px;
 }
 
@@ -306,6 +326,7 @@ body{
 
 .table-box td{
   padding:14px 16px;
+
   border-top:1px solid #eaeef5;
 }
 

@@ -1,4 +1,4 @@
-//
+// Financeiro.jsx
 
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
@@ -192,8 +192,68 @@ function ModalVenda({ onClose }) {
         </div>
 
         <div className="modal-actions">
-          <Btn onClick={onClose}>Cancelar</Btn>
-          <Btn>Salvar Venda</Btn>
+          <Btn onClick={onClose}>
+            Cancelar
+          </Btn>
+
+          <Btn>
+            Salvar Venda
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ModalOS({ onClose }) {
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div
+        className="modal-box"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2>Nova Ordem de Serviço</h2>
+
+        <div className="modal-form">
+          <div>
+            <Label>Cliente</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Veículo</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Placa</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Serviço</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Valor</Label>
+            <input className="input" />
+          </div>
+
+          <div>
+            <Label>Data</Label>
+            <input type="date" className="input" />
+          </div>
+        </div>
+
+        <div className="modal-actions">
+          <Btn onClick={onClose}>
+            Cancelar
+          </Btn>
+
+          <Btn>
+            Salvar OS
+          </Btn>
         </div>
       </div>
     </div>
@@ -201,7 +261,11 @@ function ModalVenda({ onClose }) {
 }
 
 function Painel({ onVerReceita }) {
-  const [showVenda, setShowVenda] = useState(false);
+  const [showVenda, setShowVenda] =
+    useState(false);
+
+  const [showOS, setShowOS] =
+    useState(false);
 
   return (
     <main className="main">
@@ -220,7 +284,13 @@ function Painel({ onVerReceita }) {
           Ver Receita
         </Btn>
 
-        <Btn onClick={() => setShowVenda(true)}>
+        <Btn onClick={() => setShowOS(true)}>
+          Ordem de Serviço
+        </Btn>
+
+        <Btn
+          onClick={() => setShowVenda(true)}
+        >
           Nova Venda
         </Btn>
       </div>
@@ -253,7 +323,9 @@ function Painel({ onVerReceita }) {
               key={b.label}
               className="bar-item"
             >
-              <div className={`bar ${b.pctClass}`} />
+              <div
+                className={`bar ${b.pctClass}`}
+              />
 
               <span>{b.label}</span>
             </div>
@@ -263,7 +335,15 @@ function Painel({ onVerReceita }) {
 
       {showVenda && (
         <ModalVenda
-          onClose={() => setShowVenda(false)}
+          onClose={() =>
+            setShowVenda(false)
+          }
+        />
+      )}
+
+      {showOS && (
+        <ModalOS
+          onClose={() => setShowOS(false)}
         />
       )}
     </main>
@@ -289,7 +369,9 @@ function Receita({ onVoltar }) {
       </div>
 
       <div className="top-actions">
-        <Btn>Exportar</Btn>
+        <Btn>
+          Exportar
+        </Btn>
 
         <Btn onClick={onVoltar}>
           Voltar
@@ -317,7 +399,9 @@ function Receita({ onVoltar }) {
               <Pill
                 key={f}
                 active={filtro === f}
-                onClick={() => setFiltro(f)}
+                onClick={() =>
+                  setFiltro(f)
+                }
               >
                 {f}
               </Pill>
