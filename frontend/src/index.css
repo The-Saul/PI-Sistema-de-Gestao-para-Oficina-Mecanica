@@ -203,6 +203,7 @@ body {
   font-size: 26px;
   margin-top: 10px;
   color: black;
+  font-weight: bolder;
 }
 
 .card p {
@@ -246,6 +247,8 @@ body {
 }
 .card.blue h3 {
   color: #285296;
+  font-weight: bolder;
+  font-size: 18px;
 }
 
 .card.purple {
@@ -256,6 +259,8 @@ body {
 }
 .card.purple h3 {
   color: #6442b4;
+  font-weight: bolder;
+  font-size: 18px;
 }
 
 .card.yellow {
@@ -266,6 +271,8 @@ body {
 }
 .card.yellow h3 {
   color: #a97926;
+  font-weight: bolder;
+  font-size: 18px;
 }
 
 .card.green {
@@ -276,6 +283,8 @@ body {
 }
 .card.green h3 {
   color: #268c6a;
+  font-weight: bolder;
+  font-size: 18px;
 }
 
 
