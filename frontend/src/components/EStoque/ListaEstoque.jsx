@@ -12,11 +12,11 @@ function Box({ title, children, alert }) {
 const LIMITE_ESTOQUE = 5;
 
 export default function ListaEstoque({ produtos, historico }) {
-  // últimas retiradas (3)
-  const saidasRecentes = historico.slice(0, 3);
+  // últimas retiradas 
+  const saidasRecentes = historico.slice(0, 1);
 
-  // últimos produtos adicionados (3)
-  const entradasRecentes = [...produtos].slice(-3).reverse();
+  // últimos produtos adicionados 
+  const entradasRecentes = [...produtos].slice(-1).reverse();
 
   // produtos com estoque baixo
   const estoqueBaixo = produtos.filter(
