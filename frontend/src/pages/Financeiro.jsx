@@ -531,12 +531,61 @@ function Painel({
   );
 }
 
+function ModalExport({
+  onClose,
+}) {
+  function exportar(tipo) {
+    alert(
+      `Download em ${tipo} realizado com sucesso!`
+    );
+
+    onClose();
+  }
+
+  return (
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+    >
+      <div
+        className="modal-box"
+        onClick={(e) =>
+          e.stopPropagation()
+        }
+      >
+        <h2>Exportar Relatório</h2>
+
+        <div className="modal-actions">
+          <Btn
+            onClick={() =>
+              exportar("PDF")
+            }
+          >
+            Exportar PDF
+          </Btn>
+
+          <Btn
+            onClick={() =>
+              exportar("Excel")
+            }
+          >
+            Exportar Excel
+          </Btn>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Receita({
   onVoltar,
   dados,
 }) {
   const [filtro, setFiltro] =
     useState("Mensal");
+
+  const [showExport, setShowExport] =
+  useState(false);
 
   const d = dados[filtro];
 
@@ -553,9 +602,13 @@ function Receita({
       </div>
 
       <div className="top-actions">
-        <Btn>
-          Exportar
-        </Btn>
+        <Btn
+  onClick={() =>
+    setShowExport(true)
+  }
+>
+  Exportar
+</Btn>
 
         <Btn onClick={onVoltar}>
           Voltar
@@ -638,6 +691,14 @@ function Receita({
           </tbody>
         </table>
       </div>
+
+    {showExport && (
+  <ModalExport
+    onClose={() =>
+      setShowExport(false)
+    }
+  />
+)}
     </main>
   );
 }
