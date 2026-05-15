@@ -212,6 +212,12 @@ body{
   border-radius:24px;
 
   padding:30px;
+
+  max-height:90vh;
+
+  overflow-y:auto;
+
+  margin:20px auto;
 }
 
 .modal-box h2{
@@ -348,24 +354,21 @@ body{
   border-top:1px solid #eaeef5;
 }
 
-.cliente-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
+.cliente-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.cliente-avatar{
-  width:28px;
-  height:28px;
-
-  border-radius:50%;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:13px;
-  font-weight:700;
+.cliente-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  flex-shrink: 0;
 }
 
 .avatar-A{
@@ -390,4 +393,46 @@ body{
 
   background:#dbeafe;
   color:#2563eb;
+}
+
+.input-money{
+  display:flex;
+  align-items:center;
+
+  background:#f8f9fd;
+
+  border:1px solid #d4dae8;
+  border-radius:10px;
+
+  padding:0 12px;
+}
+
+.input-money span{
+  color:#7b8299;
+
+  font-size:14px;
+  font-weight:600;
+
+  margin-right:8px;
+}
+
+.money-field{
+  border:none !important;
+  background:transparent !important;
+
+  padding-left:0;
+}
+
+.textarea{
+  min-height:100px;
+
+  resize:none;
+
+  padding-top:12px;
+
+  margin-top:6px;
+}
+
+.observacoes-box{
+  margin-top:10px;
 }
