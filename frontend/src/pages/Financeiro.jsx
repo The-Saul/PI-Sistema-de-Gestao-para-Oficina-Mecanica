@@ -10,85 +10,21 @@ const DADOS = {
     dateRange: "01/10/2023 – 31/10/2023",
     total: "R$ 29.500",
 
-    rows: [
-      {
-        data: "01/10",
-        av: "A",
-        cliente: "Pedro",
-        servico: " Consultoria",
-        valor: "10.000",
-      },
-
-      {
-        data: "01/10",
-        av: "A",
-        cliente: "Pedro",
-        servico: " Treinamento",
-        valor: "3.000",
-      },
-
-      {
-        data: "15/10",
-        av: "B",
-        cliente: "João",
-        servico: " Manutenção",
-        valor: "4.500",
-      },
-
-      {
-        data: "30/10",
-        av: "G",
-        cliente: "António",
-        servico: "</> Desenvolvimento",
-        valor: "9.500",
-      },
-    ],
+    rows: [],
   },
 
   Trimestral: {
     dateRange: "01/08/2023 – 31/10/2023",
     total: "R$ 84.200",
 
-    rows: [
-      {
-        data: "05/08",
-        av: "A",
-        cliente: "Pedro",
-        servico: " Consultoria",
-        valor: "12.000",
-      },
-
-      {
-        data: "20/08",
-        av: "G",
-        cliente: "António",
-        servico: "</> Desenvolvimento",
-        valor: "15.000",
-      },
-    ],
+    rows: [],
   },
 
   Anual: {
     dateRange: "01/01/2023 – 31/12/2023",
     total: "R$ 312.750",
 
-    rows: [
-      {
-        data: "Jan",
-        av: "A",
-        cliente: "Pedro",
-        servico: " Consultoria",
-        valor: "18.000",
-      },
-
-      {
-        data: "Fev",
-        av: "G",
-        cliente: "António",
-        servico: "</> Desenvolvimento",
-        valor: "22.500",
-      },
-    ],
+    rows: [],
   },
 };
 
@@ -203,41 +139,108 @@ function ModalVenda({
             <Label>Serviço</Label>
 
             <select
-              className="input"
-              value={servico}
-              onChange={(e) =>
-                setServico(
-                  e.target.value
-                )
-              }
-            >
-              <option>
-                Orçamento
-              </option>
+  className="input"
+  value={servico}
+  onChange={(e) =>
+    setServico(
+      e.target.value
+    )
+  }
+>
+  <option disabled value="">
+    Selecione o serviço
+  </option>
 
-              <option>
-                Peças
-              </option>
+  <option>
+    Troca de óleo
+  </option>
 
-              <option>
-                Manutenção
-              </option>
-            </select>
+  <option>
+    Alinhamento
+  </option>
+
+  <option>
+    Balanceamento
+  </option>
+
+  <option>
+    Revisão completa
+  </option>
+
+  <option>
+    Troca de pneus
+  </option>
+
+  <option>
+    Suspensão
+  </option>
+
+  <option>
+    Freios
+  </option>
+
+  <option>
+    Motor
+  </option>
+
+  <option>
+    Injeção eletrônica
+  </option>
+
+  <option>
+    Embreagem
+  </option>
+
+  <option>
+    Ar-condicionado
+  </option>
+
+  <option>
+    Diagnóstico eletrônico
+  </option>
+
+  <option>
+    Bateria
+  </option>
+
+  <option>
+    Lanternagem
+  </option>
+
+  <option>
+    Pintura
+  </option>
+
+  <option>
+    Venda de peças
+  </option>
+
+  <option>
+    Acessórios automotivos
+  </option>
+</select>
           </div>
 
           <div>
-            <Label>Valor</Label>
+  <Label>Valor</Label>
 
-            <input
-              className="input"
-              value={valor}
-              onChange={(e) =>
-                setValor(
-                  e.target.value
-                )
-              }
-            />
-          </div>
+  <div className="input-money">
+    <span>R$</span>
+
+    <input
+      type="number"
+      className="input money-field"
+      placeholder="0,00"
+      min="0"
+      value={valor}
+      onChange={(e) =>
+        setValor(
+          e.target.value
+        )
+      }
+    />
+  </div>
+</div>
 
           <div>
             <Label>Data</Label>
@@ -255,108 +258,425 @@ function ModalVenda({
           </div>
         </div>
 
+        <div className="observacoes-box">
+  <Label>Observações</Label>
+
+  <textarea
+    className="input textarea"
+    placeholder="Digite observações sobre a venda..."
+  />
+</div>
+
         <div className="modal-actions">
           <Btn onClick={onClose}>
             Cancelar
           </Btn>
 
           <Btn
-            onClick={() => {
-              const novaVenda = {
-                data,
+  onClick={() => {
 
-                av:
-                  cliente.charAt(0) ||
-                  "C",
+    if (
+      !cliente ||
+      !servico ||
+      !valor ||
+      !data
+    ) {
+      alert(
+        "Preencha todos os campos."
+      );
 
-                cliente,
+      return;
+    }
 
-                servico,
+    if (valor <= 0) {
+      alert(
+        "O valor deve ser maior que 0."
+      );
 
-                valor,
-              };
+      return;
+    }
 
-              setDados((prev) => ({
-                ...prev,
+    const novaVenda = {
+      data,
 
-                Mensal: {
-                  ...prev.Mensal,
+      av:
+        cliente.charAt(0) ||
+        "C",
 
-                  rows: [
-                    ...prev.Mensal.rows,
+      cliente,
 
-                    novaVenda,
-                  ],
-                },
-              }));
+      servico,
 
-              onClose();
-            }}
-          >
-            Salvar Venda
-          </Btn>
+      valor,
+    };
+
+    setDados((prev) => ({
+  ...prev,
+
+  Mensal: {
+    ...prev.Mensal,
+
+    rows: [
+      ...prev.Mensal.rows,
+      novaVenda,
+    ],
+  },
+
+  Trimestral: {
+    ...prev.Trimestral,
+
+    rows: [
+      ...prev.Trimestral.rows,
+      novaVenda,
+    ],
+  },
+
+  Anual: {
+    ...prev.Anual,
+
+    rows: [
+      ...prev.Anual.rows,
+      novaVenda,
+    ],
+  },
+}));
+
+    onClose();
+  }}
+>
+  Salvar Venda
+</Btn>
         </div>
       </div>
     </div>
   );
 }
 
-function ModalOS({ onClose }) {
+function ModalOS({
+  onClose,
+  setDados,
+}) {
+
+  const [cliente, setCliente] =
+    useState("");
+
+  const [marca, setMarca] =
+    useState("");
+
+  const [modelo, setModelo] =
+    useState("");
+
+  const [placa, setPlaca] =
+    useState("");
+
+  const [servico, setServico] =
+    useState("");
+
+  const [valor, setValor] =
+    useState("");
+
+  const [data, setData] =
+    useState("");
+
   return (
-    <div className="modal-overlay" onClick={onClose}>
+    <div
+      className="modal-overlay"
+      onClick={onClose}
+    >
       <div
         className="modal-box"
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) =>
+          e.stopPropagation()
+        }
       >
-        <h2>Nova Ordem de Serviço</h2>
+        <h2>
+          Nova Ordem de Serviço
+        </h2>
 
         <div className="modal-form">
+
           <div>
             <Label>Cliente</Label>
-            <input className="input" />
+
+            <input
+              type="text"
+              className="input"
+              placeholder="Nome do cliente"
+              value={cliente}
+              onChange={(e) =>
+                setCliente(
+                  e.target.value
+                )
+              }
+            />
           </div>
 
           <div>
-            <Label>Veículo</Label>
-            <input className="input" />
+            <Label>Marca</Label>
+
+            <input
+              type="text"
+              className="input"
+              placeholder="Ex: BMW"
+              value={marca}
+              onChange={(e) =>
+                setMarca(
+                  e.target.value
+                )
+              }
+            />
+          </div>
+
+          <div>
+            <Label>Modelo</Label>
+
+            <input
+              type="text"
+              className="input"
+              placeholder="Ex: BMW 320i"
+              value={modelo}
+              onChange={(e) =>
+                setModelo(
+                  e.target.value
+                )
+              }
+            />
           </div>
 
           <div>
             <Label>Placa</Label>
-            <input className="input" />
+
+            <input
+              type="text"
+              className="input"
+              placeholder="ABC-1234"
+              maxLength={8}
+              value={placa}
+              onChange={(e) =>
+                setPlaca(
+                  e.target.value
+                )
+              }
+            />
           </div>
 
           <div>
             <Label>Serviço</Label>
-            <input className="input" />
+
+            <select
+              className="input"
+              value={servico}
+              onChange={(e) =>
+                setServico(
+                  e.target.value
+                )
+              }
+            >
+              <option
+                disabled
+                value=""
+              >
+                Selecione o serviço
+              </option>
+
+              <option>
+                Troca de óleo
+              </option>
+
+              <option>
+                Alinhamento
+              </option>
+
+              <option>
+                Balanceamento
+              </option>
+
+              <option>
+                Revisão completa
+              </option>
+
+              <option>
+                Troca de pneus
+              </option>
+
+              <option>
+                Suspensão
+              </option>
+
+              <option>
+                Freios
+              </option>
+
+              <option>
+                Motor
+              </option>
+
+              <option>
+                Injeção eletrônica
+              </option>
+
+              <option>
+                Embreagem
+              </option>
+
+              <option>
+                Ar-condicionado
+              </option>
+
+              <option>
+                Diagnóstico eletrônico
+              </option>
+
+              <option>
+                Bateria
+              </option>
+
+              <option>
+                Lanternagem
+              </option>
+
+              <option>
+                Pintura
+              </option>
+            </select>
           </div>
 
           <div>
             <Label>Valor</Label>
-            <input className="input" />
+
+            <div className="input-money">
+              <span>R$</span>
+
+              <input
+                type="number"
+                className="input money-field"
+                placeholder="0,00"
+                min="0"
+                value={valor}
+                onChange={(e) =>
+                  setValor(
+                    e.target.value
+                  )
+                }
+              />
+            </div>
           </div>
 
           <div>
             <Label>Data</Label>
-            <input type="date" className="input" />
+
+            <input
+              type="date"
+              className="input"
+              value={data}
+              onChange={(e) =>
+                setData(
+                  e.target.value
+                )
+              }
+            />
           </div>
+
         </div>
 
         <div className="modal-actions">
-          <Btn onClick={onClose}>
-            Cancelar
-          </Btn>
 
-          <Btn>
-            Salvar OS
-          </Btn>
+          <Btn
+  onClick={() => {
+
+    if (
+      !cliente ||
+      !marca ||
+      !modelo ||
+      !placa ||
+      !servico ||
+      !valor ||
+      !data
+    ) {
+      alert(
+        "Preencha todos os campos."
+      );
+
+      return;
+    }
+
+    if (valor <= 0) {
+      alert(
+        "O valor deve ser maior que 0."
+      );
+
+      return;
+    }
+
+    if (placa.length < 7) {
+      alert(
+        "Digite uma placa válida."
+      );
+
+      return;
+    }
+
+    const novaOS = {
+      data,
+
+      av:
+        cliente.charAt(0) ||
+        "C",
+
+      cliente,
+
+      servico:
+        `${servico} - ${marca} ${modelo}`,
+
+      valor,
+    };
+
+    setDados((prev) => ({
+      ...prev,
+
+      Mensal: {
+        ...prev.Mensal,
+
+        rows: [
+          ...prev.Mensal.rows,
+
+          novaOS,
+        ],
+      },
+    }));
+
+    onClose();
+  }}
+>
+  Salvar OS
+</Btn>
+
         </div>
       </div>
     </div>
   );
 }
 
-function ModalEntrada({ onClose }) {
+function ModalEntrada({
+  onClose,
+  setDados,
+}) {
+
+  const [fornecedor, setFornecedor] =
+  useState("");
+
+const [produto, setProduto] =
+  useState("");
+
+const [quantidade, setQuantidade] =
+  useState("");
+
+const [valor, setValor] =
+  useState("");
+
+const [data, setData] =
+  useState("");
+  
   return (
     <div
       className="modal-overlay"
@@ -370,49 +690,241 @@ function ModalEntrada({ onClose }) {
       >
         <h2>Nova Entrada</h2>
 
-        <div className="modal-form">
-          <div>
-            <Label>Fornecedor</Label>
-            <input className="input" />
-          </div>
+        <div>
+  <Label>Fornecedor</Label>
 
-          <div>
-            <Label>Produto</Label>
-            <input className="input" />
-          </div>
+  <input
+    className="input"
+    value={fornecedor}
+    onChange={(e) =>
+      setFornecedor(
+        e.target.value
+      )
+    }
+  />
+</div>
 
-          <div>
-            <Label>Quantidade</Label>
+<div>
+  <Label>Produto</Label>
 
-            <input
-              type="number"
-              className="input"
-            />
-          </div>
+  <select
+    className="input"
+    value={produto}
+    onChange={(e) =>
+      setProduto(
+        e.target.value
+      )
+    }
+  >
+    <option
+      disabled
+      value=""
+    >
+      Selecione o produto
+    </option>
 
-          <div>
-            <Label>Valor</Label>
-            <input className="input" />
-          </div>
+    <option>
+      Óleo de motor
+    </option>
 
-          <div>
-            <Label>Data</Label>
+    <option>
+      Filtro de óleo
+    </option>
 
-            <input
-              type="date"
-              className="input"
-            />
-          </div>
-        </div>
+    <option>
+      Filtro de ar
+    </option>
+
+    <option>
+      Pastilha de freio
+    </option>
+
+    <option>
+      Disco de freio
+    </option>
+
+    <option>
+      Pneu
+    </option>
+
+    <option>
+      Bateria
+    </option>
+
+    <option>
+      Velas de ignição
+    </option>
+
+    <option>
+      Correia dentada
+    </option>
+
+    <option>
+      Amortecedor
+    </option>
+
+    <option>
+      Radiador
+    </option>
+
+    <option>
+      Fluido de freio
+    </option>
+
+    <option>
+      Aditivo de radiador
+    </option>
+
+    <option>
+      Palheta limpador
+    </option>
+
+    <option>
+      Lâmpada automotiva
+    </option>
+
+    <option>
+      Rolamento
+    </option>
+
+    <option>
+      Embreagem
+    </option>
+
+    <option>
+      Escapamento
+    </option>
+
+    <option>
+      Sensor automotivo
+    </option>
+  </select>
+</div>
+
+<div>
+  <Label>Quantidade</Label>
+
+  <input
+    type="number"
+    className="input"
+    value={quantidade}
+    onChange={(e) =>
+      setQuantidade(
+        e.target.value
+      )
+    }
+  />
+</div>
+
+<div>
+  <Label>Valor</Label>
+
+  <div className="input-money">
+    <span>R$</span>
+
+    <input
+      type="number"
+      className="input money-field"
+      placeholder="0,00"
+      min="0"
+      value={valor}
+      onChange={(e) =>
+        setValor(
+          e.target.value
+        )
+      }
+    />
+  </div>
+</div>
+
+<div>
+  <Label>Data</Label>
+
+  <input
+    type="date"
+    className="input"
+    value={data}
+    onChange={(e) =>
+      setData(
+        e.target.value
+      )
+    }
+  />
+</div>
 
         <div className="modal-actions">
           <Btn onClick={onClose}>
             Cancelar
           </Btn>
 
-          <Btn>
-            Salvar Entrada
-          </Btn>
+          <Btn
+  onClick={() => {
+
+    if (
+      !fornecedor ||
+      !produto ||
+      !quantidade ||
+      !valor ||
+      !data
+    ) {
+      alert(
+        "Preencha todos os campos."
+      );
+
+      return;
+    }
+
+    if (quantidade <= 0) {
+      alert(
+        "A quantidade deve ser maior que 0."
+      );
+
+      return;
+    }
+
+    if (valor <= 0) {
+      alert(
+        "O valor deve ser maior que 0."
+      );
+
+      return;
+    }
+
+    const novaEntrada = {
+      data,
+
+      av:
+        fornecedor.charAt(0) ||
+        "F",
+
+      cliente:
+        fornecedor,
+
+      servico:
+        `${produto} (${quantidade}x)`,
+
+      valor,
+    };
+
+    setDados((prev) => ({
+      ...prev,
+
+      Mensal: {
+        ...prev.Mensal,
+
+        rows: [
+          ...prev.Mensal.rows,
+
+          novaEntrada,
+        ],
+      },
+    }));
+
+    onClose();
+  }}
+>
+  Salvar Entrada
+</Btn>
         </div>
       </div>
     </div>
@@ -516,17 +1028,21 @@ function Painel({
 
       {showOS && (
         <ModalOS
-          onClose={() => setShowOS(false)}
-        />
+  setDados={setDados}
+  onClose={() =>
+    setShowOS(false)
+  }
+/>
       )}
 
       {showEntrada && (
-        <ModalEntrada
-          onClose={() =>
-            setShowEntrada(false)
-          }
-        />
-      )}
+  <ModalEntrada
+    setDados={setDados}
+    onClose={() =>
+      setShowEntrada(false)
+    }
+  />
+)}
     </main>
   );
 }
@@ -668,16 +1184,8 @@ function Receita({
                 <td>{row.data}</td>
 
                 <td>
-                  <div className="cliente-box">
-                    <div
-                      className={`cliente-avatar avatar-${row.av}`}
-                    >
-                      {row.av}
-                    </div>
-
-                    {row.cliente}
-                  </div>
-                </td>
+  {row.cliente}
+</td>
 
                 <td>{row.servico}</td>
 
