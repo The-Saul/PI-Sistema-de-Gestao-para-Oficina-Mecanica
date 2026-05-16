@@ -1,5 +1,3 @@
-import React from "react";
-
 function Box({ title, children, alert }) {
   return (
     <div className={`box ${alert ? "alert" : ""}`}>
@@ -11,59 +9,67 @@ function Box({ title, children, alert }) {
 
 const LIMITE_ESTOQUE = 5;
 
-export default function ListaEstoque({ produtos, historico }) {
-  // últimas retiradas 
+export default function ListaEstoque({
+  produtos,
+  historico
+}) {
+
   const saidasRecentes = historico.slice(0, 1);
 
-  // últimos produtos adicionados 
-  const entradasRecentes = [...produtos].slice(-1).reverse();
+  const entradasRecentes = [...produtos]
+    .slice(-1)
+    .reverse();
 
-  // produtos com estoque baixo
   const estoqueBaixo = produtos.filter(
-    (p) => Number(p.quantidade) <= LIMITE_ESTOQUE
+    (p) =>
+      Number(p.quantidade_atual) <= LIMITE_ESTOQUE
   );
 
   return (
     <section className="list">
-      
-      {/*  SAÍDA RECENTE */}
+
       <Box title="Saída recente">
+
         {saidasRecentes.length === 0 ? (
           <p>Nenhuma saída registrada</p>
         ) : (
           saidasRecentes.map((h) => (
             <p key={h.id}>
-              Qtd: {h.quantidade} {h.peca} {h.funcionario || "-"}
+              Qtd: {h.quantidade} {h.nome}
             </p>
           ))
         )}
+
       </Box>
 
-      {/* 🟢 ENTRADA RECENTE */}
       <Box title="Entrada recente">
+
         {entradasRecentes.length === 0 ? (
           <p>Nenhuma entrada registrada</p>
         ) : (
           entradasRecentes.map((p) => (
             <p key={p.id}>
-               Qtd: {p.quantidade} {p.peca} {p.fornecedor || "-"}
+              Qtd: {p.quantidade_atual} {p.nome}
             </p>
           ))
         )}
+
       </Box>
 
-      {/* ⚠️ ESTOQUE BAIXO */}
       <Box title="Estoque Baixo" alert>
+
         {estoqueBaixo.length === 0 ? (
           <p>Sem produtos críticos</p>
         ) : (
           estoqueBaixo.map((p) => (
             <p key={p.id}>
-              Qtd: {p.quantidade} {p.peca}
+              Qtd: {p.quantidade_atual} {p.nome}
             </p>
           ))
         )}
+
       </Box>
+
     </section>
   );
 }

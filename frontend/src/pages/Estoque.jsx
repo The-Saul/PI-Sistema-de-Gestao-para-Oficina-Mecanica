@@ -1,99 +1,214 @@
 import { useState, useEffect } from "react";
+
 import Sidebar from "../components/Sidebar";
+
 import HeaderEstoque from "../components/EStoque/HeaderEstoque";
 import CardEstoque from "../components/EStoque/CardEstoque";
 import ListEstoque from "../components/EStoque/ListaEstoque";
+
 import { NovoProduto } from "../components/EStoque/NovoProduto";
 import { Retirada } from "../components/EStoque/Retirada";
 import { ListProduto } from "../components/EStoque/ListProduto";
 
+// CORRIGIDO
+import api from "../services/api";
+
 function Estoque() {
+
   const [modal, setModal] = useState(null);
 
-  const [produtos, setProdutos] = useState(() => {
-    const dados = localStorage.getItem("produtos");
-    return dados ? JSON.parse(dados) : [];
-  });
-
-  const [historico, setHistorico] = useState(() => {
-    const dados = localStorage.getItem("historico");
-    return dados ? JSON.parse(dados) : [];
-  });
+  const [produtos, setProdutos] = useState([]);
+  const [historico, setHistorico] = useState([]);
 
   useEffect(() => {
-    localStorage.setItem("produtos", JSON.stringify(produtos));
-  }, [produtos]);
 
-  useEffect(() => {
-    localStorage.setItem("historico", JSON.stringify(historico));
-  }, [historico]);
+    carregarProdutos();
+    carregarHistorico();
 
-  function adicionarProduto(produto) {
-    const novo = { ...produto, id: Date.now() };
-    setProdutos((prev) => [...prev, novo]);
-  }
+  }, []);
 
-  function removerProduto(id) {
-    setProdutos((prev) => prev.filter((p) => p.id !== id));
-  }
+  // ======================================================
+  // CARREGAR PRODUTOS
+  // ======================================================
 
-  function atualizarQuantidade(id, novaQuantidade) {
-    if (novaQuantidade < 0) return;
+  async function carregarProdutos() {
 
-    setProdutos((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, quantidade: novaQuantidade } : p
-      )
-    );
-  }
+    try {
 
-  function retirarProduto(dados) {
-    let encontrou = false;
+      const response = await api.get(
+        "/estoque/listar.php"
+      );
 
-    setProdutos((prev) =>
-      prev.map((p) => {
-        if (p.codigo === dados.codigo) {
-          encontrou = true;
+      setProdutos(response.data);
 
-          const novaQtd =
-            Number(p.quantidade) - Number(dados.quantidade);
+    } catch (error) {
 
-          if (novaQtd < 0) {
-            alert("Quantidade insuficiente!");
-            return p;
-          }
-
-          return { ...p, quantidade: novaQtd };
-        }
-        return p;
-      })
-    );
-
-    if (!encontrou) {
-      alert("Produto não encontrado!");
-      return;
+      console.log(error);
     }
+  }
 
-    setHistorico((prev) => [
-      { ...dados, id: Date.now() },
-      ...prev,
-    ]);
+  // ======================================================
+  // CARREGAR HISTÓRICO
+  // ======================================================
+
+  async function carregarHistorico() {
+
+    try {
+
+      const response = await api.get(
+        "/estoque/historico.php"
+      );
+
+      setHistorico(response.data);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+  // ======================================================
+  // ADICIONAR PRODUTO
+  // ======================================================
+
+  async function adicionarProduto(produto) {
+
+    try {
+
+      await api.post(
+        "/estoque/cadastrar.php",
+        {
+          codigo: produto.codigo,
+          nome: produto.nome,
+          quantidade: produto.quantidade_atual,
+          preco_venda: produto.preco_venda,
+          preco_compra: produto.preco_compra,
+          observacao: produto.observacao,
+          fornecedor_id: produto.fornecedor_id,
+          quantidade_minima:
+            produto.quantidade_minima
+        }
+      );
+
+      carregarProdutos();
+
+      setModal(null);
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+  // ======================================================
+  // REMOVER PRODUTO
+  // ======================================================
+
+  async function removerProduto(id) {
+
+    try {
+
+      await api.delete(
+        `/estoque/deletar.php?id=${id}`
+      );
+
+      carregarProdutos();
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+  // ======================================================
+  // ATUALIZAR QUANTIDADE
+  // ======================================================
+
+  async function atualizarQuantidade(
+    id,
+    novaQuantidade
+  ) {
+
+    try {
+
+      await api.put(
+        "/estoque/atualizarQuantidade.php",
+        {
+          id,
+          quantidade_atual: novaQuantidade
+        }
+      );
+
+      carregarProdutos();
+
+    } catch (error) {
+
+      console.log(error);
+    }
+  }
+
+  // ======================================================
+  // RETIRADA DE PRODUTO
+  // ======================================================
+
+  async function retirarProduto(dados) {
+
+    try {
+
+      await api.post(
+        "/estoque/retirar.php",
+        {
+          codigo: dados.codigo,
+          quantidade: dados.quantidade,
+          observacao: dados.observacao
+        }
+      );
+
+      carregarProdutos();
+
+      carregarHistorico();
+
+      setModal(null);
+
+    } catch (error) {
+
+      alert(
+        error.response?.data?.error ||
+        "Erro ao retirar produto"
+      );
+    }
   }
 
   return (
     <>
       <div className="estoque-page">
+
         <Sidebar />
 
         <div className="app-estoque">
+
           <HeaderEstoque
-            onNovoProduto={() => setModal("novo")}
-            onRetirada={() => setModal("retirada")}
-            onListProduto={() => setModal("list")}
+            onNovoProduto={() =>
+              setModal("novo")
+            }
+            onRetirada={() =>
+              setModal("retirada")
+            }
+            onListProduto={() =>
+              setModal("list")
+            }
           />
 
-          <CardEstoque produtos={produtos} historico={historico} />
-          <ListEstoque produtos={produtos} historico={historico} />
+          <CardEstoque
+            produtos={produtos}
+            historico={historico}
+          />
+
+          <ListEstoque
+            produtos={produtos}
+            historico={historico}
+          />
+
         </div>
       </div>
 
@@ -108,7 +223,9 @@ function Estoque() {
         onClose={() => setModal(null)}
         produtos={produtos}
         onDelete={removerProduto}
-        onUpdateQuantidade={atualizarQuantidade}
+        onUpdateQuantidade={
+          atualizarQuantidade
+        }
       />
 
       <Retirada

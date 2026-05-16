@@ -1,4 +1,8 @@
-export default function HeaderEstoque({ onNovoProduto, onRetirada, onListProduto }) {
+export default function HeaderEstoque({
+  onNovoProduto,
+  onRetirada,
+  onListProduto
+}) {
   return (
     <header className="top">
       <div className="top-letras">
@@ -7,7 +11,11 @@ export default function HeaderEstoque({ onNovoProduto, onRetirada, onListProduto
       </div>
 
       <div className="actions">
-        <button className="active" onClick={onListProduto}>
+
+        <button
+          className="active"
+          onClick={onListProduto}
+        >
           Estoque
         </button>
 
@@ -18,6 +26,7 @@ export default function HeaderEstoque({ onNovoProduto, onRetirada, onListProduto
         <button onClick={onNovoProduto}>
           + Novo Produto
         </button>
+
       </div>
     </header>
   );
