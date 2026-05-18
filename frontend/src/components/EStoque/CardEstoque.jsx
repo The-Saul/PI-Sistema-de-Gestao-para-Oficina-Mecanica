@@ -8,9 +8,8 @@ function Card({ title, qtd, color }) {
 }
 
 export default function CardEstoque({ produtos, historico }) {
-
   const totalEstoque = produtos.reduce(
-    (acc, p) => acc + Number(p.quantidade_atual || 0),
+    (acc, p) => acc + Number(p.quantidade || 0),
     0
   );
 
