@@ -1,123 +1,185 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Sidebar from "../components/Sidebar";
-import HeaderEstoque from "../components/EStoque/HeaderEstoque";
-import CardEstoque from "../components/EStoque/CardEstoque";
-import ListEstoque from "../components/EStoque/ListaEstoque";
-import { NovoProduto } from "../components/EStoque/NovoProduto";
-import { Retirada } from "../components/EStoque/Retirada";
-import { ListProduto } from "../components/EStoque/ListProduto";
+import Header from "../components/Header";
+import ProdutoCard from "../components/Estoque/ProdutoCard";
+import ProdutoModal from "../components/Estoque/ProdutoModal";
+import {
+  listarProdutos,
+  criarProduto,
+  atualizarProduto,
+  deletarProduto,
+} from "../services/produtosService";
+import "../Estoque.css";
 
 function Estoque() {
-  const [modal, setModal] = useState(null);
+  const [produtos, setProdutos]                     = useState([]);
+  const [busca, setBusca]                           = useState("");
+  const [modalAberto, setModalAberto]               = useState(false);
+  const [produtoSelecionado, setProdutoSelecionado] = useState(null);
+  const [carregando, setCarregando]                 = useState(true);
+  const [erro, setErro]                             = useState("");
+  const [filtro, setFiltro]                         = useState("todos"); // todos | baixo
 
-  const [produtos, setProdutos] = useState(() => {
-    const dados = localStorage.getItem("produtos");
-    return dados ? JSON.parse(dados) : [];
-  });
-
-  const [historico, setHistorico] = useState(() => {
-    const dados = localStorage.getItem("historico");
-    return dados ? JSON.parse(dados) : [];
-  });
-
-  useEffect(() => {
-    localStorage.setItem("produtos", JSON.stringify(produtos));
-  }, [produtos]);
-
-  useEffect(() => {
-    localStorage.setItem("historico", JSON.stringify(historico));
-  }, [historico]);
-
-  function adicionarProduto(produto) {
-    const novo = { ...produto, id: Date.now() };
-    setProdutos((prev) => [...prev, novo]);
-  }
-
-  function removerProduto(id) {
-    setProdutos((prev) => prev.filter((p) => p.id !== id));
-  }
-
-  function atualizarQuantidade(id, novaQuantidade) {
-    if (novaQuantidade < 0) return;
-
-    setProdutos((prev) =>
-      prev.map((p) =>
-        p.id === id ? { ...p, quantidade: novaQuantidade } : p
-      )
-    );
-  }
-
-  function retirarProduto(dados) {
-    let encontrou = false;
-
-    setProdutos((prev) =>
-      prev.map((p) => {
-        if (p.codigo === dados.codigo) {
-          encontrou = true;
-
-          const novaQtd =
-            Number(p.quantidade) - Number(dados.quantidade);
-
-          if (novaQtd < 0) {
-            alert("Quantidade insuficiente!");
-            return p;
-          }
-
-          return { ...p, quantidade: novaQtd };
-        }
-        return p;
-      })
-    );
-
-    if (!encontrou) {
-      alert("Produto não encontrado!");
-      return;
+  // ── Carrega produtos da API ──────────────────────────────
+  const carregarProdutos = useCallback(async () => {
+    setCarregando(true);
+    setErro("");
+    try {
+      const resposta = await listarProdutos({ busca, limite: 100 });
+      setProdutos(resposta.dados);
+    } catch (e) {
+      setErro("Não foi possível carregar os produtos. Verifique a conexão com a API.");
+      console.error(e);
+    } finally {
+      setCarregando(false);
     }
+  }, [busca]);
 
-    setHistorico((prev) => [
-      { ...dados, id: Date.now() },
-      ...prev,
-    ]);
-  }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      carregarProdutos();
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [carregarProdutos]);
+
+  // ── Handlers ─────────────────────────────────────────────
+  const handleNovoProduto = () => {
+    setProdutoSelecionado(null);
+    setModalAberto(true);
+  };
+
+  const handleVisualizar = (produto) => {
+    setProdutoSelecionado(produto);
+    setModalAberto(true);
+  };
+
+  const handleExcluir = async (id) => {
+    if (!window.confirm("Deseja excluir este produto?")) return;
+    try {
+      await deletarProduto(id);
+      await carregarProdutos();
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const handleSalvar = async (form) => {
+    try {
+      if (produtoSelecionado) {
+        await atualizarProduto(produtoSelecionado.id, form);
+      } else {
+        await criarProduto(form);
+        setModalAberto(false);
+      }
+      await carregarProdutos();
+    } catch (e) {
+      alert(e.message);
+      throw e;
+    }
+  };
+
+  // ── Métricas para os cards de resumo ─────────────────────
+  const totalProdutos   = produtos.length;
+  const estoqueBaixo    = produtos.filter(
+    (p) => Number(p.quantidade_atual) <= Number(p.quantidade_minima)
+  );
+  const totalQtd = produtos.reduce(
+    (acc, p) => acc + Number(p.quantidade_atual || 0), 0
+  );
+
+  // ── Filtro local ──────────────────────────────────────────
+  const listaFiltrada = produtos.filter((p) => {
+    const termo = busca.toLowerCase();
+    const matchBusca =
+      p.nome.toLowerCase().includes(termo) ||
+      (p.codigo ?? "").toLowerCase().includes(termo);
+    const matchFiltro =
+      filtro === "todos" ||
+      (filtro === "baixo" && Number(p.quantidade_atual) <= Number(p.quantidade_minima));
+    return matchBusca && matchFiltro;
+  });
 
   return (
-    <>
-      <div className="estoque-page">
-        <Sidebar />
+    <div className="app">
+      <Sidebar />
 
-        <div className="app-estoque">
-          <HeaderEstoque
-            onNovoProduto={() => setModal("novo")}
-            onRetirada={() => setModal("retirada")}
-            onListProduto={() => setModal("list")}
-          />
+      <main className="main">
+        <Header
+          title="Estoque"
+          subtitle={`${totalProdutos} Produto${totalProdutos !== 1 ? "s" : ""} Cadastrado${totalProdutos !== 1 ? "s" : ""}`}
+          action={
+            <button className="btn-novo" onClick={handleNovoProduto}>
+              <strong>+</strong> Novo Produto
+            </button>
+          }
+        />
 
-          <CardEstoque produtos={produtos} historico={historico} />
-          <ListEstoque produtos={produtos} historico={historico} />
+        {/* Cards de resumo */}
+        <div className="estoque-resumo">
+          <div className="estoque-resumo__card estoque-resumo__card--blue">
+            <span className="estoque-resumo__valor">{totalProdutos}</span>
+            <span className="estoque-resumo__label">Produtos</span>
+          </div>
+          <div className="estoque-resumo__card estoque-resumo__card--orange">
+            <span className="estoque-resumo__valor">{totalQtd}</span>
+            <span className="estoque-resumo__label">Unidades em estoque</span>
+          </div>
+          <div
+            className="estoque-resumo__card estoque-resumo__card--red"
+            style={{ cursor: "pointer" }}
+            onClick={() => setFiltro(filtro === "baixo" ? "todos" : "baixo")}
+          >
+            <span className="estoque-resumo__valor">{estoqueBaixo.length}</span>
+            <span className="estoque-resumo__label">
+              Estoque crítico {filtro === "baixo" ? "— clique para ver todos" : "— clique para filtrar"}
+            </span>
+          </div>
         </div>
-      </div>
 
-      <NovoProduto
-        open={modal === "novo"}
-        onClose={() => setModal(null)}
-        onAdd={adicionarProduto}
-      />
+        {/* Busca */}
+        <div className="busca-wrapper">
+          <img src="./icons/lupa-svgrepo-com.svg" alt="" className="icon busca-icon" />
+          <input
+            type="text"
+            className="busca-input"
+            placeholder="Busca por nome ou código..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
 
-      <ListProduto
-        open={modal === "list"}
-        onClose={() => setModal(null)}
-        produtos={produtos}
-        onDelete={removerProduto}
-        onUpdateQuantidade={atualizarQuantidade}
-      />
+        {/* Lista */}
+        <div className="clientes-lista">
+          {carregando && (
+            <p className="lista-vazia">Carregando produtos...</p>
+          )}
 
-      <Retirada
-        open={modal === "retirada"}
-        onClose={() => setModal(null)}
-        onRetirar={retirarProduto}
-        historico={historico}
+          {!carregando && erro && (
+            <p className="lista-vazia" style={{ color: "red" }}>{erro}</p>
+          )}
+
+          {!carregando && !erro && listaFiltrada.length === 0 && (
+            <p className="lista-vazia">Nenhum produto encontrado.</p>
+          )}
+
+          {!carregando && !erro && listaFiltrada.map((p) => (
+            <ProdutoCard
+              key={p.id}
+              produto={p}
+              onVisualizar={handleVisualizar}
+              onExcluir={handleExcluir}
+            />
+          ))}
+        </div>
+      </main>
+
+      <ProdutoModal
+        aberto={modalAberto}
+        onFechar={() => setModalAberto(false)}
+        onSalvar={handleSalvar}
+        produtoSelecionado={produtoSelecionado}
       />
-    </>
+    </div>
   );
 }
 

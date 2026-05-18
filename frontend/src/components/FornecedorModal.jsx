@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { mascaraTelefone, mascaraCNPJ, validarCNPJ } from "../services/validacoes";
 
 const FORM_VAZIO = {
   nome: "",
@@ -11,6 +12,7 @@ const FORM_VAZIO = {
   rua: "",
   numero: "",
   bairro: "",
+  cidade: "",
 };
 
 const ESTADOS = [
@@ -19,29 +21,59 @@ const ESTADOS = [
   "RS","RO","RR","SC","SP","SE","TO",
 ];
 
-// modo: "novo" | "visualizar" | "editar"
-function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, modoInicial }) {
-  const [form, setForm]           = useState(FORM_VAZIO);
-  const [editando, setEditando]   = useState(false);
+function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado }) {
+  const [form, setForm]               = useState(FORM_VAZIO);
+  const [editando, setEditando]       = useState(false);
   const [buscandoCep, setBuscandoCep] = useState(false);
-  const [erroCep, setErroCep]     = useState("");
+  const [erroCep, setErroCep]         = useState("");
+  const [erroCnpj, setErroCnpj]       = useState("");
+  const [erroTelefone, setErroTelefone] = useState("");
 
   useEffect(() => {
     if (!aberto) return;
     if (fornecedorSelecionado) {
-      setForm(fornecedorSelecionado);
-      setEditando(false); // abre sempre em visualização
+      setForm({
+        ...FORM_VAZIO,
+        ...fornecedorSelecionado,
+        cnpj:     mascaraCNPJ(fornecedorSelecionado.cnpj     ?? ""),
+        telefone: mascaraTelefone(fornecedorSelecionado.telefone ?? ""),
+      });
+      setEditando(false);
     } else {
       setForm(FORM_VAZIO);
-      setEditando(true);  // novo cadastro já começa editável
+      setEditando(true);
     }
     setErroCep("");
+    setErroCnpj("");
+    setErroTelefone("");
   }, [fornecedorSelecionado, aberto]);
 
   if (!aberto) return null;
 
   const somenteLeitura = !editando;
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }));
+
+  const handleCnpj = (e) => {
+    set("cnpj", mascaraCNPJ(e.target.value));
+    if (erroCnpj) setErroCnpj("");
+  };
+
+  const handleTelefone = (e) => {
+    set("telefone", mascaraTelefone(e.target.value));
+    if (erroTelefone) setErroTelefone("");
+  };
+
+  const validarCampoCnpj = () => {
+    const digits = form.cnpj.replace(/\D/g, "");
+    if (digits === "") return;
+    if (!validarCNPJ(form.cnpj)) setErroCnpj("CNPJ inválido. Verifique os dígitos.");
+  };
+
+  const validarCampoTelefone = () => {
+    const digits = form.telefone.replace(/\D/g, "");
+    if (digits === "") return;
+    if (digits.length < 10) setErroTelefone("Telefone incompleto. Use (00) 00000-0000.");
+  };
 
   const buscarCep = async () => {
     const cepLimpo = form.cep.replace(/\D/g, "");
@@ -56,9 +88,10 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
       } else {
         setForm((f) => ({
           ...f,
-          rua: dados.logradouro || "",
-          bairro: dados.bairro || "",
-          estado: dados.uf || "",
+          rua:         dados.logradouro  || "",
+          bairro:      dados.bairro      || "",
+          cidade:      dados.localidade  || "",
+          estado:      dados.uf          || "",
           complemento: dados.complemento || "",
         }));
       }
@@ -71,6 +104,16 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
 
   const handleSalvar = async (e) => {
     e.preventDefault();
+    const digits = form.cnpj.replace(/\D/g, "");
+    if (digits !== "" && !validarCNPJ(form.cnpj)) {
+      setErroCnpj("CNPJ inválido. Verifique os dígitos.");
+      return;
+    }
+    const telDigits = form.telefone.replace(/\D/g, "");
+    if (telDigits !== "" && telDigits.length < 10) {
+      setErroTelefone("Telefone incompleto. Use (00) 00000-0000.");
+      return;
+    }
     try {
       await onSalvar(form);
       setEditando(false);
@@ -87,7 +130,6 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
     <div className="modal-overlay" onClick={onFechar}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
 
-        {/* Cabeçalho */}
         <div className="modal__header">
           <h2 className="modal__titulo">{titulo}</h2>
           <button className="modal__fechar" onClick={onFechar}>×</button>
@@ -95,7 +137,6 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
 
         <form onSubmit={handleSalvar}>
 
-          {/* Linha 1: Nome + CNPJ */}
           <div className="modal__row">
             <div className="modal__field">
               <label>Nome da empresa <span className="obrigatorio">*</span></label>
@@ -109,19 +150,20 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
               />
             </div>
             <div className="modal__field">
-              <label>CNPJ <span className="obrigatorio">*</span></label>
+              <label>CNPJ</label>
               <input
                 type="text"
                 placeholder="00.000.000/0000-00"
                 value={form.cnpj}
-                onChange={(e) => set("cnpj", e.target.value)}
+                onChange={handleCnpj}
+                onBlur={validarCampoCnpj}
                 readOnly={somenteLeitura}
-                required
+                maxLength={18}
               />
+              {erroCnpj && <span className="erro-cep">{erroCnpj}</span>}
             </div>
           </div>
 
-          {/* Linha 2: Telefone + Email */}
           <div className="modal__row">
             <div className="modal__field">
               <label>Telefone</label>
@@ -129,9 +171,12 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
                 type="text"
                 placeholder="(00) 00000-0000"
                 value={form.telefone}
-                onChange={(e) => set("telefone", e.target.value)}
+                onChange={handleTelefone}
+                onBlur={validarCampoTelefone}
                 readOnly={somenteLeitura}
+                maxLength={15}
               />
+              {erroTelefone && <span className="erro-cep">{erroTelefone}</span>}
             </div>
             <div className="modal__field">
               <label>E-mail</label>
@@ -145,29 +190,22 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
             </div>
           </div>
 
-          {/* Separador endereço */}
           <p className="modal__secao">Endereço</p>
 
-          {/* Linha 3: CEP + Estado + Complemento */}
           <div className="modal__row modal__row--3">
             <div className="modal__field">
               <label>CEP</label>
               <div className="input-cep">
                 <input
                   type="text"
-                  placeholder="000000-000"
+                  placeholder="00000-000"
                   value={form.cep}
                   maxLength={9}
                   onChange={(e) => set("cep", e.target.value)}
                   readOnly={somenteLeitura}
                 />
                 {!somenteLeitura && (
-                  <button
-                    type="button"
-                    className="btn-buscar-cep"
-                    onClick={buscarCep}
-                    disabled={buscandoCep}
-                  >
+                  <button type="button" className="btn-buscar-cep" onClick={buscarCep} disabled={buscandoCep}>
                     {buscandoCep ? "..." : "Buscar"}
                   </button>
                 )}
@@ -181,88 +219,49 @@ function FornecedorModal({ aberto, onFechar, onSalvar, fornecedorSelecionado, mo
               ) : (
                 <select value={form.estado} onChange={(e) => set("estado", e.target.value)}>
                   <option value="">UF</option>
-                  {ESTADOS.map((uf) => (
-                    <option key={uf} value={uf}>{uf}</option>
-                  ))}
+                  {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
                 </select>
               )}
             </div>
             <div className="modal__field">
               <label>Complemento</label>
-              <input
-                type="text"
-                placeholder="Apto, Sala, etc..."
-                value={form.complemento}
-                onChange={(e) => set("complemento", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Apto, Sala, etc..." value={form.complemento}
+                onChange={(e) => set("complemento", e.target.value)} readOnly={somenteLeitura} />
             </div>
           </div>
 
-          {/* Linha 4: Rua + Número + Bairro */}
           <div className="modal__row modal__row--3">
             <div className="modal__field">
               <label>Rua / Logradouro</label>
-              <input
-                type="text"
-                placeholder="Nome da rua"
-                value={form.rua}
-                onChange={(e) => set("rua", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Nome da rua" value={form.rua}
+                onChange={(e) => set("rua", e.target.value)} readOnly={somenteLeitura} />
             </div>
             <div className="modal__field">
               <label>Número</label>
-              <input
-                type="text"
-                placeholder="Ex: 123"
-                value={form.numero}
-                onChange={(e) => set("numero", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Ex: 123" value={form.numero}
+                onChange={(e) => set("numero", e.target.value)} readOnly={somenteLeitura} />
             </div>
             <div className="modal__field">
               <label>Bairro</label>
-              <input
-                type="text"
-                placeholder="Nome do Bairro"
-                value={form.bairro}
-                onChange={(e) => set("bairro", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Nome do Bairro" value={form.bairro}
+                onChange={(e) => set("bairro", e.target.value)} readOnly={somenteLeitura} />
             </div>
           </div>
 
-          {/* Rodapé */}
           <div className="modal__footer">
-            <button type="button" className="btn-cancelar" onClick={onFechar}>
-              Cancelar
-            </button>
+            <button type="button" className="btn-cancelar" onClick={onFechar}>Cancelar</button>
 
-            {/* Novo cadastro: só botão Cadastrar */}
             {!fornecedorSelecionado && (
-              <button type="submit" className="btn-salvar">
-                Cadastrar
-              </button>
+              <button type="submit" className="btn-salvar">Cadastrar</button>
             )}
-
-            {/* Visualizando: botão Editar */}
             {fornecedorSelecionado && !editando && (
-              <button
-                type="button"
-                className="btn-editar-modal"
-                onClick={() => setEditando(true)}
-              >
+              <button type="button" className="btn-editar-modal" onClick={() => setEditando(true)}>
                 <img src="./icons/pencil-svgrepo-com.svg" alt="" className="icon icon-btn-editar" />
                 Editar
               </button>
             )}
-
-            {/* Editando registro existente: botão Salvar */}
             {fornecedorSelecionado && editando && (
-              <button type="submit" className="btn-salvar">
-                Salvar alterações
-              </button>
+              <button type="submit" className="btn-salvar">Salvar alterações</button>
             )}
           </div>
 

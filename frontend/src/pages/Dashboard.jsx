@@ -5,18 +5,13 @@ import Card from "../components/Card";
 import FinanceBox from "../components/FinanceBox";
 import { listarClientes } from "../services/clientesService";
 import { listarFornecedores } from "../services/fornecedoresService";
+import { listarProdutos } from "../services/produtosService";
 
 function Dashboard() {
-  // ── Estoque: mantém o localStorage do colega ─────────────
-  const produtos     = JSON.parse(localStorage.getItem("produtos")) || [];
-  const totalEstoque = produtos.reduce(
-    (acc, p) => acc + Number(p.quantidade || 0),
-    0
-  );
-
   // ── Estado dos cards ──────────────────────────────────────
   const [totalClientes,     setTotalClientes]     = useState("...");
   const [totalFornecedores, setTotalFornecedores] = useState("...");
+  const [totalEstoque,           setTotalEstoque] = useState("...");
 
   // ── Busca os totais da API ────────────────────────────────
   useEffect(() => {
@@ -27,6 +22,10 @@ function Dashboard() {
     listarFornecedores({ limite: 1 })
       .then((res) => setTotalFornecedores(res.total))
       .catch(() => setTotalFornecedores("—"));
+
+    listarProdutos({ limite: 1 })
+      .then((res) => setTotalEstoque(res.total))
+      .catch(() => setTotalEstoque("—"));
   }, []);
 
   return (

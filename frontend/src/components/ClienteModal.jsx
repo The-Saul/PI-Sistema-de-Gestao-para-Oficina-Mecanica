@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { mascaraTelefone, mascaraCPF, validarCPF } from "../services/validacoes";
 
 const FORM_VAZIO = {
   nome: "",
@@ -11,6 +12,7 @@ const FORM_VAZIO = {
   rua: "",
   numero: "",
   bairro: "",
+  cidade: "",
   placaCarro: "",
   marcaCarro: "",
   modeloCarro: "",
@@ -27,23 +29,57 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
   const [editando, setEditando]       = useState(false);
   const [buscandoCep, setBuscandoCep] = useState(false);
   const [erroCep, setErroCep]         = useState("");
+  const [erroCpf, setErroCpf]         = useState("");
+  const [erroTelefone, setErroTelefone] = useState("");
 
   useEffect(() => {
     if (!aberto) return;
     if (clienteSelecionado) {
-      setForm(clienteSelecionado);
-      setEditando(false); // abre sempre em visualização
+      setForm({
+        ...FORM_VAZIO,
+        ...clienteSelecionado,
+        placaCarro:  clienteSelecionado.placaCarro  ?? clienteSelecionado.veiculo_placa  ?? "",
+        marcaCarro:  clienteSelecionado.marcaCarro  ?? clienteSelecionado.veiculo_marca  ?? "",
+        modeloCarro: clienteSelecionado.modeloCarro ?? clienteSelecionado.veiculo_modelo ?? "",
+        cpf:      mascaraCPF(clienteSelecionado.cpf      ?? ""),
+        telefone: mascaraTelefone(clienteSelecionado.telefone ?? ""),
+      });
+      setEditando(false);
     } else {
       setForm(FORM_VAZIO);
-      setEditando(true);  // novo cadastro já começa editável
+      setEditando(true);
     }
     setErroCep("");
+    setErroCpf("");
+    setErroTelefone("");
   }, [clienteSelecionado, aberto]);
 
   if (!aberto) return null;
 
   const somenteLeitura = !editando;
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }));
+
+  const handleCpf = (e) => {
+    set("cpf", mascaraCPF(e.target.value));
+    if (erroCpf) setErroCpf("");
+  };
+
+  const handleTelefone = (e) => {
+    set("telefone", mascaraTelefone(e.target.value));
+    if (erroTelefone) setErroTelefone("");
+  };
+
+  const validarCampoCpf = () => {
+    const digits = form.cpf.replace(/\D/g, "");
+    if (digits === "") return;
+    if (!validarCPF(form.cpf)) setErroCpf("CPF inválido. Verifique os dígitos.");
+  };
+
+  const validarCampoTelefone = () => {
+    const digits = form.telefone.replace(/\D/g, "");
+    if (digits === "") return;
+    if (digits.length < 10) setErroTelefone("Telefone incompleto. Use (00) 00000-0000.");
+  };
 
   const buscarCep = async () => {
     const cepLimpo = form.cep.replace(/\D/g, "");
@@ -58,9 +94,10 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
       } else {
         setForm((f) => ({
           ...f,
-          rua: dados.logradouro || "",
-          bairro: dados.bairro || "",
-          estado: dados.uf || "",
+          rua:         dados.logradouro  || "",
+          bairro:      dados.bairro      || "",
+          cidade:      dados.localidade  || "",
+          estado:      dados.uf          || "",
           complemento: dados.complemento || "",
         }));
       }
@@ -72,15 +109,24 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
   };
 
   const handleSalvar = async (e) => {
-  e.preventDefault();
-  try {
-    await onSalvar(form);
-    setEditando(false); // só trava se salvou com sucesso
-  } catch {
-    // se deu erro, mantém o form editável — o alert já foi
-    // disparado pelo Clientes.jsx
-  }
-};
+    e.preventDefault();
+    const digits = form.cpf.replace(/\D/g, "");
+    if (digits !== "" && !validarCPF(form.cpf)) {
+      setErroCpf("CPF inválido. Verifique os dígitos.");
+      return;
+    }
+    const telDigits = form.telefone.replace(/\D/g, "");
+    if (telDigits !== "" && telDigits.length < 10) {
+      setErroTelefone("Telefone incompleto. Use (00) 00000-0000.");
+      return;
+    }
+    try {
+      await onSalvar(form);
+      setEditando(false);
+    } catch {
+      // mantém editável se der erro
+    }
+  };
 
   const titulo = clienteSelecionado
     ? (editando ? "Editar Cliente" : "Detalhes do Cliente")
@@ -90,7 +136,6 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
     <div className="modal-overlay" onClick={onFechar}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
 
-        {/* Cabeçalho */}
         <div className="modal__header">
           <h2 className="modal__titulo">{titulo}</h2>
           <button className="modal__fechar" onClick={onFechar}>×</button>
@@ -98,7 +143,6 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
 
         <form onSubmit={handleSalvar}>
 
-          {/* Linha 1: Nome + CPF */}
           <div className="modal__row">
             <div className="modal__field">
               <label>Nome do Cliente <span className="obrigatorio">*</span></label>
@@ -112,19 +156,20 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
               />
             </div>
             <div className="modal__field">
-              <label>CPF <span className="obrigatorio">*</span></label>
+              <label>CPF</label>
               <input
                 type="text"
                 placeholder="000.000.000-00"
                 value={form.cpf}
-                onChange={(e) => set("cpf", e.target.value)}
+                onChange={handleCpf}
+                onBlur={validarCampoCpf}
                 readOnly={somenteLeitura}
-                required
+                maxLength={14}
               />
+              {erroCpf && <span className="erro-cep">{erroCpf}</span>}
             </div>
           </div>
 
-          {/* Linha 2: Telefone + Email */}
           <div className="modal__row">
             <div className="modal__field">
               <label>Telefone</label>
@@ -132,9 +177,12 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
                 type="text"
                 placeholder="(00) 00000-0000"
                 value={form.telefone}
-                onChange={(e) => set("telefone", e.target.value)}
+                onChange={handleTelefone}
+                onBlur={validarCampoTelefone}
                 readOnly={somenteLeitura}
+                maxLength={15}
               />
+              {erroTelefone && <span className="erro-cep">{erroTelefone}</span>}
             </div>
             <div className="modal__field">
               <label>E-mail</label>
@@ -148,29 +196,22 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
             </div>
           </div>
 
-          {/* Separador endereço */}
           <p className="modal__secao">Endereço</p>
 
-          {/* Linha 3: CEP + Estado + Complemento */}
           <div className="modal__row modal__row--3">
             <div className="modal__field">
               <label>CEP</label>
               <div className="input-cep">
                 <input
                   type="text"
-                  placeholder="000000-000"
+                  placeholder="00000-000"
                   value={form.cep}
                   maxLength={9}
                   onChange={(e) => set("cep", e.target.value)}
                   readOnly={somenteLeitura}
                 />
                 {!somenteLeitura && (
-                  <button
-                    type="button"
-                    className="btn-buscar-cep"
-                    onClick={buscarCep}
-                    disabled={buscandoCep}
-                  >
+                  <button type="button" className="btn-buscar-cep" onClick={buscarCep} disabled={buscandoCep}>
                     {buscandoCep ? "..." : "Buscar"}
                   </button>
                 )}
@@ -184,9 +225,7 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
               ) : (
                 <select value={form.estado} onChange={(e) => set("estado", e.target.value)}>
                   <option value="">UF</option>
-                  {ESTADOS.map((uf) => (
-                    <option key={uf} value={uf}>{uf}</option>
-                  ))}
+                  {ESTADOS.map((uf) => <option key={uf} value={uf}>{uf}</option>)}
                 </select>
               )}
             </div>
@@ -202,110 +241,58 @@ function ClienteModal({ aberto, onFechar, onSalvar, clienteSelecionado }) {
             </div>
           </div>
 
-          {/* Linha 4: Rua + Número + Bairro */}
           <div className="modal__row modal__row--3">
             <div className="modal__field">
               <label>Rua / Logradouro</label>
-              <input
-                type="text"
-                placeholder="Nome da rua"
-                value={form.rua}
-                onChange={(e) => set("rua", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Nome da rua" value={form.rua}
+                onChange={(e) => set("rua", e.target.value)} readOnly={somenteLeitura} />
             </div>
             <div className="modal__field">
               <label>Número</label>
-              <input
-                type="text"
-                placeholder="Ex: 123"
-                value={form.numero}
-                onChange={(e) => set("numero", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Ex: 123" value={form.numero}
+                onChange={(e) => set("numero", e.target.value)} readOnly={somenteLeitura} />
             </div>
             <div className="modal__field">
               <label>Bairro</label>
-              <input
-                type="text"
-                placeholder="Nome do Bairro"
-                value={form.bairro}
-                onChange={(e) => set("bairro", e.target.value)}
-                readOnly={somenteLeitura}
-              />
+              <input type="text" placeholder="Nome do Bairro" value={form.bairro}
+                onChange={(e) => set("bairro", e.target.value)} readOnly={somenteLeitura} />
             </div>
           </div>
 
-          {/* Separador carro */}
           <p className="modal__secao">Carro do Cliente</p>
 
-          {/* Linha 5: Placa + Marca + Modelo */}
           <div className="modal__row modal__row--3">
             <div className="modal__field">
-              <label>Placa do Carro <span className="obrigatorio">*</span></label>
-              <input
-                type="text"
-                placeholder="Ex: RIO2A18"
-                value={form.placaCarro}
-                onChange={(e) => set("placaCarro", e.target.value.toUpperCase())}
-                readOnly={somenteLeitura}
-                required
-              />
+              <label>Placa do Carro</label>
+              <input type="text" placeholder="Ex: RIO2A18" value={form.placaCarro}
+                onChange={(e) => set("placaCarro", e.target.value.toUpperCase())} readOnly={somenteLeitura} />
             </div>
             <div className="modal__field">
-              <label>Marca do Carro <span className="obrigatorio">*</span></label>
-              <input
-                type="text"
-                placeholder="Ex: Toyota"
-                value={form.marcaCarro}
-                onChange={(e) => set("marcaCarro", e.target.value)}
-                readOnly={somenteLeitura}
-                required
-              />
+              <label>Marca do Carro</label>
+              <input type="text" placeholder="Ex: Toyota" value={form.marcaCarro}
+                onChange={(e) => set("marcaCarro", e.target.value)} readOnly={somenteLeitura} />
             </div>
             <div className="modal__field">
-              <label>Modelo do Carro <span className="obrigatorio">*</span></label>
-              <input
-                type="text"
-                placeholder="Ex: Corolla"
-                value={form.modeloCarro}
-                onChange={(e) => set("modeloCarro", e.target.value)}
-                readOnly={somenteLeitura}
-                required
-              />
+              <label>Modelo do Carro</label>
+              <input type="text" placeholder="Ex: Corolla" value={form.modeloCarro}
+                onChange={(e) => set("modeloCarro", e.target.value)} readOnly={somenteLeitura} />
             </div>
           </div>
 
-          {/* Rodapé */}
           <div className="modal__footer">
-            <button type="button" className="btn-cancelar" onClick={onFechar}>
-              Cancelar
-            </button>
+            <button type="button" className="btn-cancelar" onClick={onFechar}>Cancelar</button>
 
-            {/* Novo cadastro */}
             {!clienteSelecionado && (
-              <button type="submit" className="btn-salvar">
-                Cadastrar
-              </button>
+              <button type="submit" className="btn-salvar">Cadastrar</button>
             )}
-
-            {/* Visualizando: botão Editar */}
             {clienteSelecionado && !editando && (
-              <button
-                type="button"
-                className="btn-editar-modal"
-                onClick={() => setEditando(true)}
-              >
+              <button type="button" className="btn-editar-modal" onClick={() => setEditando(true)}>
                 <img src="./icons/pencil-svgrepo-com.svg" alt="" className="icon icon-btn-editar" />
                 Editar
               </button>
             )}
-
-            {/* Editando registro existente: botão Salvar */}
             {clienteSelecionado && editando && (
-              <button type="submit" className="btn-salvar">
-                Salvar alterações
-              </button>
+              <button type="submit" className="btn-salvar">Salvar alterações</button>
             )}
           </div>
 
