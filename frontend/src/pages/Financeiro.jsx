@@ -6,25 +6,35 @@ import Header from "../components/Header";
 import "../Financeiro.css";
 
 const DADOS = {
+
   Mensal: {
     dateRange: "01/10/2023 – 31/10/2023",
+
     total: "R$ 29.500",
 
     rows: [],
+
+    ordensServico: [],
   },
 
   Trimestral: {
     dateRange: "01/08/2023 – 31/10/2023",
+
     total: "R$ 84.200",
 
     rows: [],
+
+    ordensServico: [],
   },
 
   Anual: {
     dateRange: "01/01/2023 – 31/12/2023",
+
     total: "R$ 312.750",
 
     rows: [],
+
+    ordensServico: [],
   },
 };
 
@@ -632,18 +642,35 @@ function ModalOS({
     };
 
     setDados((prev) => ({
-      ...prev,
+  ...prev,
 
-      Mensal: {
-        ...prev.Mensal,
+  Mensal: {
+    ...prev.Mensal,
 
-        rows: [
-          ...prev.Mensal.rows,
+    ordensServico: [
+      ...prev.Mensal.ordensServico,
+      novaOS,
+    ],
+  },
 
-          novaOS,
-        ],
-      },
-    }));
+  Trimestral: {
+    ...prev.Trimestral,
+
+    ordensServico: [
+      ...prev.Trimestral.ordensServico,
+      novaOS,
+    ],
+  },
+
+  Anual: {
+    ...prev.Anual,
+
+    ordensServico: [
+      ...prev.Anual.ordensServico,
+      novaOS,
+    ],
+  },
+}));
 
     onClose();
   }}
@@ -936,6 +963,24 @@ function Painel({
   dados,
   setDados,
 }) {
+
+  const vendasTotal =
+  dados.Mensal.rows.reduce(
+    (acc, item) =>
+      acc + Number(item.valor || 0),
+    0
+  );
+
+const entradasTotal =
+  dados.Mensal.entradas?.reduce(
+    (acc, item) =>
+      acc + Number(item.valor || 0),
+    0
+  ) || 0;
+
+const saldoTotal =
+  vendasTotal - entradasTotal;
+
   const [showVenda, setShowVenda] =
     useState(false);
 
@@ -996,26 +1041,153 @@ function Painel({
         ))}
       </div>
 
-      <div className="grafico-box">
-        <div className="grafico-header">
-          <h2>Resumo do Mês</h2>
+      <div className="painel-grid">
+
+  <div className="grafico-box modern-chart">
+
+    <div className="grafico-header">
+      <h2>Resumo Financeiro</h2>
+      <p>Movimentação do mês</p>
+    </div>
+
+    <div className="modern-bars">
+
+      <div className="bar-card entradas">
+        <div className="bar-top">
+          <span>Entradas</span>
+          <strong>
+      R$ {entradasTotal}
+          </strong>
         </div>
 
-        <div className="grafico-bars">
-          {BARS.map((b) => (
-            <div
-              key={b.label}
-              className="bar-item"
-            >
-              <div
-                className={`bar ${b.pctClass}`}
-              />
-
-              <span>{b.label}</span>
-            </div>
-          ))}
+        <div className="bar-bg">
+          <div
+  className="bar-fill fill-entrada"
+  style={{
+    width: `${Math.min(
+      entradasTotal / 100,
+      100
+    )}%`,
+  }}
+></div>
         </div>
       </div>
+
+      <div className="bar-card vendas">
+        <div className="bar-top">
+          <span>Vendas</span>
+          <strong>
+      R$ {vendasTotal}
+          </strong>
+        </div>
+
+        <div className="bar-bg">
+          <div
+  className="bar-fill fill-venda"
+  style={{
+    width: `${Math.min(
+      vendasTotal / 100,
+      100
+    )}%`,
+  }}
+></div>
+        </div>
+      </div>
+
+      <div className="bar-card lucro">
+        <div className="bar-top">
+          <span>Lucro</span>
+          <strong>
+        R$ {saldoTotal}
+          </strong>
+        </div>
+
+        <div className="bar-bg">
+          <div
+  className="bar-fill fill-lucro"
+  style={{
+    width: `${Math.min(
+      saldoTotal / 100,
+      100
+    )}%`,
+  }}
+></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div className="os-box">
+
+    <div className="grafico-header">
+      <h2>Ordens de Serviço</h2>
+      <p>Últimos serviços cadastrados</p>
+    </div>
+
+    <div className="table-mini">
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Cliente</th>
+        <th>Serviço</th>
+        <th>Valor</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      {dados.Mensal.ordensServico?.length >
+      0 ? (
+
+        dados.Mensal.ordensServico.map(
+          (os, i) => (
+            <tr key={i}>
+
+              <td>{os.data}</td>
+
+              <td>
+                {os.cliente}
+              </td>
+
+              <td>
+                {os.servico}
+              </td>
+
+              <td>
+                <span className="valor-pill">
+            R$ {Number(os.valor).toLocaleString("pt-BR")}
+                </span>
+              </td>
+
+            </tr>
+          )
+        )
+
+      ) : (
+
+        <tr>
+          <td
+            colSpan="4"
+            className="sem-dados"
+          >
+            Nenhuma ordem de serviço cadastrada.
+          </td>
+        </tr>
+
+      )}
+
+    </tbody>
+
+  </table>
+
+</div>
+  </div>
+
+</div>
 
       {showVenda && (
         <ModalVenda
@@ -1191,8 +1363,8 @@ function Receita({
 
                 <td>
                   <span className="valor-pill">
-                    R$ {row.valor}
-                  </span>
+  R$ {Number(row.valor).toLocaleString("pt-BR")}
+</span>
                 </td>
               </tr>
             ))}
