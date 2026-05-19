@@ -44,22 +44,7 @@ const DADOS = {
 },
 };
 
-const BARS = [
-  {
-    label: "Entradas",
-    pctClass: "bar-1",
-  },
 
-  {
-    label: "Vendas",
-    pctClass: "bar-2",
-  },
-
-  {
-    label: "Lucro",
-    pctClass: "bar-3",
-  },
-];
 
 const CARDS = [
   {
@@ -1379,38 +1364,95 @@ const totalReceitas =
         </div>
       </div>
 
-      <div className="table-box">
-        <table>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Cliente</th>
-              <th>Serviço</th>
-              <th>Valor</th>
-            </tr>
-          </thead>
+      <div className="receita-grid">
 
-          <tbody>
-            {d.rows.map((row, i) => (
-              <tr key={i}>
-                <td>{row.data}</td>
+  {/* TABELA DE VENDAS */}
+  <div className="table-box">
 
-                <td>
-  {row.cliente}
-</td>
+    <h3 className="table-title">
+      Vendas
+    </h3>
 
-                <td>{row.servico}</td>
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Cliente</th>
+          <th>Serviço</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
 
-                <td>
-                  <span className="valor-pill">
-  R$ {Number(row.valor).toLocaleString("pt-BR")}
-</span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <tbody>
+        {d.rows.map((row, i) => (
+          <tr key={i}>
+            <td>{row.data}</td>
+
+            <td>
+              {row.cliente}
+            </td>
+
+            <td>{row.servico}</td>
+
+            <td>
+              <span className="valor-pill">
+                R$ {Number(row.valor).toLocaleString("pt-BR")}
+              </span>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+
+  </div>
+
+  {/* TABELA DE ENTRADAS */}
+  <div className="table-box">
+
+    <h3 className="table-title">
+      Entradas / Gastos
+    </h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Fornecedor</th>
+          <th>Produto</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        {d.entradas?.map((row, i) => (
+          <tr key={i}>
+
+            <td>{row.data}</td>
+
+            <td>
+              {row.cliente}
+            </td>
+
+            <td>
+              {row.servico}
+            </td>
+
+            <td>
+              <span className="valor-pill">
+                R$ {Number(row.valor).toLocaleString("pt-BR")}
+              </span>
+            </td>
+
+          </tr>
+        ))}
+
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
 
     {showExport && (
   <ModalExport
