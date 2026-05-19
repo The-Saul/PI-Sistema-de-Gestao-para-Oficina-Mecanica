@@ -54,20 +54,21 @@ body{
   margin-bottom:28px;
 }
 
-.btn{
-  border:none;
-  background:#4f7cff;
-  color:#fff;
-  padding:12px 18px;
-  border-radius:14px;
-  font-size:14px;
-  font-weight:600;
-  cursor:pointer;
-  transition:.2s;
+.btn {
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  margin-left: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
+  color: #ffffff;
+  font-weight: 500;
+  transition: 0.2s;
 }
 
-.btn:hover{
-  opacity:.9;
+.btn:hover {
+  background: linear-gradient(90deg, #1a5edb, #2d7df6);
 }
 
 .cards-grid{
@@ -436,3 +437,107 @@ body{
 .observacoes-box{
   margin-top:10px;
 }
+
+.painel-grid{
+  display:grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap:20px;
+  margin-top:20px;
+  align-items:start;
+}
+
+.modern-chart{
+  padding:20px;
+}
+
+.modern-bars{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  margin-top:20px;
+}
+
+.bar-card{
+  background:#f8f8f8;
+  border-radius:16px;
+  padding:14px;
+}
+
+.bar-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.bar-bg{
+  width:100%;
+  height:12px;
+  background:#ddd;
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.bar-fill{
+  height:100%;
+  border-radius:20px;
+}
+
+.fill-entrada{
+  width:85%;
+  background:#ff4d4d;
+}
+
+.fill-venda{
+  width:65%;
+  background:#22c55e;
+}
+
+.fill-lucro{
+  width:45%;
+  background:#f59e0b;
+}
+
+.os-box{
+  background:#fff;
+  border-radius:24px;
+  padding:20px;
+}
+
+.table-mini{
+  margin-top:15px;
+  overflow-x:auto;
+}
+
+.table-mini table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.table-mini th{
+  text-align:left;
+  padding:12px;
+  font-size:14px;
+  border-bottom:1px solid #e5e7eb;
+}
+
+.table-mini td{
+  padding:12px;
+  font-size:13px;
+  border-bottom:1px solid #f1f1f1;
+}
+
+.sem-dados{
+  text-align:center;
+  padding:30px;
+  color:#888;
+}
+
+.valor-pill{
+  background:#f3f4f6;
+  padding:6px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+}
+
