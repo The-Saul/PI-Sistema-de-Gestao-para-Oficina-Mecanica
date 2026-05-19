@@ -328,12 +328,10 @@ body{
 }
 
 .table-box{
-  background:#fff;
-
-  border-radius:16px;
-  border:1px solid #eaeef5;
-
-  overflow:hidden;
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
 }
 
 .table-box table{
@@ -353,6 +351,13 @@ body{
   padding:14px 16px;
 
   border-top:1px solid #eaeef5;
+}
+
+.table-title{
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 18px;
 }
 
 .cliente-box {
@@ -541,3 +546,12 @@ body{
   font-weight:600;
 }
 
+.receita-grid{
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.receita-grid .table-box{
+  flex: 1;
+}
