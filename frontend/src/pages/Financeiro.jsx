@@ -980,36 +980,31 @@ const saldoTotal =
   return (
     <main className="main">
       <Header
-        title="Financeiro"
-        subtitle="Controle financeiro da oficina"
-      />
+  title="Financeiro"
+  subtitle="Controle financeiro da oficina"
 
-      <div className="tab">
-        <span>$</span>
-        <p>Visão Geral</p>
-      </div>
+  action={
+    <div className="header-actions">
 
-      <div className="top-actions">
-  <Btn onClick={onVerReceita}>
-    Ver Receita
-  </Btn>
+      <Btn onClick={onVerReceita}>
+        Ver Receita
+      </Btn>
 
-  <Btn onClick={() => setShowOS(true)}>
-    Ordem de Serviço
-  </Btn>
+      <Btn onClick={() => setShowOS(true)}>
+        Ordem de Serviço
+      </Btn>
 
-  <Btn
-    onClick={() => setShowVenda(true)}
-  >
-    Nova Venda
-  </Btn>
+      <Btn onClick={() => setShowVenda(true)}>
+        Nova Venda
+      </Btn>
 
-  <Btn
-    onClick={() => setShowEntrada(true)}
-  >
-    Nova Entrada
-  </Btn>
-</div>
+      <Btn onClick={() => setShowEntrada(true)}>
+        Nova Entrada
+      </Btn>
+
+    </div>
+  }
+/>
 
       <div className="cards-grid">
 
