@@ -8,34 +8,40 @@ import "../Financeiro.css";
 const DADOS = {
 
   Mensal: {
-    dateRange: "01/10/2023 – 31/10/2023",
+  dateRange: "01/10/2023 – 31/10/2023",
 
-    total: "R$ 29.500",
+  total: 0,
 
-    rows: [],
+  rows: [],
 
-    ordensServico: [],
-  },
+  entradas: [],
+
+  ordensServico: [],
+},
 
   Trimestral: {
-    dateRange: "01/08/2023 – 31/10/2023",
+    dateRange: "01/10/2023 – 31/10/2023",
 
-    total: "R$ 84.200",
+  total: 0,
 
-    rows: [],
+  rows: [],
 
-    ordensServico: [],
-  },
+  entradas: [],
+
+  ordensServico: [],
+},
 
   Anual: {
-    dateRange: "01/01/2023 – 31/12/2023",
+    dateRange: "01/10/2023 – 31/10/2023",
 
-    total: "R$ 312.750",
+  total: 0,
 
-    rows: [],
+  rows: [],
 
-    ordensServico: [],
-  },
+  entradas: [],
+
+  ordensServico: [],
+},
 };
 
 const BARS = [
@@ -934,18 +940,35 @@ const [data, setData] =
     };
 
     setDados((prev) => ({
-      ...prev,
+  ...prev,
 
-      Mensal: {
-        ...prev.Mensal,
+  Mensal: {
+    ...prev.Mensal,
 
-        rows: [
-          ...prev.Mensal.rows,
+    entradas: [
+      ...prev.Mensal.entradas,
+      novaEntrada,
+    ],
+  },
 
-          novaEntrada,
-        ],
-      },
-    }));
+  Trimestral: {
+    ...prev.Trimestral,
+
+    entradas: [
+      ...prev.Trimestral.entradas,
+      novaEntrada,
+    ],
+  },
+
+  Anual: {
+    ...prev.Anual,
+
+    entradas: [
+      ...prev.Anual.entradas,
+      novaEntrada,
+    ],
+  },
+}));
 
     onClose();
   }}
@@ -1160,7 +1183,7 @@ const saldoTotal =
               <td>
                 <span className="valor-pill">
             R$ {Number(os.valor).toLocaleString("pt-BR")}
-                </span>
+          </span>
               </td>
 
             </tr>
@@ -1277,6 +1300,23 @@ function Receita({
 
   const d = dados[filtro];
 
+  const totalVendas =
+  d.rows.reduce(
+    (acc, item) =>
+      acc + Number(item.valor || 0),
+    0
+  );
+
+const totalEntradas =
+  d.entradas?.reduce(
+    (acc, item) =>
+      acc + Number(item.valor || 0),
+    0
+  ) || 0;
+
+const totalReceitas =
+  totalVendas - totalEntradas;
+
   return (
     <main className="main">
       <Header
@@ -1310,7 +1350,7 @@ function Receita({
           </div>
 
           <div className="receita-value">
-            {d.total}
+            R$ {totalReceitas.toLocaleString("pt-BR")}
           </div>
         </div>
 
