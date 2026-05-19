@@ -46,28 +46,7 @@ const DADOS = {
 
 
 
-const CARDS = [
-  {
-    label: "Entradas (Gastos)",
-    value: "R$ 20,00",
-    icon: "↘",
-    className: "card-red",
-  },
 
-  {
-    label: "Vendas (Saída)",
-    value: "R$ 20,00",
-    icon: "↗",
-    className: "card-green",
-  },
-
-  {
-    label: "Saldo Atual",
-    value: "R$ -20,00",
-    icon: "$",
-    className: "card-orange",
-  },
-];
 
 function Btn({ children, onClick }) {
   return (
@@ -1033,21 +1012,44 @@ const saldoTotal =
 </div>
 
       <div className="cards-grid">
-        {CARDS.map((c) => (
-          <div
-            key={c.label}
-            className={`card-financeiro ${c.className}`}
-          >
-            <div className="card-icon-financeiro">
-              {c.icon}
-            </div>
 
-            <h3>{c.value}</h3>
+  <div className="card-financeiro card-red">
+    <div className="card-icon-financeiro">
+      ↘
+    </div>
 
-            <p>{c.label}</p>
-          </div>
-        ))}
-      </div>
+    <h3>
+      R$ {entradasTotal.toLocaleString("pt-BR")}
+    </h3>
+
+    <p>Entradas (Gastos)</p>
+  </div>
+
+  <div className="card-financeiro card-green">
+    <div className="card-icon-financeiro">
+      ↗
+    </div>
+
+    <h3>
+      R$ {vendasTotal.toLocaleString("pt-BR")}
+    </h3>
+
+    <p>Vendas</p>
+  </div>
+
+  <div className="card-financeiro card-orange">
+    <div className="card-icon-financeiro">
+      $
+    </div>
+
+    <h3>
+      R$ {saldoTotal.toLocaleString("pt-BR")}
+    </h3>
+
+    <p>Saldo Atual</p>
+  </div>
+
+</div>
 
       <div className="painel-grid">
 
