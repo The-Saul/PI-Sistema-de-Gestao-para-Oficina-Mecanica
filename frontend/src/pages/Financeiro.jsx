@@ -10,7 +10,7 @@ const DADOS = {
   Mensal: {
   dateRange: "01/10/2023 – 31/10/2023",
 
-  total: 0,
+ 
 
   rows: [],
 
@@ -22,7 +22,7 @@ const DADOS = {
   Trimestral: {
     dateRange: "01/10/2023 – 31/10/2023",
 
-  total: 0,
+  
 
   rows: [],
 
@@ -34,7 +34,7 @@ const DADOS = {
   Anual: {
     dateRange: "01/10/2023 – 31/10/2023",
 
-  total: 0,
+  
 
   rows: [],
 
