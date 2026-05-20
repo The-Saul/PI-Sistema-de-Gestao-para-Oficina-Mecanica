@@ -1302,29 +1302,29 @@ const totalReceitas =
   return (
     <main className="main">
       <Header
-        title="Receitas"
-        subtitle="Detalhamento financeiro da oficina"
-      />
+  title="Receitas"
+  subtitle="Detalhamento financeiro da oficina"
 
-      <div className="tab">
-        <span>$</span>
-        <p>Receitas</p>
-      </div>
+  action={
+    <div className="header-actions">
 
-      <div className="top-actions">
-        <Btn
-  onClick={() =>
-    setShowExport(true)
+      <Btn
+        onClick={() =>
+          setShowExport(true)
+        }
+      >
+        Exportar
+      </Btn>
+
+      <Btn onClick={onVoltar}>
+        Voltar
+      </Btn>
+
+    </div>
   }
->
-  Exportar
-</Btn>
+/>
 
-        <Btn onClick={onVoltar}>
-          Voltar
-        </Btn>
-      </div>
-
+        
       <div className="receita-top">
         <div className="receita-total">
           <div className="mini-title">
