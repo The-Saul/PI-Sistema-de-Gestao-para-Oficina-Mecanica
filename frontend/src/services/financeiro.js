@@ -13,32 +13,7 @@ const BASE_URL =
 const TIPOS_VALIDOS = ['entrada', 'saida'];
 
 // ============================================================
-// VALIDAÇÃO DE MOVIMENTAÇÃO
-// ============================================================
-
-function validarMovimentacao(dados) {
-
-  if (!dados.tipo || !TIPOS_VALIDOS.includes(dados.tipo)) {
-    throw new Error(
-      'Tipo de movimentação inválido.'
-    );
-  }
-
-  if (!dados.descricao || dados.descricao.trim() === '') {
-    throw new Error(
-      'Descrição obrigatória.'
-    );
-  }
-
-  if (!dados.valor || Number(dados.valor) <= 0) {
-    throw new Error(
-      'Valor inválido.'
-    );
-  }
-}
-
-// ============================================================
-// FORMATAR MOEDA BRL
+// FORMATAR MOEDA
 // ============================================================
 
 export function formatarMoeda(valor) {
@@ -49,19 +24,56 @@ export function formatarMoeda(valor) {
 }
 
 // ============================================================
-// LISTAR MOVIMENTAÇÕES
-// Pode filtrar por:
-// - tipo
+// VALIDAR DADOS DA MOVIMENTAÇÃO
 // ============================================================
+
+function validarMovimentacao(dados) {
+
+  if (!dados.tipo || !TIPOS_VALIDOS.includes(dados.tipo)) {
+    throw new Error('Tipo de movimentação inválido.');
+  }
+
+  if (!dados.descricao || dados.descricao.trim() === '') {
+    throw new Error('Descrição obrigatória.');
+  }
+
+  if (
+    dados.valor === undefined ||
+    dados.valor === null ||
+    Number(dados.valor) <= 0
+  ) {
+    throw new Error('Valor inválido.');
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Listar movimentações financeiras
+// Params:
+// {
+//   tipo,
+//   pagina,
+//   limite
+// }
+// ─────────────────────────────────────────────────────────────
 
 export async function listarMovimentacoes({
   tipo = '',
+  pagina = 1,
+  limite = 20,
 } = {}) {
 
   const params = new URLSearchParams();
 
   if (tipo) {
     params.append('tipo', tipo);
+  }
+
+  if (pagina) {
+    params.append('pagina', pagina);
+  }
+
+  if (limite) {
+    params.append('limite', limite);
   }
 
   const res = await fetch(
@@ -78,11 +90,20 @@ export async function listarMovimentacoes({
   }
 
   return res.json();
+
+  // Retorna:
+  // {
+  //   dados: [],
+  //   total,
+  //   pagina,
+  //   limite,
+  //   total_paginas
+  // }
 }
 
-// ============================================================
-// BUSCAR MOVIMENTAÇÃO POR ID
-// ============================================================
+// ─────────────────────────────────────────────────────────────
+// Buscar movimentação por ID
+// ─────────────────────────────────────────────────────────────
 
 export async function buscarMovimentacao(id) {
 
@@ -102,9 +123,10 @@ export async function buscarMovimentacao(id) {
   return res.json();
 }
 
-// ============================================================
-// CRIAR MOVIMENTAÇÃO
-// ============================================================
+// ─────────────────────────────────────────────────────────────
+// Criar nova movimentação financeira
+// Params: objeto com os campos da movimentação
+// ─────────────────────────────────────────────────────────────
 
 export async function criarMovimentacao(dados) {
 
@@ -128,16 +150,25 @@ export async function criarMovimentacao(dados) {
   if (!res.ok) {
 
     throw new Error(
-      json.erro || 'Erro ao criar movimentação.'
+      json.erro || 'Erro ao cadastrar movimentação.'
     );
   }
 
   return json;
+
+  // Retorna:
+  // {
+  //   mensagem,
+  //   id
+  // }
 }
 
-// ============================================================
-// ATUALIZAR MOVIMENTAÇÃO
-// ============================================================
+// ─────────────────────────────────────────────────────────────
+// Atualizar movimentação existente
+// Params:
+// id (number)
+// dados (object)
+// ─────────────────────────────────────────────────────────────
 
 export async function atualizarMovimentacao(id, dados) {
 
@@ -166,11 +197,16 @@ export async function atualizarMovimentacao(id, dados) {
   }
 
   return json;
+
+  // Retorna:
+  // {
+  //   mensagem
+  // }
 }
 
-// ============================================================
-// EXCLUIR MOVIMENTAÇÃO
-// ============================================================
+// ─────────────────────────────────────────────────────────────
+// Excluir movimentação
+// ─────────────────────────────────────────────────────────────
 
 export async function deletarMovimentacao(id) {
 
@@ -191,4 +227,9 @@ export async function deletarMovimentacao(id) {
   }
 
   return json;
+
+  // Retorna:
+  // {
+  //   mensagem
+  // }
 }
