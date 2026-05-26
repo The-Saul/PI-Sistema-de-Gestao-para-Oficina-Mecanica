@@ -569,3 +569,11 @@ body{
 .receita-grid .table-box{
   flex: 1;
 }
+
+.table-mini .valor-pill {
+  white-space: nowrap;
+}
+
+.table-box .valor-pill {
+  white-space: nowrap;
+}

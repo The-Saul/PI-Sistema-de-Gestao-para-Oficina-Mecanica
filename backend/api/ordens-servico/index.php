@@ -1,75 +1,261 @@
+<?php
+
 // ============================================================
-// CodeMec — services/financeiroService.js
+// CodeMec — /api/ordens-servico/index.php
+// POST → Cria uma OS completa:
+//   1. Insere em ordens_servico
+//   2. Insere as peças em itens_os
+//   3. Baixa o estoque das peças em produtos
+//   4. Registra lançamento em financeiro
+// GET  → Lista OS recentes
 // ============================================================
 
-const BASE_FINANCEIRO  = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/financeiro';
-const BASE_VENDAS      = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/vendas';
-const BASE_OS          = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/ordens-servico';
-const BASE_PRODUTOS    = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/produtos';
+require_once '../../config/headers.php';
+require_once '../../config/database.php';
+
+$pdo    = getConnection();
+$method = $_SERVER['REQUEST_METHOD'];
 
 // ─────────────────────────────────────────────────────────────
-// Financeiro
+// GET — Lista ordens de serviço recentes
 // ─────────────────────────────────────────────────────────────
-export async function listarMovimentacoes({ tipo = '', mes = '' } = {}) {
-  const params = new URLSearchParams();
-  if (tipo) params.append('tipo', tipo);
-  if (mes)  params.append('mes',  mes);
+if ($method === 'GET') {
 
-  const res = await fetch(`${BASE_FINANCEIRO}/index.php?${params.toString()}`);
-  if (!res.ok) {
-    const erro = await res.json().catch(() => ({}));
-    throw new Error(erro.erro || 'Erro ao listar movimentações.');
-  }
-  return res.json();
-}
+    $limite = max(1, min(100, (int)($_GET['limite'] ?? 20)));
+    $status = trim($_GET['status'] ?? '');
 
-export async function deletarMovimentacao(id) {
-  const res = await fetch(`${BASE_FINANCEIRO}/movimentacao.php?id=${id}`, { method: 'DELETE' });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.erro || 'Erro ao excluir movimentação.');
-  return json;
-}
+    $where  = '';
+    $params = [];
 
-// ─────────────────────────────────────────────────────────────
-// Produtos (para buscar no modal de venda/OS)
-// ─────────────────────────────────────────────────────────────
-export async function buscarProdutos(busca = '') {
-  const params = new URLSearchParams({ limite: 100 });
-  if (busca) params.append('busca', busca);
-  const res = await fetch(`${BASE_PRODUTOS}/index.php?${params.toString()}`);
-  if (!res.ok) throw new Error('Erro ao buscar produtos.');
-  const json = await res.json();
-  return json.dados;
-}
+    if (in_array($status, ['aberta','em_andamento','concluida','cancelada'])) {
+        $where            = "WHERE status = :status";
+        $params[':status'] = $status;
+    }
 
-// ─────────────────────────────────────────────────────────────
-// Vendas
-// Body: { cliente_nome, observacao, itens: [{ produto_id, quantidade, preco_unitario }] }
-// ─────────────────────────────────────────────────────────────
-export async function criarVenda(dados) {
-  const res = await fetch(`${BASE_VENDAS}/index.php`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(dados),
-  });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.erro || 'Erro ao registrar venda.');
-  return json;
+    $sql = "
+        SELECT
+            id,
+            veiculo_placa,
+            veiculo_marca,
+            veiculo_modelo,
+            descricao_problema,
+            servicos_realizados,
+            valor_servico,
+            valor_pecas,
+            valor_total,
+            status,
+            TO_CHAR(criado_em,    'DD/MM/YYYY HH24:MI') AS criado_em,
+            TO_CHAR(concluida_em, 'DD/MM/YYYY HH24:MI') AS concluida_em
+        FROM ordens_servico
+        {$where}
+        ORDER BY criado_em DESC
+        LIMIT :limite
+    ";
+
+    $stmt = $pdo->prepare($sql);
+    foreach ($params as $k => $v) $stmt->bindValue($k, $v);
+    $stmt->bindValue(':limite', $limite, PDO::PARAM_INT);
+    $stmt->execute();
+
+    echo json_encode(['dados' => $stmt->fetchAll()]);
+    exit;
 }
 
 // ─────────────────────────────────────────────────────────────
-// Ordens de Serviço
-// Body: { cliente_nome, veiculo_placa, veiculo_marca, veiculo_modelo,
-//         descricao_problema, servico, valor_servico,
-//         pecas: [{ produto_id, quantidade, preco_unitario }] }
+// POST — Cria nova OS completa
+// Body JSON:
+// {
+//   "cliente_nome":       "Maria Silva",
+//   "veiculo_placa":      "ABC1D23",
+//   "veiculo_marca":      "Volkswagen",
+//   "veiculo_modelo":     "Gol 1.6",
+//   "descricao_problema": "Barulho no freio",
+//   "servico":            "Troca de pastilhas",
+//   "valor_servico":      150.00,
+//   "pecas": [
+//     { "produto_id": 5, "quantidade": 1, "preco_unitario": 90.00 },
+//     { "produto_id": 4, "quantidade": 4, "preco_unitario": 18.00 }
+//   ]
+// }
 // ─────────────────────────────────────────────────────────────
-export async function criarOS(dados) {
-  const res = await fetch(`${BASE_OS}/index.php`, {
-    method:  'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body:    JSON.stringify(dados),
-  });
-  const json = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(json.erro || 'Erro ao registrar ordem de serviço.');
-  return json;
+if ($method === 'POST') {
+
+    $body = json_decode(file_get_contents('php://input'), true);
+
+    if (!$body) {
+        http_response_code(400);
+        echo json_encode(['erro' => 'Body inválido ou vazio.']);
+        exit;
+    }
+
+    $clienteNome       = trim($body['cliente_nome']       ?? '');
+    $veiculo_placa     = strtoupper(trim($body['veiculo_placa']  ?? ''));
+    $veiculo_marca     = trim($body['veiculo_marca']     ?? '');
+    $veiculo_modelo    = trim($body['veiculo_modelo']    ?? '');
+    $descricaoProblema = trim($body['descricao_problema'] ?? '');
+    $servico           = trim($body['servico']            ?? '');
+    $valorServico      = (float)($body['valor_servico']   ?? 0);
+    $pecas             = $body['pecas'] ?? [];
+
+    // Validações básicas
+    if ($servico === '') {
+        http_response_code(422);
+        echo json_encode(['erro' => 'O campo serviço é obrigatório.']);
+        exit;
+    }
+
+    if ($valorServico < 0) {
+        http_response_code(422);
+        echo json_encode(['erro' => 'O valor do serviço não pode ser negativo.']);
+        exit;
+    }
+
+    // Valida e verifica estoque das peças
+    $valorPecas = 0;
+    foreach ($pecas as $i => $peca) {
+        $produtoId     = (int)($peca['produto_id']    ?? 0);
+        $quantidade    = (float)($peca['quantidade']  ?? 0);
+        $precoUnitario = (float)($peca['preco_unitario'] ?? 0);
+
+        if ($produtoId <= 0 || $quantidade <= 0 || $precoUnitario <= 0) {
+            http_response_code(422);
+            echo json_encode(['erro' => "Peça #{$i}: produto_id, quantidade e preco_unitario são obrigatórios e maiores que zero."]);
+            exit;
+        }
+
+        $stmtProd = $pdo->prepare("SELECT nome, quantidade_atual FROM produtos WHERE id = :id");
+        $stmtProd->execute([':id' => $produtoId]);
+        $produto = $stmtProd->fetch();
+
+        if (!$produto) {
+            http_response_code(404);
+            echo json_encode(['erro' => "Produto ID {$produtoId} não encontrado."]);
+            exit;
+        }
+
+        if ((float)$produto['quantidade_atual'] < $quantidade) {
+            http_response_code(409);
+            echo json_encode([
+                'erro' => "Estoque insuficiente para \"{$produto['nome']}\". Disponível: {$produto['quantidade_atual']}, necessário: {$quantidade}."
+            ]);
+            exit;
+        }
+
+        $valorPecas += $quantidade * $precoUnitario;
+    }
+
+    $valorTotal = $valorServico + $valorPecas;
+
+    // Transação para garantir consistência
+    $pdo->beginTransaction();
+
+    try {
+
+        // 1. Insere a OS
+        $stmtOS = $pdo->prepare("
+            INSERT INTO ordens_servico (
+                usuario_id,
+                veiculo_placa, veiculo_marca, veiculo_modelo,
+                descricao_problema, servicos_realizados,
+                valor_servico, valor_pecas,
+                status
+            ) VALUES (
+                1,
+                :placa, :marca, :modelo,
+                :problema, :servico,
+                :valor_servico, :valor_pecas,
+                'concluida'
+            )
+            RETURNING id
+        ");
+        $stmtOS->execute([
+            ':placa'         => $veiculo_placa  ?: null,
+            ':marca'         => $veiculo_marca  ?: null,
+            ':modelo'        => $veiculo_modelo ?: null,
+            ':problema'      => $descricaoProblema ?: null,
+            ':servico'       => $servico,
+            ':valor_servico' => $valorServico,
+            ':valor_pecas'   => $valorPecas,
+        ]);
+        $osId = (int) $stmtOS->fetchColumn();
+
+        // 2. Insere peças e baixa estoque
+        foreach ($pecas as $peca) {
+            $produtoId     = (int)$peca['produto_id'];
+            $quantidade    = (float)$peca['quantidade'];
+            $precoUnitario = (float)$peca['preco_unitario'];
+
+            // Insere item da OS
+            $stmtItem = $pdo->prepare("
+                INSERT INTO itens_os (os_id, produto_id, quantidade, preco_unitario)
+                VALUES (:os_id, :produto_id, :quantidade, :preco_unitario)
+            ");
+            $stmtItem->execute([
+                ':os_id'          => $osId,
+                ':produto_id'     => $produtoId,
+                ':quantidade'     => $quantidade,
+                ':preco_unitario' => $precoUnitario,
+            ]);
+
+            // Baixa estoque
+            $pdo->prepare("
+                UPDATE produtos
+                SET quantidade_atual = quantidade_atual - :quantidade
+                WHERE id = :id
+            ")->execute([':quantidade' => $quantidade, ':id' => $produtoId]);
+
+            // Movimentação de estoque
+            $pdo->prepare("
+                INSERT INTO movimentacoes_estoque
+                    (produto_id, usuario_id, tipo, quantidade, motivo, referencia_tipo, referencia_id)
+                VALUES
+                    (:produto_id, 1, 'saida', :quantidade, :motivo, 'os', :os_id)
+            ")->execute([
+                ':produto_id' => $produtoId,
+                ':quantidade' => $quantidade,
+                ':motivo'     => "OS #{$osId}" . ($clienteNome ? " — {$clienteNome}" : ''),
+                ':os_id'      => $osId,
+            ]);
+        }
+
+        // 3. Marca como concluída com timestamp
+        $pdo->prepare("UPDATE ordens_servico SET concluida_em = NOW() WHERE id = :id")
+            ->execute([':id' => $osId]);
+
+        // 4. Lançamento financeiro
+        $descFinanceiro = "OS #{$osId} — {$servico}"
+            . ($clienteNome   ? " | Cliente: {$clienteNome}" : '')
+            . ($veiculo_placa ? " | Veículo: {$veiculo_placa}" : '');
+
+        $pdo->prepare("
+            INSERT INTO financeiro (tipo, descricao, valor, referencia_tipo, referencia_id)
+            VALUES ('entrada', :descricao, :valor, 'os', :os_id)
+        ")->execute([
+            ':descricao' => $descFinanceiro,
+            ':valor'     => $valorTotal,
+            ':os_id'     => $osId,
+        ]);
+
+        $pdo->commit();
+
+        http_response_code(201);
+        echo json_encode([
+            'mensagem'     => 'Ordem de serviço registrada com sucesso.',
+            'os_id'        => $osId,
+            'valor_total'  => $valorTotal,
+        ]);
+
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        http_response_code(500);
+        echo json_encode([
+            'erro'    => 'Erro ao processar a ordem de serviço.',
+            'detalhe' => $e->getMessage(),
+        ]);
+    }
+
+    exit;
 }
+
+http_response_code(405);
+echo json_encode(['erro' => 'Método não permitido.']);

@@ -82,3 +82,10 @@ export async function listarClientesFinanceiro() {
   const json = await res.json();
   return json.dados;
 }
+
+export async function totalVendas() {
+  const res = await fetch(`${BASE_VENDAS}/total.php`);
+  if (!res.ok) throw new Error('Erro ao buscar total de vendas.');
+  const json = await res.json();
+  return json.total;
+}

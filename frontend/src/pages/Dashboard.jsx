@@ -6,12 +6,14 @@ import FinanceBox from "../components/FinanceBox";
 import { listarClientes } from "../services/clientesService";
 import { listarFornecedores } from "../services/fornecedoresService";
 import { listarProdutos } from "../services/produtosService";
+import { totalVendas } from "../services/financeiroService";
 
 function Dashboard() {
   // ── Estado dos cards ──────────────────────────────────────
-  const [totalClientes,     setTotalClientes]     = useState("...");
+  const [totalClientes,         setTotalClientes] = useState("...");
   const [totalFornecedores, setTotalFornecedores] = useState("...");
   const [totalEstoque,           setTotalEstoque] = useState("...");
+  const [totalVendasValor,   setTotalVendasValor] = useState("...");
 
   // ── Busca os totais da API ────────────────────────────────
   useEffect(() => {
@@ -26,6 +28,11 @@ function Dashboard() {
     listarProdutos({ limite: 1 })
       .then((res) => setTotalEstoque(res.total))
       .catch(() => setTotalEstoque("—"));
+
+    totalVendas()
+      .then((val) => setTotalVendasValor(val))
+      .catch(() => setTotalVendasValor("—"));
+
   }, []);
 
   return (
@@ -67,8 +74,8 @@ function Dashboard() {
           />
           <Card
             icon="/icons/dolar-svgrepo-com.svg"
-            value="9999"
-            label="Financeiro"
+            value={totalVendasValor}
+            label="Vendas"
             color="green"
             rota="/financeiro"
           />

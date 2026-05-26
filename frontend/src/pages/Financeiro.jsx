@@ -515,14 +515,75 @@ function ModalOS({ onClose, onSalvar }) {
 // ─────────────────────────────────────────────────────────────
 // Modal de exportação
 // ─────────────────────────────────────────────────────────────
-function ModalExport({ onClose }) {
+function ModalExport({ onClose, movimentacoes, totais }) {
+  const handleImprimir = () => {
+    const receitas = movimentacoes.filter((m) => m.tipo === 'entrada');
+    const gastos   = movimentacoes.filter((m) => m.tipo === 'saida');
+
+    const linhas = (lista) => lista.map((r) => `
+      <tr>
+        <td>${r.data}</td>
+        <td>${r.descricao}</td>
+        <td>R$ ${Number(r.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</td>
+      </tr>
+    `).join("");
+
+    const janela = window.open("", "_blank");
+    janela.document.write(`
+      <html>
+        <head>
+          <title>Relatório Financeiro — CodeMec</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 30px; color: #111; }
+            h1   { font-size: 22px; margin-bottom: 4px; }
+            p    { color: #666; font-size: 13px; margin-bottom: 24px; }
+            h2   { font-size: 16px; margin: 24px 0 10px; }
+            table { width: 100%; border-collapse: collapse; font-size: 13px; }
+            th { background: #f3f4f6; padding: 10px 12px; text-align: left; border-bottom: 2px solid #e5e7eb; }
+            td { padding: 10px 12px; border-bottom: 1px solid #f1f1f1; }
+            .saldo { margin-top: 24px; padding: 14px 18px; background: #d1fae5; border-radius: 8px; font-weight: 700; font-size: 15px; color: #065f46; }
+            @media print { button { display: none; } }
+          </style>
+        </head>
+        <body>
+          <h1>Relatório Financeiro — CodeMec</h1>
+          <p>Gerado em ${new Date().toLocaleDateString("pt-BR")} às ${new Date().toLocaleTimeString("pt-BR")}</p>
+
+          <h2>Receitas</h2>
+          <table>
+            <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead>
+            <tbody>${linhas(receitas)}</tbody>
+          </table>
+
+          <h2>Gastos / Compras</h2>
+          <table>
+            <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead>
+            <tbody>${linhas(gastos)}</tbody>
+          </table>
+
+          <div class="saldo">
+            Saldo: R$ ${totais.saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+          </div>
+
+          <br/>
+          <button onclick="window.print()">🖨️ Imprimir / Salvar como PDF</button>
+        </body>
+      </html>
+    `);
+    janela.document.close();
+    onClose();
+  };
+
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-box" onClick={(e) => e.stopPropagation()}>
         <h2>Exportar Relatório</h2>
+        <p style={{ color: "#7b8299", fontSize: 13, marginBottom: 20 }}>
+          Abre uma nova aba com o relatório formatado. Use Ctrl+P ou o botão na página para salvar como PDF.
+        </p>
         <div className="modal-actions">
-          <Btn onClick={() => { alert("Download em PDF realizado!"); onClose(); }}>Exportar PDF</Btn>
-          <Btn onClick={() => { alert("Download em Excel realizado!"); onClose(); }}>Exportar Excel</Btn>
+          <button className="btn" onClick={onClose} style={{ background: "#e5e7eb", color: "#374151" }}>Cancelar</button>
+          <button className="btn" onClick={handleImprimir}>Gerar Relatório</button>
         </div>
       </div>
     </div>
@@ -844,11 +905,46 @@ function Painel({ onVerReceita, movimentacoes, totais, onVenda, onOS, onCompra, 
 // Tela de Receita
 // ─────────────────────────────────────────────────────────────
 function Receita({ onVoltar, movimentacoes, totais }) {
+  const [busca, setBusca] = useState("");
   const [filtro,     setFiltro]     = useState("Mensal");
   const [showExport, setShowExport] = useState(false);
 
-  const receitas = movimentacoes.filter((m) => m.tipo === 'entrada');
-  const gastos   = movimentacoes.filter((m) => m.tipo === 'saida');
+  const hoje = new Date();
+
+  const dataCorte = {
+    Mensal:     new Date(hoje.getFullYear(), hoje.getMonth(), 1),
+    Trimestral: new Date(hoje.getFullYear(), hoje.getMonth() - 2, 1),
+    Anual:      new Date(hoje.getFullYear(), 0, 1),
+    Todos:      new Date(2000, 0, 1),
+  }[filtro];
+
+  const parsarData = (dataStr) => {
+    const [dia, mes, ano] = dataStr.split('/');
+    return new Date(`${ano}-${mes}-${dia}`);
+  };
+
+  const receitas = movimentacoes.filter((m) =>
+  m.tipo === 'entrada' &&
+  parsarData(m.data) >= dataCorte &&
+  m.descricao.toLowerCase().includes(busca.toLowerCase())
+  );
+
+  const despesas = movimentacoes.filter((m) =>
+    m.tipo === 'saida' &&
+    parsarData(m.data) >= dataCorte &&
+    m.descricao.toLowerCase().includes(busca.toLowerCase())
+  );
+
+  const totalReceitas  = receitas.reduce((acc, r) => acc + Number(r.valor), 0);
+  const totalDespesas  = despesas.reduce((acc, d) => acc + Number(d.valor), 0);
+  const saldoPeriodo   = totalReceitas - totalDespesas;
+
+  // Identifica o tipo da receita pela descrição
+  const tipoReceita = (descricao) => {
+    if (descricao.startsWith("OS"))    return { label: "OS",    cor: "#7c3aed", bg: "#ede9fe" };
+    if (descricao.startsWith("Venda")) return { label: "Venda", cor: "#2563eb", bg: "#dbeafe" };
+    return                                    { label: "Outro", cor: "#374151", bg: "#f3f4f6" };
+  };
 
   return (
     <main className="main">
@@ -863,58 +959,120 @@ function Receita({ onVoltar, movimentacoes, totais }) {
         }
       />
 
-      <div className="receita-top">
-        <div className="receita-total">
-          <div className="mini-title">Saldo do período</div>
-          <div className="receita-value">
-            R$ {totais.saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
-          </div>
+      {/* Barra de ferramentas */}
+      <div style={{ display: "flex", gap: 12, alignItems: "center", marginBottom: 24, flexWrap: "wrap" }}>
+        
+        {/* Cards de resumo */}
+      <div className="cards-grid" style={{ marginBottom: 24 }}>
+        <div className="card-financeiro card-green">
+          <div className="card-icon-financeiro">↗</div>
+          <h3>R$ {totalReceitas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h3>
+          <p>Receitas do período</p>
         </div>
-        <div className="receita-filter">
-          <div className="pill-group">
-            {["Mensal","Trimestral","Anual"].map((f) => (
-              <Pill key={f} active={filtro === f} onClick={() => setFiltro(f)}>{f}</Pill>
-            ))}
-          </div>
-          <div className="date-range">📅 Dados em tempo real do banco</div>
+        <div className="card-financeiro card-red">
+          <div className="card-icon-financeiro">↘</div>
+          <h3>R$ {totalDespesas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h3>
+          <p>Despesas do período</p>
+        </div>
+        <div className="card-financeiro card-orange">
+          <div className="card-icon-financeiro">$</div>
+          <h3>R$ {saldoPeriodo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h3>
+          <p>Saldo do período</p>
         </div>
       </div>
 
+        {/* Busca */}
+        <div className="busca-wrapper" style={{ flex: 1, minWidth: 200, marginBottom: 0 }}>
+          <img src="./icons/lupa-svgrepo-com.svg" alt="" className="icon busca-icon" />
+          <input
+            type="text"
+            className="busca-input"
+            placeholder="Buscar por descrição..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+          />
+        </div>
+
+        {/* Filtro de período */}
+        <div className="pill-group" style={{ marginBottom: 0 }}>
+          {["Mensal","Trimestral","Anual","Todos"].map((f) => (
+            <Pill key={f} active={filtro === f} onClick={() => setFiltro(f)}>{f}</Pill>
+          ))}
+        </div>
+
+      </div>
+
+
+      {/* Tabelas */}
       <div className="receita-grid">
+
         <div className="table-box">
           <h3 className="table-title">Receitas</h3>
           <table>
-            <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
             <tbody>
-              {receitas.length > 0 ? receitas.map((r) => (
-                <tr key={r.id}>
-                  <td>{r.data}</td>
-                  <td>{r.descricao}</td>
-                  <td><span className="valor-pill">R$ {Number(r.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span></td>
-                </tr>
-              )) : <tr><td colSpan="3" className="sem-dados">Nenhuma receita registrada.</td></tr>}
+              {receitas.length > 0 ? receitas.map((r) => {
+                const tipo = tipoReceita(r.descricao);
+                return (
+                  <tr key={r.id}>
+                    <td>{r.data}</td>
+                    <td>
+                      <span style={{
+                        padding: "3px 10px", borderRadius: 999, fontSize: 11,
+                        fontWeight: 700, background: tipo.bg, color: tipo.cor,
+                        whiteSpace: "nowrap"
+                      }}>
+                        {tipo.label}
+                      </span>
+                    </td>
+                    <td>{r.descricao}</td>
+                    <td><span className="valor-pill" style={{ whiteSpace: "nowrap" }}>R$ {Number(r.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span></td>
+                  </tr>
+                );
+              }) : <tr><td colSpan="4" className="sem-dados">Nenhuma receita no período.</td></tr>}
             </tbody>
           </table>
         </div>
 
         <div className="table-box">
-          <h3 className="table-title">Gastos / Compras</h3>
+          <h3 className="table-title">Despesas</h3>
           <table>
-            <thead><tr><th>Data</th><th>Descrição</th><th>Valor</th></tr></thead>
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
             <tbody>
-              {gastos.length > 0 ? gastos.map((g) => (
-                <tr key={g.id}>
-                  <td>{g.data}</td>
-                  <td>{g.descricao}</td>
-                  <td><span className="valor-pill">R$ {Number(g.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span></td>
+              {despesas.length > 0 ? despesas.map((d) => (
+                <tr key={d.id}>
+                  <td>{d.data}</td>
+                  <td>{d.descricao}</td>
+                  <td><span className="valor-pill" style={{ whiteSpace: "nowrap" }}>R$ {Number(d.valor).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</span></td>
                 </tr>
-              )) : <tr><td colSpan="3" className="sem-dados">Nenhum gasto registrado.</td></tr>}
+              )) : <tr><td colSpan="3" className="sem-dados">Nenhuma despesa no período.</td></tr>}
             </tbody>
           </table>
         </div>
+
       </div>
 
-      {showExport && <ModalExport onClose={() => setShowExport(false)} />}
+      {showExport && (
+        <ModalExport
+          onClose={() => setShowExport(false)}
+          movimentacoes={movimentacoes}
+          totais={{ ...totais, saldo: saldoPeriodo }}
+        />
+      )}
+
     </main>
   );
 }
@@ -944,19 +1102,22 @@ export default function Financeiro() {
   useEffect(() => { carregar(); }, [carregar]);
 
   const handleVenda = async (dados) => {
-    await criarVenda(dados);
-    await carregar();
+  const res = await criarVenda(dados);
+  await carregar();
+  alert(`✅ ${res.mensagem}\nTotal: R$ ${Number(res.total).toFixed(2)}`);
   };
 
   const handleOS = async (dados) => {
-    await criarOS(dados);
+    const res = await criarOS(dados);
     await carregar();
+    alert(`✅ ${res.mensagem}\nTotal: R$ ${Number(res.valor_total).toFixed(2)}`);
   };
 
   const handleCompra = async (dados) => {
-  await criarCompra(dados);
-  await carregar();
-};
+    const res = await criarCompra(dados);
+    await carregar();
+    alert(`✅ ${res.mensagem}\nTotal: R$ ${Number(res.total).toFixed(2)}`);
+  };
 
   return (
     <div className="app">
