@@ -2,11 +2,11 @@ import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import Card from "../components/Card";
-import FinanceBox from "../components/FinanceBox";
 import { listarClientes } from "../services/clientesService";
 import { listarFornecedores } from "../services/fornecedoresService";
 import { listarProdutos } from "../services/produtosService";
 import { totalVendas } from "../services/financeiroService";
+import { listarMovimentacoes } from "../services/financeiroService";
 
 function Dashboard() {
   // ── Estado dos cards ──────────────────────────────────────
@@ -14,6 +14,9 @@ function Dashboard() {
   const [totalFornecedores, setTotalFornecedores] = useState("...");
   const [totalEstoque,           setTotalEstoque] = useState("...");
   const [totalVendasValor,   setTotalVendasValor] = useState("...");
+  const [totalEntradas,         setTotalEntradas] = useState(0);
+  const [totalSaidas,           setTotalSaidas]   = useState(0);
+  const [saldo,                 setSaldo]         = useState(0);
 
   // ── Busca os totais da API ────────────────────────────────
   useEffect(() => {
@@ -32,6 +35,14 @@ function Dashboard() {
     totalVendas()
       .then((val) => setTotalVendasValor(val))
       .catch(() => setTotalVendasValor("—"));
+
+    listarMovimentacoes({})
+      .then((res) => {
+        setTotalEntradas(res.total_entradas);
+        setTotalSaidas(res.total_saidas);
+        setSaldo(res.saldo);
+      })
+      .catch(() => {});
 
   }, []);
 
@@ -81,7 +92,23 @@ function Dashboard() {
           />
         </section>
 
-        <FinanceBox />
+        <section className="finance-box">
+          <h3>Resumo Financeiro (Total)</h3>
+          <div className="finance">
+            <div className="fin red">
+              <p>↘ Gastos / Compras</p>
+              <h2>R$ {totalSaidas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h2>
+            </div>
+            <div className="fin green">
+              <p>↗ Receitas</p>
+              <h2>R$ {totalEntradas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h2>
+            </div>
+            <div className="fin orange">
+              <p>$ Saldo</p>
+              <h2>R$ {saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h2>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
