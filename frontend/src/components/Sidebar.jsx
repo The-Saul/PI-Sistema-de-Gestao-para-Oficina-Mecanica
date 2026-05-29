@@ -15,7 +15,7 @@ function Sidebar() {
         <nav>
           <ul>
             <li>
-              <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>
+              <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
                 <img src="/icons/dashboard-svgrepo-com.svg" alt="" className="icon" id="icon-dash" />
                 <span>Dashboard</span>
               </NavLink>
@@ -53,11 +53,33 @@ function Sidebar() {
       </div>
 
       <footer>
-        <button>
-          <img src="/icons/leave-svgrepo-com.svg" alt="" className="icon" id="icon-lea"/>
-          <span>Sair</span>
-        </button>
-      </footer>
+
+      <button
+        onClick={() => window.location.href = "/"}
+    >
+     <img
+        src="/icons/iconlogin.svg"
+        alt=""
+        className="icon"
+      />
+
+      <span>Login</span>
+      </button>
+
+  <button
+    onClick={() => window.location.href = "/"}
+  >
+    <img
+      src="/icons/leave-svgrepo-com.svg"
+      alt=""
+      className="icon"
+      id="icon-lea"
+    />
+
+    <span>Sair</span>
+  </button>
+
+</footer>
     </aside>
   );
 }
