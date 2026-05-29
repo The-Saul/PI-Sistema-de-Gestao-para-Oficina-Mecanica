@@ -165,18 +165,27 @@ if ($method === 'POST') {
         }
 
         // 3. Lançamento financeiro de SAÍDA
-        $descFinanceiro = "Compra #{$compraId}"
-            . ($fornecedorNome ? " — {$fornecedorNome}" : '')
-            . " (" . count($itens) . " item(ns))";
+        // Busca os nomes dos produtos comprados
+        $nomesProdutos = [];
+        foreach ($itens as $item) {
+            $stmtNome = $pdo->prepare("SELECT nome FROM produtos WHERE id = :id");
+            $stmtNome->execute([':id' => $item['produto_id']]);
+            $nomeProd = $stmtNome->fetchColumn();
+            $nomesProdutos[] = "{$nomeProd} ({$item['quantidade']}x)";
+        }
+
+        $descFinanceiro = "Produtos: " . implode(', ', $nomesProdutos);
+        if ($fornecedorNome) $descFinanceiro .= " | Fornecedor: {$fornecedorNome}";
+        if ($observacao)     $descFinanceiro .= " | Obs: {$observacao}";
 
         $pdo->prepare("
             INSERT INTO financeiro (tipo, descricao, valor, referencia_tipo, referencia_id, fornecedor_id)
             VALUES ('saida', :descricao, :valor, 'compra', :compra_id, :fornecedor_id)
         ")->execute([
-            ':descricao'    => $descFinanceiro,
-            ':valor'        => $total,
-            ':compra_id'    => $compraId,
-            ':fornecedor_id'=> $fornecedorId,
+            ':descricao'     => $descFinanceiro,
+            ':valor'         => $total,
+            ':compra_id'     => $compraId,
+            ':fornecedor_id' => $fornecedorId,
         ]);
 
         $pdo->commit();

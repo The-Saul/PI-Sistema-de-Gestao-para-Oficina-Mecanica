@@ -146,6 +146,19 @@ CREATE TABLE ordens_servico (
 );
 
 -- ============================================================
+-- 8.1. SERVIÇOS DA ORDEM DE SERVIÇO
+-- ============================================================
+CREATE TABLE itens_servico_os (
+    id              SERIAL PRIMARY KEY,
+    os_id           INT             NOT NULL REFERENCES ordens_servico(id) ON DELETE CASCADE,
+    descricao       VARCHAR(255)    NOT NULL,
+    valor           NUMERIC(12,2)   NOT NULL CHECK (valor > 0)
+);
+
+CREATE INDEX idx_itens_servico_os ON itens_servico_os(os_id);
+
+
+-- ============================================================
 -- 9. PEÇAS USADAS NA ORDEM DE SERVIÇO
 -- ============================================================
 CREATE TABLE itens_os (

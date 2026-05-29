@@ -175,9 +175,19 @@ if ($method === 'POST') {
         }
 
         // 4. Lançamento financeiro de entrada
-        $descFinanceiro = "Venda #{$vendaId}"
-            . ($clienteNome ? " — {$clienteNome}" : '')
-            . " ({$total} · " . count($itens) . " item(ns))";
+        // 4. Lançamento financeiro
+        // Busca os nomes dos produtos vendidos
+        $nomesProdutos = [];
+        foreach ($itens as $item) {
+            $stmtNome = $pdo->prepare("SELECT nome FROM produtos WHERE id = :id");
+            $stmtNome->execute([':id' => $item['produto_id']]);
+            $nomeProd = $stmtNome->fetchColumn();
+            $nomesProdutos[] = "{$nomeProd} ({$item['quantidade']}x)";
+        }
+
+        $descFinanceiro = "Produtos: " . implode(', ', $nomesProdutos);
+        if ($clienteNome) $descFinanceiro .= " | Cliente: {$clienteNome}";
+        if ($observacao)  $descFinanceiro .= " | Obs: {$observacao}";
 
         $stmtFin = $pdo->prepare("
             INSERT INTO financeiro (tipo, descricao, valor, referencia_tipo, referencia_id)
