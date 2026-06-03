@@ -5,15 +5,15 @@ import {
   Navigate,
 } from "react-router-dom";
 
+// LOGIN
 import Login from "./pages/Login";
 
+// PÁGINAS
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Fornecedores from "./pages/Fornecedores";
 import Estoque from "./pages/Estoque";
 import Financeiro from "./pages/Financeiro";
-
-import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
 
@@ -23,59 +23,44 @@ function App() {
 
       <Routes>
 
+        {/* LOGIN */}
         <Route
           path="/"
           element={<Login />}
         />
 
+        {/* SISTEMA */}
         <Route
           path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
+          element={<Dashboard />}
         />
 
         <Route
           path="/clientes"
-          element={
-            <PrivateRoute>
-              <Clientes />
-            </PrivateRoute>
-          }
+          element={<Clientes />}
         />
 
         <Route
           path="/fornecedores"
-          element={
-            <PrivateRoute>
-              <Fornecedores />
-            </PrivateRoute>
-          }
+          element={<Fornecedores />}
         />
 
         <Route
           path="/estoque"
-          element={
-            <PrivateRoute>
-              <Estoque />
-            </PrivateRoute>
-          }
+          element={<Estoque />}
         />
 
         <Route
           path="/financeiro"
-          element={
-            <PrivateRoute>
-              <Financeiro />
-            </PrivateRoute>
-          }
+          element={<Financeiro />}
         />
 
+        {/* ROTAS INVÁLIDAS */}
         <Route
           path="*"
-          element={<Navigate to="/" />}
+          element={
+            <Navigate to="/" />
+          }
         />
 
       </Routes>
