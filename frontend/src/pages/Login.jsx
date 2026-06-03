@@ -1,30 +1,30 @@
 // ============================================================
 // CodeMec — pages/Login.jsx
-// Tela de Login
 // ============================================================
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../services/login";
 import "../Login.css";
-
-
-
 
 export default function Login() {
 
   const navigate = useNavigate();
 
-  const [email, setEmail] =
+  const [usuario, setUsuario] =
     useState("");
 
   const [senha, setSenha] =
     useState("");
 
-  function handleLogin(e) {
+  const [loading, setLoading] =
+    useState(false);
+
+  async function handleLogin(e) {
 
     e.preventDefault();
 
-    if (!email || !senha) {
+    if (!usuario || !senha) {
 
       alert(
         "Preencha todos os campos."
@@ -33,37 +33,61 @@ export default function Login() {
       return;
     }
 
-    // Backend será conectado futuramente
-    alert("Login realizado com sucesso!");
+    try {
 
-    navigate("/dashboard");
+      setLoading(true);
+
+      const data =
+        await login(
+          usuario,
+          senha
+        );
+
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify(
+          data.usuario
+        )
+      );
+
+      navigate("/dashboard");
+
+    } catch (error) {
+
+      alert(
+        error.message ||
+        "Erro ao realizar login"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
   }
 
   return (
     <div className="login-page">
 
-      {/* LADO ESQUERDO */}
       <div className="login-left">
 
         <div className="login-overlay">
 
-       <div className="login-brand">
+          <div className="login-brand">
 
+            <h1>CodeMec</h1>
 
-  <h1>CodeMec</h1>
+            <p>
+              Sistema de Gestão para
+              Oficina Mecânica
+            </p>
 
-  <p>
-    Sistema de Gestão para
-    Oficina Mecânica
-  </p>
-
-</div>
+          </div>
 
         </div>
 
       </div>
 
-      {/* LADO DIREITO */}
       <div className="login-right">
 
         <form
@@ -73,40 +97,43 @@ export default function Login() {
 
           <div className="login-header">
 
-  <img
-    src="/Img/codemeclogo.png"
-    alt="CodeMec"
-    className="login-top-logo"
-  />
+            <img
+              src="/Img/codemeclogo.png"
+              alt="CodeMec"
+              className="login-top-logo"
+            />
 
-  <h2>Bem-vindo</h2>
+            <h2>Bem-vindo</h2>
 
-  <p>
-    Faça login para acessar
-    o sistema
-  </p>
+            <p>
+              Faça login para acessar
+              o sistema
+            </p>
 
-</div>
+          </div>
 
           <div className="login-form">
 
             <div>
-              <label>Email</label>
+
+              <label>Usuário</label>
 
               <input
-                type="email"
+                type="text"
                 className="login-input"
-                placeholder="Digite seu email"
-                value={email}
+                placeholder="Digite seu usuário"
+                value={usuario}
                 onChange={(e) =>
-                  setEmail(
+                  setUsuario(
                     e.target.value
                   )
                 }
               />
+
             </div>
 
             <div>
+
               <label>Senha</label>
 
               <input
@@ -120,13 +147,21 @@ export default function Login() {
                   )
                 }
               />
+
             </div>
 
             <button
               type="submit"
               className="login-btn"
+              disabled={loading}
             >
-              Entrar
+
+              {
+                loading
+                  ? "Entrando..."
+                  : "Entrar"
+              }
+
             </button>
 
           </div>
