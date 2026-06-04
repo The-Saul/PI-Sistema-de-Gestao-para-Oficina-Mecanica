@@ -6,7 +6,6 @@ import {
 } from "react-router-dom";
 
 import Login from "./pages/Login";
-
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Fornecedores from "./pages/Fornecedores";
@@ -16,17 +15,10 @@ import Financeiro from "./pages/Financeiro";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
-
   return (
-
     <BrowserRouter>
-
       <Routes>
-
-        <Route
-          path="/"
-          element={<Login />}
-        />
+        <Route path="/" element={<Login />} />
 
         <Route
           path="/dashboard"
@@ -75,13 +67,10 @@ function App() {
 
         <Route
           path="*"
-          element={<Navigate to="/" />}
+          element={<Navigate to="/" replace />}
         />
-
       </Routes>
-
     </BrowserRouter>
-
   );
 }
 

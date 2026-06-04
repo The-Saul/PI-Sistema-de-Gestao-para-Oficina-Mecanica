@@ -3,97 +3,85 @@
 require_once "../../config/headers.php";
 require_once "../../config/database.php";
 
-session_start();
+$conn = getConnection();
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+$dados = json_decode(
+    file_get_contents("php://input"),
+    true
+);
 
-    http_response_code(405);
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'Método não permitido'
-    ]);
-
-    exit;
-}
-
-$dados = json_decode(file_get_contents("php://input"), true);
-
-$usuario = trim($dados['usuario'] ?? '');
-$senha = trim($dados['senha'] ?? '');
+$usuario = trim($dados["usuario"] ?? "");
+$senha   = trim($dados["senha"] ?? "");
 
 if (empty($usuario) || empty($senha)) {
 
     http_response_code(400);
 
     echo json_encode([
-        'success' => false,
-        'message' => 'Usuário e senha são obrigatórios'
+        "success" => false,
+        "message" => "Preencha todos os campos"
     ]);
 
-    exit;
+    exit();
 }
 
-try {
+$sql = "
+    SELECT
+        id,
+        nome,
+        usuario,
+        senha_hash,
+        ativo
+    FROM usuarios
+    WHERE usuario = :usuario
+    LIMIT 1
+";
 
-    $pdo = getConnection();
+$stmt = $conn->prepare($sql);
+$stmt->bindParam(":usuario", $usuario);
+$stmt->execute();
 
-    $stmt = $pdo->prepare("
-        SELECT *
-        FROM usuarios
-        WHERE usuario = :usuario
-        AND ativo = true
-        LIMIT 1
-    ");
+$user = $stmt->fetch();
 
-    $stmt->bindValue(':usuario', $usuario);
-    $stmt->execute();
+if (!$user) {
 
-    $user = $stmt->fetch();
-
-    if (!$user) {
-
-        http_response_code(401);
-
-        echo json_encode([
-            'success' => false,
-            'message' => 'Usuário não encontrado'
-        ]);
-
-        exit;
-    }
-
-    if (!password_verify($senha, $user['senha_hash'])) {
-
-        http_response_code(401);
-
-        echo json_encode([
-            'success' => false,
-            'message' => 'Senha inválida'
-        ]);
-
-        exit;
-    }
-
-    $_SESSION['usuario_id'] = $user['id'];
-    $_SESSION['usuario_nome'] = $user['nome'];
-    $_SESSION['usuario_login'] = $user['usuario'];
+    http_response_code(401);
 
     echo json_encode([
-        'success' => true,
-        'usuario' => [
-            'id' => $user['id'],
-            'nome' => $user['nome'],
-            'usuario' => $user['usuario']
-        ]
+        "success" => false,
+        "message" => "Usuário não encontrado"
     ]);
 
-} catch (Exception $e) {
-
-    http_response_code(500);
-
-    echo json_encode([
-        'success' => false,
-        'message' => $e->getMessage()
-    ]);
+    exit();
 }
+
+if (!$user["ativo"]) {
+
+    http_response_code(403);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Usuário inativo"
+    ]);
+
+    exit();
+}
+
+if (!password_verify($senha, $user["senha_hash"])) {
+
+    http_response_code(401);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Senha inválida"
+    ]);
+
+    exit();
+}
+
+unset($user["senha_hash"]);
+
+echo json_encode([
+    "success" => true,
+    "usuario" => $user
+]);
