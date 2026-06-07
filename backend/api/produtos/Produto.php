@@ -5,7 +5,7 @@
 // Métodos: GET (buscar um) | PUT (atualizar) | DELETE (deletar)
 // Query param obrigatório: ?id=1
 // ============================================================
-
+require_once '../../config/cors.php';
 require_once '../../config/headers.php';
 require_once '../../config/database.php';
 

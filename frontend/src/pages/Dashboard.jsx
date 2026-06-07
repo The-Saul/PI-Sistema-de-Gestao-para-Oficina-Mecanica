@@ -10,7 +10,6 @@ import { listarMovimentacoes } from "../services/financeiroService";
 
 function Dashboard() {
   // ── Estado dos cards ──────────────────────────────────────
-  const cargo = localStorage.getItem("cargo");
   const [totalClientes,         setTotalClientes] = useState("...");
   const [totalFornecedores, setTotalFornecedores] = useState("...");
   const [totalEstoque,           setTotalEstoque] = useState("...");
@@ -63,51 +62,35 @@ function Dashboard() {
         </div>
 
         <section className="cards">
-
-  {(cargo === "gerente" || cargo === "atendente") && (
-    <Card
-      icon="/icons/people-svgrepo-com.svg"
-      value={totalClientes}
-      label="Clientes"
-      color="blue"
-      rota="/clientes"
-    />
-  )}
-
-  {cargo === "gerente" && (
-    <Card
-      icon="/icons/truck-svgrepo-com.svg"
-      value={totalFornecedores}
-      label="Fornecedores"
-      color="purple"
-      rota="/fornecedores"
-    />
-  )}
-
-  {(cargo === "gerente" ||
-    cargo === "estoquista" ||
-    cargo === "mecanico") && (
-    <Card
-      icon="/icons/box-svgrepo-com.svg"
-      value={totalEstoque}
-      label="Estoque"
-      color="yellow"
-      rota="/estoque"
-    />
-  )}
-
-  {(cargo === "gerente" ||
-    cargo === "financeiro") && (
-    <Card
-      icon="/icons/dolar-svgrepo-com.svg"
-      value={totalVendasValor}
-      label="Vendas"
-      color="green"
-      rota="/financeiro"
-    />
-  )}
-
-</section>
+          <Card
+            icon="/icons/people-svgrepo-com.svg"
+            value={totalClientes}
+            label="Clientes"
+            color="blue"
+            rota="/clientes"
+          />
+          <Card
+            icon="/icons/truck-svgrepo-com.svg"
+            value={totalFornecedores}
+            label="Fornecedores"
+            color="purple"
+            rota="/fornecedores"
+          />
+          <Card
+            icon="/icons/box-svgrepo-com.svg"
+            value={totalEstoque}
+            label="Estoque"
+            color="yellow"
+            rota="/estoque"
+          />
+          <Card
+            icon="/icons/dolar-svgrepo-com.svg"
+            value={totalVendasValor}
+            label="Vendas"
+            color="green"
+            rota="/financeiro"
+          />
+        </section>
 
         <section className="finance-box">
           <h3>Resumo Financeiro (Total)</h3>

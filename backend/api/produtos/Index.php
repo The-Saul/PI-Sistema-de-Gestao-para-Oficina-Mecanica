@@ -4,7 +4,7 @@
 // CodeMec — /api/produtos/index.php
 // Métodos: GET (listar) | POST (criar)
 // ============================================================
-
+require_once '../../config/cors.php';
 require_once '../../config/headers.php';
 require_once '../../config/database.php';
 

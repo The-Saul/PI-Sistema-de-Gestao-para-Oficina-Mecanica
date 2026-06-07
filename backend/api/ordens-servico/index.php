@@ -5,7 +5,7 @@
 // POST → Cria uma OS completa com múltiplos serviços e peças
 // GET  → Lista OS recentes
 // ============================================================
-
+require_once '../../config/cors.php';
 require_once '../../config/headers.php';
 require_once '../../config/database.php';
 

@@ -9,7 +9,7 @@ import {
 import Login from "./pages/Login";
 import Cadastro from "./pages/cadastro";
 import EsqueciSenha from "./pages/EsqueciSenha";
-
+import PrivateRoute from "./components/PrivateRoute";
 // SISTEMA
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
@@ -39,30 +39,50 @@ function App() {
         />
 
         {/* SISTEMA */}
-        <Route
-          path="/dashboard"
-          element={<Dashboard />}
-        />
+       <Route
+  path="/dashboard"
+  element={
+    <PrivateRoute>
+      <Dashboard />
+    </PrivateRoute>
+  }
+/>
 
-        <Route
-          path="/clientes"
-          element={<Clientes />}
-        />
+<Route
+  path="/clientes"
+  element={
+    <PrivateRoute>
+      <Clientes />
+    </PrivateRoute>
+  }
+/>
 
-        <Route
-          path="/fornecedores"
-          element={<Fornecedores />}
-        />
+<Route
+  path="/fornecedores"
+  element={
+    <PrivateRoute>
+      <Fornecedores />
+    </PrivateRoute>
+  }
+/>
 
-        <Route
-          path="/estoque"
-          element={<Estoque />}
-        />
+<Route
+  path="/estoque"
+  element={
+    <PrivateRoute>
+      <Estoque />
+    </PrivateRoute>
+  }
+/>
 
-        <Route
-          path="/financeiro"
-          element={<Financeiro />}
-        />
+<Route
+  path="/financeiro"
+  element={
+    <PrivateRoute>
+      <Financeiro />
+    </PrivateRoute>
+  }
+/>
 
         {/* ROTA INVÁLIDA */}
         <Route

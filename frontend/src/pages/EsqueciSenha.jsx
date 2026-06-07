@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+import {
+  enviarCodigo,
+  redefinirSenha
+} from "../services/cadastrar";
+
 import "../Login.css";
 
 export default function EsqueciSenha() {
@@ -10,21 +16,52 @@ export default function EsqueciSenha() {
   const [codigo, setCodigo] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [mostrarCodigo, setMostrarCodigo] = useState(false);
 
-  function enviarCodigo() {
+  const [mostrarCodigo, setMostrarCodigo] =
+    useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  async function handleEnviarCodigo() {
 
     if (!email) {
+
       alert("Digite seu e-mail.");
+
       return;
+
     }
 
-    alert("Código enviado para o e-mail!");
+    try {
 
-    setMostrarCodigo(true);
+      setLoading(true);
+
+      const response =
+        await enviarCodigo(email);
+
+      alert(`Código de recuperação: ${response.codigo}`);
+
+      console.log(
+        "Código:",
+        response.codigo
+      );
+
+      setMostrarCodigo(true);
+
+    } catch (error) {
+
+      alert(error.message);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
   }
 
-  function redefinirSenha(e) {
+  async function handleRedefinir(e) {
 
     e.preventDefault();
 
@@ -33,18 +70,52 @@ export default function EsqueciSenha() {
       !novaSenha ||
       !confirmarSenha
     ) {
-      alert("Preencha todos os campos.");
+
+      alert(
+        "Preencha todos os campos."
+      );
+
       return;
+
     }
 
-    if (novaSenha !== confirmarSenha) {
-      alert("As senhas não coincidem.");
+    if (
+      novaSenha !== confirmarSenha
+    ) {
+
+      alert(
+        "As senhas não coincidem."
+      );
+
       return;
+
     }
 
-    alert("Senha redefinida com sucesso!");
+    try {
 
-    navigate("/");
+      setLoading(true);
+
+      const response =
+        await redefinirSenha(
+          email,
+          codigo,
+          novaSenha
+        );
+
+      alert(response.message);
+
+      navigate("/");
+
+    } catch (error) {
+
+      alert(error.message);
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
   }
 
   return (
@@ -73,7 +144,7 @@ export default function EsqueciSenha() {
 
         <form
           className="login-box"
-          onSubmit={redefinirSenha}
+          onSubmit={handleRedefinir}
         >
 
           <div className="login-header">
@@ -87,8 +158,7 @@ export default function EsqueciSenha() {
             <h2>Recuperar Senha</h2>
 
             <p>
-              Informe seu e-mail para
-              recuperar o acesso
+              Informe seu e-mail
             </p>
 
           </div>
@@ -108,9 +178,16 @@ export default function EsqueciSenha() {
             <button
               type="button"
               className="login-btn"
-              onClick={enviarCodigo}
+              onClick={
+                handleEnviarCodigo
+              }
+              disabled={loading}
             >
-              Enviar Código
+              {
+                loading
+                  ? "Enviando..."
+                  : "Enviar Código"
+              }
             </button>
 
           )}
@@ -118,13 +195,16 @@ export default function EsqueciSenha() {
           {mostrarCodigo && (
 
             <>
+
               <input
                 type="text"
                 className="login-input"
-                placeholder="Digite o código recebido"
+                placeholder="Código recebido"
                 value={codigo}
                 onChange={(e) =>
-                  setCodigo(e.target.value)
+                  setCodigo(
+                    e.target.value
+                  )
                 }
               />
 
@@ -134,26 +214,36 @@ export default function EsqueciSenha() {
                 placeholder="Nova senha"
                 value={novaSenha}
                 onChange={(e) =>
-                  setNovaSenha(e.target.value)
+                  setNovaSenha(
+                    e.target.value
+                  )
                 }
               />
 
               <input
                 type="password"
                 className="login-input"
-                placeholder="Confirmar nova senha"
+                placeholder="Confirmar senha"
                 value={confirmarSenha}
                 onChange={(e) =>
-                  setConfirmarSenha(e.target.value)
+                  setConfirmarSenha(
+                    e.target.value
+                  )
                 }
               />
 
               <button
                 type="submit"
                 className="login-btn"
+                disabled={loading}
               >
-                Redefinir Senha
+                {
+                  loading
+                    ? "Salvando..."
+                    : "Redefinir Senha"
+                }
               </button>
+
             </>
 
           )}
