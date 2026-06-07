@@ -96,6 +96,33 @@
   padding: 40px;
 }
 
+.login-register {
+  margin-top: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-register span {
+  color: #d1d5db;
+  font-size: 14px;
+}
+.register-link {
+  color: #313ead;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.register-link:hover {
+  opacity: 0.8;
+}
+
+.login-input {
+  margin-bottom: 15px;
+}
+
 .login-box {
   width: 100%;
 }
@@ -116,17 +143,15 @@
 
 .login-top-logo {
 
-  width: 350px;
+  width: 300px;
 
   height: auto;
 
   object-fit: contain;
 
-  position: absolute;
+  display: block;
 
-  top: 40px;
-
-  right: 40px;
+  margin: 0 auto 20px auto;
 
 }
 .login-header h2 {
