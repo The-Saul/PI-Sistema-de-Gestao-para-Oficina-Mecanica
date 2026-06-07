@@ -5,70 +5,71 @@ import {
   Navigate,
 } from "react-router-dom";
 
+// AUTENTICAÇÃO
 import Login from "./pages/Login";
+import Cadastro from "./pages/cadastro";
+import EsqueciSenha from "./pages/EsqueciSenha";
+
+// SISTEMA
 import Dashboard from "./pages/Dashboard";
 import Clientes from "./pages/Clientes";
 import Fornecedores from "./pages/Fornecedores";
 import Estoque from "./pages/Estoque";
 import Financeiro from "./pages/Financeiro";
 
-import PrivateRoute from "./components/PrivateRoute";
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
+
+        {/* AUTENTICAÇÃO */}
+        <Route
+          path="/"
+          element={<Login />}
+        />
 
         <Route
+          path="/cadastro"
+          element={<Cadastro />}
+        />
+
+        <Route
+          path="/esqueci-senha"
+          element={<EsqueciSenha />}
+        />
+
+        {/* SISTEMA */}
+        <Route
           path="/dashboard"
-          element={
-            <PrivateRoute>
-              <Dashboard />
-            </PrivateRoute>
-          }
+          element={<Dashboard />}
         />
 
         <Route
           path="/clientes"
-          element={
-            <PrivateRoute>
-              <Clientes />
-            </PrivateRoute>
-          }
+          element={<Clientes />}
         />
 
         <Route
           path="/fornecedores"
-          element={
-            <PrivateRoute>
-              <Fornecedores />
-            </PrivateRoute>
-          }
+          element={<Fornecedores />}
         />
 
         <Route
           path="/estoque"
-          element={
-            <PrivateRoute>
-              <Estoque />
-            </PrivateRoute>
-          }
+          element={<Estoque />}
         />
 
         <Route
           path="/financeiro"
-          element={
-            <PrivateRoute>
-              <Financeiro />
-            </PrivateRoute>
-          }
+          element={<Financeiro />}
         />
 
+        {/* ROTA INVÁLIDA */}
         <Route
           path="*"
-          element={<Navigate to="/" replace />}
+          element={<Navigate to="/" />}
         />
+
       </Routes>
     </BrowserRouter>
   );
