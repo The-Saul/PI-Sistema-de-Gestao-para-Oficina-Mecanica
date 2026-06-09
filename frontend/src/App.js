@@ -5,17 +5,17 @@ import {
   Navigate,
 } from "react-router-dom";
 
-// AUTENTICAÇÃO
-import Login from "./pages/Login";
-import Cadastro from "./pages/cadastro";
-import EsqueciSenha from "./pages/EsqueciSenha";
-import PrivateRoute from "./components/PrivateRoute";
-// SISTEMA
-import Dashboard from "./pages/Dashboard";
-import Clientes from "./pages/Clientes";
-import Fornecedores from "./pages/Fornecedores";
-import Estoque from "./pages/Estoque";
-import Financeiro from "./pages/Financeiro";
+import RotaProtegida  from "./components/RotaProtegida";
+
+import Login          from "./pages/Login";
+import Cadastro       from "./pages/Cadastro";
+import EsqueciSenha   from "./pages/EsqueciSenha";
+
+import Dashboard      from "./pages/Dashboard";
+import Clientes       from "./pages/Clientes";
+import Fornecedores   from "./pages/Fornecedores";
+import Estoque        from "./pages/Estoque";
+import Financeiro     from "./pages/Financeiro";
 import ControleAcesso from "./pages/ControleAcesso";
 
 function App() {
@@ -23,78 +23,36 @@ function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* AUTENTICAÇÃO */}
-        <Route
-          path="/"
-          element={<Login />}
-        />
+        {/* ── Rotas públicas ── */}
+        <Route path="/"              element={<Login />} />
+        <Route path="/cadastro"      element={<Cadastro />} />
+        <Route path="/esqueci-senha" element={<EsqueciSenha />} />
 
-        <Route
-          path="/cadastro"
-          element={<Cadastro />}
-        />
+        {/* ── Rotas protegidas — todos os logados ── */}
+        <Route path="/dashboard" element={
+          <RotaProtegida><Dashboard /></RotaProtegida>
+        } />
+        <Route path="/clientes" element={
+          <RotaProtegida><Clientes /></RotaProtegida>
+        } />
+        <Route path="/fornecedores" element={
+          <RotaProtegida><Fornecedores /></RotaProtegida>
+        } />
+        <Route path="/estoque" element={
+          <RotaProtegida><Estoque /></RotaProtegida>
+        } />
+        <Route path="/financeiro" element={
+          <RotaProtegida><Financeiro /></RotaProtegida>
+        } />
 
-        <Route
-          path="/esqueci-senha"
-          element={<EsqueciSenha />}
-        />
+        {/* ── Rota restrita — admin e funcionario_admin ── */}
+        <Route path="/controle-acesso" element={
+          <RotaProtegida cargosPermitidos={["admin", "funcionario_admin"]}>
+            <ControleAcesso />
+          </RotaProtegida>
+        } />
 
-        {/* SISTEMA */}
-       <Route
-  path="/dashboard"
-  element={
-    <PrivateRoute>
-      <Dashboard />
-    </PrivateRoute>
-  }
-/>
-
-<Route
-  path="/clientes"
-  element={
-    <PrivateRoute>
-      <Clientes />
-    </PrivateRoute>
-  }
-/>
-
-<Route
-  path="/fornecedores"
-  element={
-    <PrivateRoute>
-      <Fornecedores />
-    </PrivateRoute>
-  }
-/>
-
-<Route
-  path="/estoque"
-  element={
-    <PrivateRoute>
-      <Estoque />
-    </PrivateRoute>
-  }
-/>
-
-<Route
-  path="/financeiro"
-  element={
-    <PrivateRoute>
-      <Financeiro />
-    </PrivateRoute>
-  }
-/>
-
-<Route
-  path="/controle-acesso"
-  element={<ControleAcesso />}
-/>
-
-        {/* ROTA INVÁLIDA */}
-        <Route
-          path="*"
-          element={<Navigate to="/" />}
-        />
+        <Route path="*" element={<Navigate to="/" />} />
 
       </Routes>
     </BrowserRouter>

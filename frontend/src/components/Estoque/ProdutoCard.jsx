@@ -1,4 +1,7 @@
+import { usePermissao } from "../../hooks/usePermissao";
+
 function ProdutoCard({ produto, onVisualizar, onExcluir }) {
+  const { podeExcluir } = usePermissao();
   const estoqueBaixo = Number(produto.quantidade_atual) <= Number(produto.quantidade_minima);
 
   return (
@@ -22,15 +25,9 @@ function ProdutoCard({ produto, onVisualizar, onExcluir }) {
             <img src="./icons/box-svgrepo-com.svg" alt="" className="icon" />
             Qtd: {produto.quantidade_atual} {produto.unidade}
           </span>
-          <span>
-            Mín: {produto.quantidade_minima} {produto.unidade}
-          </span>
-          <span>
-            Compra: R$ {Number(produto.preco_compra).toFixed(2)}
-          </span>
-          <span>
-            Venda: R$ {Number(produto.preco_venda).toFixed(2)}
-          </span>
+          <span>Mín: {produto.quantidade_minima} {produto.unidade}</span>
+          <span>Compra: R$ {Number(produto.preco_compra).toFixed(2)}</span>
+          <span>Venda: R$ {Number(produto.preco_venda).toFixed(2)}</span>
         </div>
       </div>
 
@@ -39,9 +36,11 @@ function ProdutoCard({ produto, onVisualizar, onExcluir }) {
           <img src="./icons/eye-svgrepo-com.svg" alt="" className="icon-eye" />
           Ver detalhes
         </button>
-        <button className="btn-excluir" onClick={() => onExcluir(produto.id)}>
-          <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon-trash" />
-        </button>
+        {podeExcluir && (
+          <button className="btn-excluir" onClick={() => onExcluir(produto.id)}>
+            <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon-trash" />
+          </button>
+        )}
       </div>
 
     </div>

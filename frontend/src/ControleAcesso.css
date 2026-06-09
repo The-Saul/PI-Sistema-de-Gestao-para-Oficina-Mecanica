@@ -1,3 +1,4 @@
+/* ── Cabeçalho da seção ─────────────────────────────────────── */
 .acesso-header {
   display: flex;
   justify-content: space-between;
@@ -5,21 +6,27 @@
   margin-bottom: 20px;
 }
 
+.acesso-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
 .acesso-btn {
-  background: #2563eb;
+  background: linear-gradient(90deg, #2d7df6, #1a5edb);
   color: white;
   border: none;
   border-radius: 10px;
   padding: 10px 18px;
   cursor: pointer;
   font-weight: 600;
+  font-size: 14px;
   transition: 0.2s;
 }
 
-.acesso-btn:hover {
-  background: #1d4ed8;
-}
+.acesso-btn:hover { opacity: 0.9; }
 
+/* ── Tabela ─────────────────────────────────────────────────── */
 .acesso-table {
   width: 100%;
   border-collapse: collapse;
@@ -27,39 +34,214 @@
 
 .acesso-table th {
   text-align: left;
-  padding: 14px;
+  padding: 12px 16px;
   border-bottom: 2px solid #e5e7eb;
   color: #374151;
+  font-size: 13px;
+  background: #f9fafb;
 }
 
 .acesso-table td {
-  padding: 14px;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 14px;
+  color: #374151;
 }
 
-.acesso-table tr:hover {
-  background: #f8fafc;
+.acesso-table tr:hover td { background: #f8fafc; }
+
+/* ── Avatar + nome ──────────────────────────────────────────── */
+.acesso-nome {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
 }
 
+.acesso-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d7df6, #1a5edb);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Status ─────────────────────────────────────────────────── */
 .status-ativo {
   color: #16a34a;
   font-weight: 600;
+  font-size: 13px;
 }
 
 .status-inativo {
   color: #dc2626;
   font-weight: 600;
+  font-size: 13px;
 }
 
-.btn-editar {
-  background: #2563eb;
-  color: white;
-  border: none;
-  padding: 8px 14px;
+/* ── Botões de ação ─────────────────────────────────────────── */
+.btn-desativar {
+  background: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+  padding: 6px 14px;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.15s;
 }
 
-.btn-editar:hover {
-  background: #1d4ed8;
+.btn-desativar:hover { background: #fecaca; }
+
+.btn-ativar {
+  background: #d1fae5;
+  color: #16a34a;
+  border: 1px solid #a7f3d0;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.15s;
+}
+
+.btn-ativar:hover { background: #a7f3d0; }
+
+.btn-desativar:disabled,
+.btn-ativar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Modal de novo funcionário ──────────────────────────────── */
+.modal-overlay-acesso {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-acesso {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+.modal-acesso-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modal-acesso-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.modal-acesso-fechar {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #9ca3af;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-acesso-fechar:hover { color: #374151; }
+
+.modal-acesso-campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.modal-acesso-campo label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.modal-acesso-input {
+  padding: 10px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #111827;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.modal-acesso-input:focus { border-color: #2563eb; }
+
+.modal-acesso-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.btn-cancelar-acesso {
+  padding: 9px 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-cancelar-acesso:hover { background: #f9fafb; }
+
+/* ── Utilitários ────────────────────────────────────────────── */
+.acesso-vazio {
+  text-align: center;
+  padding: 30px;
+  color: #6b7280;
+}
+
+.acesso-erro { color: #dc2626; }
+
+/* ── Badges de cargo ────────────────────────────────────────── */
+.cargo-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.cargo-admin {
+  background: #ede9fe;
+  color: #7c3aed;
+}
+
+.cargo-funcionario_admin {
+  background: #dbeafe;
+  color: #2563eb;
+}
+
+.cargo-funcionario {
+  background: #f3f4f6;
+  color: #374151;
 }

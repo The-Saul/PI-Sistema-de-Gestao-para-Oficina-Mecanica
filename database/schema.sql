@@ -23,6 +23,8 @@ CREATE TABLE IF NOT EXISTS public.usuarios (
     nome        VARCHAR(150)  NOT NULL,
     usuario     VARCHAR(80)   NOT NULL UNIQUE,
     senha_hash  VARCHAR(255)  NOT NULL,
+    cargo       VARCHAR(20)   NOT NULL DEFAULT 'funcionario'
+                    CHECK (cargo IN ('admin', 'funcionario_admin', 'funcionario')),
     ativo       BOOLEAN       NOT NULL DEFAULT TRUE,
     criado_em   TIMESTAMP     NOT NULL DEFAULT NOW()
 );
@@ -280,11 +282,12 @@ WHERE DATE_TRUNC('month', criado_em) = DATE_TRUNC('month', NOW());
 -- DADOS INICIAIS - Usuario administrador
 -- senha: admin123
 -- ============================================================
-INSERT INTO public.usuarios (nome, usuario, senha_hash)
+INSERT INTO public.usuarios (nome, usuario, senha_hash, cargo)
 VALUES (
     'Administrador',
     'admin',
-    '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'
+    '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    'admin'
 ) ON CONFLICT (usuario) DO NOTHING;
 
 -- ============================================================

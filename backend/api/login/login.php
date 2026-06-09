@@ -1,7 +1,7 @@
 <?php
-require_once '../config/cors.php';
-require_once "../config/headers.php";
-require_once "../config/database.php";
+require_once '../../config/cors.php';
+require_once "../../config/headers.php";
+require_once "../../config/database.php";
 
 $conn = getConnection();
 
@@ -31,6 +31,7 @@ $sql = "
         nome,
         usuario,
         senha_hash,
+        cargo,
         ativo
     FROM usuarios
     WHERE usuario = :usuario

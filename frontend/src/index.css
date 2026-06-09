@@ -341,3 +341,61 @@ body {
   background: #ffedd5;
   color: #c2410c;
 }
+
+/* ── Header com usuário logado ───────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-usuario {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+
+.header-usuario-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d7df6, #1a5edb);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.header-usuario-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.header-usuario-nome {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1;
+}
+
+.header-usuario-cargo {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+  line-height: 1;
+}

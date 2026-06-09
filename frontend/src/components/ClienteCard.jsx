@@ -1,4 +1,8 @@
+import { usePermissao } from "../hooks/usePermissao";
+
 function ClienteCard({ cliente, onVisualizar, onExcluir }) {
+  const { podeExcluir } = usePermissao();
+
   return (
     <div className="cliente-card">
       <div className="cliente-card__info">
@@ -26,9 +30,11 @@ function ClienteCard({ cliente, onVisualizar, onExcluir }) {
           <img src="./icons/eye-svgrepo-com.svg" alt="" className="icon icon-eye" />
           Visualizar detalhes
         </button>
-        <button className="btn-excluir" onClick={() => onExcluir(cliente.id)}>
-          <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon icon-trash" />
-        </button>
+        {podeExcluir && (
+          <button className="btn-excluir" onClick={() => onExcluir(cliente.id)}>
+            <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon icon-trash" />
+          </button>
+        )}
       </div>
     </div>
   );
