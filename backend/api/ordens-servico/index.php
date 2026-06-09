@@ -174,7 +174,7 @@ if ($method === 'POST') {
                 valor_servico, valor_pecas,
                 status
             ) VALUES (
-                1,
+                NULL,
                 :placa, :marca, :modelo,
                 :problema, :servicos_realizados,
                 :valor_servico, :valor_pecas,
@@ -230,7 +230,7 @@ if ($method === 'POST') {
             $pdo->prepare("
                 INSERT INTO movimentacoes_estoque
                     (produto_id, usuario_id, tipo, quantidade, motivo, referencia_tipo, referencia_id)
-                VALUES (:produto_id, 1, 'saida', :quantidade, :motivo, 'os', :os_id)
+                VALUES (:produto_id, NULL, 'saida', :quantidade, :motivo, 'os', :os_id)
             ")->execute([
                 ':produto_id' => $produtoId,
                 ':quantidade' => $quantidade,

@@ -11,7 +11,6 @@ export function usePermissao() {
   // ── Níveis de acesso ──────────────────────────────────────
   const isAdmin          = cargo === "admin";
   const isFuncionarioAdmin = cargo === "funcionario_admin";
-  const isFuncionario    = cargo === "funcionario";
 
   // ── Permissões específicas ────────────────────────────────
   return {

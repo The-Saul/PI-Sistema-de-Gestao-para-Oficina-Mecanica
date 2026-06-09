@@ -1,5 +1,5 @@
 const BASE_FINANCEIRO  = 'http://localhost/PI/backend/api/financeiro';
-const BASE_VENDAS      = 'http://localhostPI/backend/api/vendas';
+const BASE_VENDAS      = 'http://localhost/PI/backend/api/vendas';
 const BASE_OS          = 'http://localhost/PI/backend/api/ordens-servico';
 const BASE_PRODUTOS    = 'http://localhost/PI/backend/api/produtos';
 

@@ -121,7 +121,7 @@ if ($method === 'POST') {
         // 2. Insere o cabeçalho da venda (usuario_id = 1 por enquanto, sem auth)
         $stmtVenda = $pdo->prepare("
             INSERT INTO vendas (usuario_id, total, observacao)
-            VALUES (1, :total, :observacao)
+            VALUES (NULL, :total, :observacao)
             RETURNING id
         ");
         $stmtVenda->execute([
@@ -164,7 +164,7 @@ if ($method === 'POST') {
                 INSERT INTO movimentacoes_estoque
                     (produto_id, usuario_id, tipo, quantidade, motivo, referencia_tipo, referencia_id)
                 VALUES
-                    (:produto_id, 1, 'saida', :quantidade, :motivo, 'venda', :venda_id)
+                    (:produto_id, NULL, 'saida', :quantidade, :motivo, 'venda', :venda_id)
             ");
             $stmtMov->execute([
                 ':produto_id' => $produtoId,

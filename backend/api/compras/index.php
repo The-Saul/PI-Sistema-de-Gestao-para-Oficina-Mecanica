@@ -113,7 +113,7 @@ if ($method === 'POST') {
         // 1. Insere cabeçalho da compra
         $stmtCompra = $pdo->prepare("
             INSERT INTO compras (fornecedor_id, usuario_id, total, observacao, data_compra)
-            VALUES (:fornecedor_id, 1, :total, :observacao, CURRENT_DATE)
+            VALUES (:fornecedor_id, NULL, :total, :observacao, CURRENT_DATE)
             RETURNING id
         ");
         $stmtCompra->execute([
@@ -155,7 +155,7 @@ if ($method === 'POST') {
                 INSERT INTO movimentacoes_estoque
                     (produto_id, usuario_id, tipo, quantidade, motivo, referencia_tipo, referencia_id)
                 VALUES
-                    (:produto_id, 1, 'entrada', :quantidade, :motivo, 'compra', :compra_id)
+                    (:produto_id, NULL, 'entrada', :quantidade, :motivo, 'compra', :compra_id)
             ")->execute([
                 ':produto_id' => $produtoId,
                 ':quantidade' => $quantidade,
