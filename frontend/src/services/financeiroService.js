@@ -1,7 +1,7 @@
-const BASE_FINANCEIRO  = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/financeiro';
-const BASE_VENDAS      = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/vendas';
-const BASE_OS          = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/ordens-servico';
-const BASE_PRODUTOS    = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/produtos';
+const BASE_FINANCEIRO  = 'http://localhost/PI/backend/api/financeiro';
+const BASE_VENDAS      = 'http://localhostPI/backend/api/vendas';
+const BASE_OS          = 'http://localhost/PI/backend/api/ordens-servico';
+const BASE_PRODUTOS    = 'http://localhost/PI/backend/api/produtos';
 
 export async function listarMovimentacoes({ tipo = '', mes = '' } = {}) {
   const params = new URLSearchParams();
@@ -53,8 +53,8 @@ export async function criarOS(dados) {
   return json;
 }
 
-const BASE_COMPRAS = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/compras';
-const BASE_FORN    = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/fornecedores';
+const BASE_COMPRAS = 'http://localhost/PI/backend/api/compras';
+const BASE_FORN    = 'http://localhost/PI/backend/api/fornecedores';
 
 export async function listarFornecedoresFinanceiro() {
   const res = await fetch(`${BASE_FORN}/index.php?limite=100`);
@@ -74,7 +74,7 @@ export async function criarCompra(dados) {
   return json;
 }
 
-const BASE_CLIENTES = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/clientes';
+const BASE_CLIENTES = 'http://localhost/PI/backend/api/clientes';
 
 export async function listarClientesFinanceiro() {
   const res = await fetch(`${BASE_CLIENTES}/index.php?limite=100`);

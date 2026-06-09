@@ -5,7 +5,7 @@
 // GET → retorna o próximo código disponível para um produto
 // Ex: se o último for "PRO-007", retorna "PRO-008"
 // ============================================================
-
+require_once '../../config/cors.php';
 require_once '../../config/headers.php';
 require_once '../../config/database.php';
 

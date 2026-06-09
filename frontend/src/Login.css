@@ -51,15 +51,10 @@
 }
 
 .login-logo {
-
   width: 120px;
-
   height: 120px;
-
   object-fit: contain;
-
   margin-bottom: 20px;
-
 }
 
 .login-brand {
@@ -70,13 +65,11 @@
 .login-brand h1 {
   font-size: 64px;
   font-weight: 800;
-
   margin-bottom: 10px;
 }
 
 .login-brand p {
   font-size: 18px;
-
   opacity: 0.9;
 }
 
@@ -96,44 +89,40 @@
   padding: 40px;
 }
 
+/* 🔧 CORREÇÃO IMPORTANTE (não quebra estilo) */
 .login-box {
   width: 100%;
+  position: relative;
+  z-index: 2;
 }
+
+/* ============================================================
+   HEADER
+============================================================ */
 
 .login-header {
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   text-align: center;
-
   margin-bottom: 30px;
-
 }
 
+/* 🔧 MANTÉM VISUAL, MAS NÃO BLOQUEIA FORM */
 .login-top-logo {
-
   width: 350px;
-
   height: auto;
-
   object-fit: contain;
 
-  position: absolute;
-
-  top: 40px;
-
-  right: 40px;
-
+  position: relative; /* era absolute (causava problema) */
+  z-index: 1;
+  top: 0;
+  right: 0;
 }
+
 .login-header h2 {
   color: white;
-
   font-size: 32px;
-
   margin-bottom: 10px;
 }
 
@@ -145,62 +134,53 @@
    FORMULÁRIO
 ============================================================ */
 
+
 .login-form {
   display: flex;
   flex-direction: column;
+  gap: 18px; /* espaço entre os blocos */
 
-  gap: 20px;
 }
 
 .login-form label {
   display: block;
-
   color: #d1d5db;
-
   margin-bottom: 8px;
-
   font-size: 14px;
 }
 
+/* INPUT */
 .login-input {
   width: 100%;
-
   padding: 14px;
-
   border: 1px solid #374151;
   border-radius: 10px;
-
   background: #1f2937;
-
   color: white;
-
   outline: none;
-
   transition: 0.2s;
+  position: relative;
+  z-index: 2;
+  margin: 5px;
 }
 
 .login-input:focus {
   border-color: #2563eb;
 }
 
+/* BOTÃO */
 .login-btn {
   width: 100%;
-
   padding: 14px;
-
   border: none;
   border-radius: 10px;
-
   background: #2563eb;
-
   color: white;
-
   font-size: 16px;
   font-weight: 600;
-
   cursor: pointer;
-
   transition: 0.2s;
+  margin: 5px;
 }
 
 .login-btn:hover {
@@ -208,11 +188,39 @@
 }
 
 /* ============================================================
+   LINKS
+============================================================ */
+
+.login-register {
+  margin-top: 20px;
+  text-align: center;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-register span {
+  color: #d1d5db;
+  font-size: 14px;
+}
+
+.register-link {
+  color: #313ead;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.register-link:hover {
+  opacity: 0.8;
+}
+
+/* ============================================================
    RESPONSIVO
 ============================================================ */
 
 @media (max-width: 900px) {
-
   .login-left {
     display: none;
   }
@@ -220,5 +228,4 @@
   .login-right {
     width: 100%;
   }
-
 }

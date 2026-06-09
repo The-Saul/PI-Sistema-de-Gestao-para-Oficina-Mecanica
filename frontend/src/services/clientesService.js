@@ -3,7 +3,7 @@
 // Comunicação com a API PHP de Clientes
 // ============================================================
 
-const BASE_URL = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/clientes';
+const BASE_URL = 'http://localhost/PI/backend/api/clientes';
 //                                   ^^^^^^^^
 //                  Ajuste "codemec" para o nome da pasta
 //                  do seu projeto dentro do htdocs do XAMPP

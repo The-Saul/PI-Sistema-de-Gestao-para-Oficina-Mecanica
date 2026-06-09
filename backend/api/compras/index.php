@@ -9,7 +9,7 @@
 //   4. Registra movimentações de estoque
 //   5. Lança saída em financeiro
 // ============================================================
-
+require_once '../../config/cors.php';
 require_once '../../config/headers.php';
 require_once '../../config/database.php';
 

@@ -1,7 +1,7 @@
 <?php
 require_once '../../config/headers.php';
 require_once '../../config/database.php';
-
+require_once '../../config/cors.php';
 $pdo = getConnection();
 
 $stmtVendas = $pdo->query("SELECT COUNT(*) FROM vendas");

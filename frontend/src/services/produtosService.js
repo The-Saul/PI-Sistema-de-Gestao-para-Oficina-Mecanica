@@ -2,7 +2,7 @@
 // CodeMec — services/produtosService.js
 // ============================================================
 
-const BASE_URL = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/produtos';
+const BASE_URL = 'http://localhost/pi/backend/api/produtos';
 
 export async function listarProdutos({ busca = '', pagina = 1, limite = 100 } = {}) {
   const params = new URLSearchParams();

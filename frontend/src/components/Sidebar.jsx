@@ -1,85 +1,201 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function Sidebar() {
+
+  const cargo = localStorage.getItem("cargo");
+  const navigate = useNavigate();
+
+  const cargos = {
+    gerente: "Gerente",
+    atendente: "Atendente",
+    estoquista: "Estoquista",
+    mecanico: "Mecânico",
+    financeiro: "Financeiro"
+  };
+
   return (
     <aside className="sidebar">
+
       <div>
+
         <header className="logo">
-          <img src="./Img/Rectangle 55.png" alt="logo" />
+
+          <img
+            src="./Img/Rectangle 55.png"
+            alt="logo"
+          />
+
           <div>
+
             <h1>CODEMEC</h1>
+
             <p>Nome da Empresa</p>
+
+            <span className="cargo-badge">
+              {cargos[cargo] || "Usuário"}
+            </span>
+
           </div>
+
         </header>
 
         <nav>
+
           <ul>
+
             <li>
-              <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
-                <img src="/icons/dashboard-svgrepo-com.svg" alt="" className="icon" id="icon-dash" />
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                <img
+                  src="/icons/dashboard-svgrepo-com.svg"
+                  alt=""
+                  className="icon"
+                  id="icon-dash"
+                />
+
                 <span>Dashboard</span>
               </NavLink>
             </li>
 
-            <li>
-              <NavLink to="/clientes" className={({ isActive }) => isActive ? "active" : ""}>
-                <img src="/icons/people-svgrepo-com.svg" alt="" className="icon" id="icon-cli" />
-                <span>Clientes</span>
-              </NavLink>
-            </li>
+            {(cargo === "gerente" ||
+              cargo === "atendente") && (
 
-            <li>
-              <NavLink to="/fornecedores" className={({ isActive }) => isActive ? "active" : ""}>
-                <img src="/icons/truck-svgrepo-com.svg" alt="" className="icon" id="icon-for" />
-                <span>Fornecedores</span>
-              </NavLink>
-            </li>
+              <li>
+                <NavLink
+                  to="/clientes"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  <img
+                    src="/icons/people-svgrepo-com.svg"
+                    alt=""
+                    className="icon"
+                  />
 
-            <li>
-              <NavLink to="/estoque" className={({ isActive }) => isActive ? "active" : ""}>
-                <img src="/icons/box-svgrepo-com.svg" alt="" className="icon" id="icon-est" />
-                <span>Estoque</span>
-              </NavLink>
-            </li>
+                  <span>Clientes</span>
+                </NavLink>
+              </li>
 
-            <li>
-              <NavLink to="/financeiro" className={({ isActive }) => isActive ? "active" : ""}>
-                <img src="/icons/dolar-svgrepo-com.svg" alt="" className="icon" id="icon-fin" />
-                <span>Financeiro</span>
-              </NavLink>
-            </li>
+            )}
+
+            {cargo === "gerente" && (
+
+              <li>
+                <NavLink
+                  to="/fornecedores"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  <img
+                    src="/icons/truck-svgrepo-com.svg"
+                    alt=""
+                    className="icon"
+                  />
+
+                  <span>Fornecedores</span>
+                </NavLink>
+              </li>
+
+            )}
+
+            {(cargo === "gerente" ||
+              cargo === "estoquista" ||
+              cargo === "mecanico") && (
+
+              <li>
+                <NavLink
+                  to="/estoque"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  <img
+                    src="/icons/box-svgrepo-com.svg"
+                    alt=""
+                    className="icon"
+                  />
+
+                  <span>Estoque</span>
+                </NavLink>
+              </li>
+
+            )}
+
+            {(cargo === "gerente" ||
+              cargo === "financeiro") && (
+
+              <li>
+                <NavLink
+                  to="/financeiro"
+                  className={({ isActive }) =>
+                    isActive ? "active" : ""
+                  }
+                >
+                  <img
+                    src="/icons/dolar-svgrepo-com.svg"
+                    alt=""
+                    className="icon"
+                  />
+
+                  <span>Financeiro</span>
+                </NavLink>
+              </li>
+
+            )}
+
           </ul>
+
         </nav>
+
       </div>
 
       <footer>
 
-      <button
-        onClick={() => window.location.href = "/"}
-    >
-     <img
-        src="/icons/iconlogin.svg"
-        alt=""
-        className="icon"
-      />
+        <button
+          onClick={() => {
 
-      <span>Login</span>
-      </button>
+            localStorage.removeItem("cargo");
 
-  <button
-    onClick={() => window.location.href = "/"}
-  >
-    <img
-      src="/icons/leave-svgrepo-com.svg"
-      alt=""
-      className="icon"
-      id="icon-lea"
-    />
+            navigate("/");
 
-    <span>Sair</span>
-  </button>
+          }}
+        >
+          <img
+            src="/icons/iconlogin.svg"
+            alt=""
+            className="icon"
+          />
 
-</footer>
+          <span>Trocar Usuário</span>
+        </button>
+
+        <button
+          onClick={() => {
+
+            localStorage.clear();
+
+            navigate("/");
+
+          }}
+        >
+          <img
+            src="/icons/leave-svgrepo-com.svg"
+            alt=""
+            className="icon"
+            id="icon-lea"
+          />
+
+          <span>Sair</span>
+        </button>
+
+      </footer>
+
     </aside>
   );
 }

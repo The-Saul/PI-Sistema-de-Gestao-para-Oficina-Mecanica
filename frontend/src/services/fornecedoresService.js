@@ -3,7 +3,7 @@
 // Comunicação com a API PHP de Fornecedores
 // ============================================================
 
-const BASE_URL = 'http://localhost/projeto-pi/PI-Sistema-de-Gestao-para-Oficina-Mecanica/backend/api/fornecedores';
+const BASE_URL = 'http://localhost/PI/backend/api/fornecedores';
 
 // ─────────────────────────────────────────────────────────────
 // Listar fornecedores (com busca e paginação opcionais)
