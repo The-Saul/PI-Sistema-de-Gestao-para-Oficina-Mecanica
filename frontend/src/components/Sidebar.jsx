@@ -2,16 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 function Sidebar() {
 
-  const cargo = localStorage.getItem("cargo");
   const navigate = useNavigate();
-
-  const cargos = {
-    gerente: "Gerente",
-    atendente: "Atendente",
-    estoquista: "Estoquista",
-    mecanico: "Mecânico",
-    financeiro: "Financeiro"
-  };
 
   return (
     <aside className="sidebar">
@@ -30,10 +21,6 @@ function Sidebar() {
             <h1>CODEMEC</h1>
 
             <p>Nome da Empresa</p>
-
-            <span className="cargo-badge">
-              {cargos[cargo] || "Usuário"}
-            </span>
 
           </div>
 
@@ -61,93 +48,90 @@ function Sidebar() {
               </NavLink>
             </li>
 
-            {(cargo === "gerente" ||
-              cargo === "atendente") && (
+            <li>
+              <NavLink
+                to="/clientes"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                <img
+                  src="/icons/people-svgrepo-com.svg"
+                  alt=""
+                  className="icon"
+                />
 
-              <li>
-                <NavLink
-                  to="/clientes"
-                  className={({ isActive }) =>
-                    isActive ? "active" : ""
-                  }
-                >
-                  <img
-                    src="/icons/people-svgrepo-com.svg"
-                    alt=""
-                    className="icon"
-                  />
+                <span>Clientes</span>
+              </NavLink>
+            </li>
 
-                  <span>Clientes</span>
-                </NavLink>
-              </li>
+            <li>
+              <NavLink
+                to="/fornecedores"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                <img
+                  src="/icons/truck-svgrepo-com.svg"
+                  alt=""
+                  className="icon"
+                />
 
-            )}
+                <span>Fornecedores</span>
+              </NavLink>
+            </li>
 
-            {cargo === "gerente" && (
+            <li>
+              <NavLink
+                to="/estoque"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                <img
+                  src="/icons/box-svgrepo-com.svg"
+                  alt=""
+                  className="icon"
+                />
 
-              <li>
-                <NavLink
-                  to="/fornecedores"
-                  className={({ isActive }) =>
-                    isActive ? "active" : ""
-                  }
-                >
-                  <img
-                    src="/icons/truck-svgrepo-com.svg"
-                    alt=""
-                    className="icon"
-                  />
+                <span>Estoque</span>
+              </NavLink>
+            </li>
 
-                  <span>Fornecedores</span>
-                </NavLink>
-              </li>
+            <li>
+              <NavLink
+                to="/financeiro"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                <img
+                  src="/icons/dolar-svgrepo-com.svg"
+                  alt=""
+                  className="icon"
+                />
 
-            )}
+                <span>Financeiro</span>
+              </NavLink>
+            </li>
 
-            {(cargo === "gerente" ||
-              cargo === "estoquista" ||
-              cargo === "mecanico") && (
+            <li>
+              <NavLink
+                to="/controle-acesso"
+                className={({ isActive }) =>
+                  isActive ? "active" : ""
+                }
+              >
+                <img
+                  src="/icons/lock-svgrepo-com.svg"
+                  alt=""
+                  className="icon"
+                />
 
-              <li>
-                <NavLink
-                  to="/estoque"
-                  className={({ isActive }) =>
-                    isActive ? "active" : ""
-                  }
-                >
-                  <img
-                    src="/icons/box-svgrepo-com.svg"
-                    alt=""
-                    className="icon"
-                  />
-
-                  <span>Estoque</span>
-                </NavLink>
-              </li>
-
-            )}
-
-            {(cargo === "gerente" ||
-              cargo === "financeiro") && (
-
-              <li>
-                <NavLink
-                  to="/financeiro"
-                  className={({ isActive }) =>
-                    isActive ? "active" : ""
-                  }
-                >
-                  <img
-                    src="/icons/dolar-svgrepo-com.svg"
-                    alt=""
-                    className="icon"
-                  />
-
-                  <span>Financeiro</span>
-                </NavLink>
-              </li>
-
-            )}
+                <span>Controle de Acesso</span>
+              </NavLink>
+            </li>
 
           </ul>
 
@@ -159,11 +143,7 @@ function Sidebar() {
 
         <button
           onClick={() => {
-
-            localStorage.removeItem("cargo");
-
             navigate("/");
-
           }}
         >
           <img

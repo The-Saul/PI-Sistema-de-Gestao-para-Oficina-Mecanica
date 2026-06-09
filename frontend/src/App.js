@@ -16,6 +16,7 @@ import Clientes from "./pages/Clientes";
 import Fornecedores from "./pages/Fornecedores";
 import Estoque from "./pages/Estoque";
 import Financeiro from "./pages/Financeiro";
+import ControleAcesso from "./pages/ControleAcesso";
 
 function App() {
   return (
@@ -82,6 +83,11 @@ function App() {
       <Financeiro />
     </PrivateRoute>
   }
+/>
+
+<Route
+  path="/controle-acesso"
+  element={<ControleAcesso />}
 />
 
         {/* ROTA INVÁLIDA */}
