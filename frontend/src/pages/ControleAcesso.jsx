@@ -28,7 +28,7 @@ async function cadastrarFuncionario(nome, email, senha, cargo) {
   const res  = await fetch(`${BASE_CADASTRO}/cadastro.php`, {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
-    body:    JSON.stringify({ nome, email, senha, cargo }),
+    body: JSON.stringify({ nome, usuario: email, senha, cargo }),
   });
   const json = await res.json();
   if (!res.ok) throw new Error(json.message || "Erro ao cadastrar funcionário.");

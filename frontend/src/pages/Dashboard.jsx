@@ -2,21 +2,23 @@ import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import Card from "../components/Card";
+import { usePermissao } from "../hooks/usePermissao";
 import { listarClientes } from "../services/clientesService";
 import { listarFornecedores } from "../services/fornecedoresService";
 import { listarProdutos } from "../services/produtosService";
-import { totalVendas } from "../services/financeiroService";
-import { listarMovimentacoes } from "../services/financeiroService";
+import { totalVendas, listarMovimentacoes } from "../services/financeiroService";
 
 function Dashboard() {
+  const { podeVerFinanceiro } = usePermissao();
+
   // ── Estado dos cards ──────────────────────────────────────
-  const [totalClientes,         setTotalClientes] = useState("...");
+  const [totalClientes,     setTotalClientes]     = useState("...");
   const [totalFornecedores, setTotalFornecedores] = useState("...");
-  const [totalEstoque,           setTotalEstoque] = useState("...");
-  const [totalVendasValor,   setTotalVendasValor] = useState("...");
-  const [totalEntradas,         setTotalEntradas] = useState(0);
-  const [totalSaidas,           setTotalSaidas]   = useState(0);
-  const [saldo,                 setSaldo]         = useState(0);
+  const [totalEstoque,      setTotalEstoque]      = useState("...");
+  const [totalVendasValor,  setTotalVendasValor]  = useState("...");
+  const [totalEntradas,     setTotalEntradas]     = useState(0);
+  const [totalSaidas,       setTotalSaidas]       = useState(0);
+  const [saldo,             setSaldo]             = useState(0);
 
   // ── Busca os totais da API ────────────────────────────────
   useEffect(() => {
@@ -43,8 +45,13 @@ function Dashboard() {
         setSaldo(res.saldo);
       })
       .catch(() => {});
-
   }, []);
+
+  // ── Formata valor financeiro conforme permissão ───────────
+  const formatarValor = (val) =>
+    podeVerFinanceiro
+      ? `R$ ${Number(val).toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`
+      : "R$ ***";
 
   return (
     <div className="app">
@@ -92,20 +99,21 @@ function Dashboard() {
           />
         </section>
 
+        {/* Resumo financeiro — valores escondidos para funcionário comum */}
         <section className="finance-box">
           <h3>Resumo Financeiro (Total)</h3>
           <div className="finance">
             <div className="fin red">
               <p>↘ Gastos / Compras</p>
-              <h2>R$ {totalSaidas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h2>
+              <h2>{formatarValor(totalSaidas)}</h2>
             </div>
             <div className="fin green">
               <p>↗ Receitas</p>
-              <h2>R$ {totalEntradas.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h2>
+              <h2>{formatarValor(totalEntradas)}</h2>
             </div>
             <div className="fin orange">
               <p>$ Saldo</p>
-              <h2>R$ {saldo.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</h2>
+              <h2>{formatarValor(saldo)}</h2>
             </div>
           </div>
         </section>
