@@ -1,84 +1,59 @@
 <?php
-
-require_once "../../config/headers.php";
+require_once "../../config/cors.php";
 require_once "../../config/database.php";
 
 $conn = getConnection();
 
-$dados = json_decode(
-    file_get_contents("php://input"),
-    true
-);
+$data = json_decode(file_get_contents("php://input"), true);
 
-$nome = trim($dados["nome"] ?? "");
-$email = trim($dados["email"] ?? "");
-$senha = trim($dados["senha"] ?? "");
+$nome    = trim($data["nome"] ?? "");
+$usuario = trim($data["usuario"] ?? ""); // email
+$senha   = trim($data["senha"] ?? "");
+$cargo   = trim($data["cargo"] ?? "funcionario");
 
-if (
-    empty($nome) ||
-    empty($email) ||
-    empty($senha)
-) {
+$validos = ["admin", "funcionario_admin", "funcionario"];
 
+if (!in_array($cargo, $validos)) {
+    $cargo = "funcionario";
+}
+
+if (!$nome || !$usuario || !$senha) {
     http_response_code(400);
-
     echo json_encode([
         "success" => false,
-        "message" => "Preencha todos os campos"
+        "message" => "Preencha nome, email e senha"
     ]);
-
-    exit();
+    exit;
 }
 
-$stmt = $conn->prepare("
-    SELECT id
-    FROM usuarios
-    WHERE usuario = :usuario
-");
+/* verifica se já existe */
+$check = $conn->prepare("SELECT id FROM usuarios WHERE usuario = :usuario");
+$check->execute([":usuario" => $usuario]);
 
-$stmt->execute([
-    ":usuario" => $email
-]);
-
-if ($stmt->fetch()) {
-
+if ($check->fetch()) {
     http_response_code(409);
-
     echo json_encode([
         "success" => false,
-        "message" => "Usuário já cadastrado"
+        "message" => "Email já cadastrado"
     ]);
-
-    exit();
+    exit;
 }
 
-$hash = password_hash(
-    $senha,
-    PASSWORD_BCRYPT
-);
+$senhaHash = password_hash($senha, PASSWORD_BCRYPT);
 
-$stmt = $conn->prepare("
-    INSERT INTO usuarios
-    (
-        nome,
-        usuario,
-        senha_hash
-    )
-    VALUES
-    (
-        :nome,
-        :usuario,
-        :senha
-    )
-");
+$sql = "INSERT INTO usuarios (nome, usuario, senha_hash, cargo)
+        VALUES (:nome, :usuario, :senha, :cargo)";
+
+$stmt = $conn->prepare($sql);
 
 $stmt->execute([
     ":nome" => $nome,
-    ":usuario" => $email,
-    ":senha" => $hash
+    ":usuario" => $usuario,
+    ":senha" => $senhaHash,
+    ":cargo" => $cargo
 ]);
 
 echo json_encode([
     "success" => true,
-    "message" => "Conta criada com sucesso"
+    "message" => "Usuário cadastrado com sucesso"
 ]);

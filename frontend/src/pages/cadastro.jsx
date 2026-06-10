@@ -4,25 +4,19 @@ import { cadastrar } from "../services/cadastrar";
 import "../Login.css";
 
 export default function Cadastro() {
-
   const navigate = useNavigate();
 
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [confirmarSenha, setConfirmarSenha] = useState("");
+  const [cargo, setCargo] = useState("funcionario");
   const [loading, setLoading] = useState(false);
 
   async function handleCadastro(e) {
-
     e.preventDefault();
 
-    if (
-      !nome ||
-      !email ||
-      !senha ||
-      !confirmarSenha
-    ) {
+    if (!nome || !email || !senha || !confirmarSenha) {
       alert("Preencha todos os campos.");
       return;
     }
@@ -33,141 +27,91 @@ export default function Cadastro() {
     }
 
     try {
-
       setLoading(true);
 
-      const response = await cadastrar(
-        nome,
-        email,
-        senha
-      );
+      await cadastrar(nome, email, senha, cargo);
 
-      alert(
-        response.message ||
-        "Conta criada com sucesso!"
-      );
-
+      alert("Conta criada com sucesso!");
       navigate("/");
 
     } catch (error) {
-
       alert(error.message);
-
     } finally {
-
       setLoading(false);
-
     }
-
   }
 
   return (
     <div className="login-page">
 
+      {/* 🔵 LADO ESQUERDO (RESTO DO CSS) */}
       <div className="login-left">
         <div className="login-overlay">
           <div className="login-brand">
             <h1>CodeMec</h1>
-            <p>
-              Sistema de Gestão para Oficina Mecânica
-            </p>
+            <p>Sistema de Gestão para Oficina Mecânica</p>
           </div>
         </div>
       </div>
 
+      {/* 🔵 LADO DIREITO (FORM PADRÃO) */}
       <div className="login-right">
 
-        <form
-          className="login-box"
-          onSubmit={handleCadastro}
-        >
+        <form className="login-box" onSubmit={handleCadastro}>
 
-          <div className="login-header">
-
-            <img
-              src="/Img/codemeclogo.png"
-              alt="CodeMec"
-              className="login-top-logo"
-            />
-
-            <h2>Criar Conta</h2>
-
-            <p>
-              Cadastre-se para acessar o sistema
-            </p>
-
-          </div>
+          <h2>Cadastro</h2>
 
           <input
-            className="login-input"
-            placeholder="Nome completo"
+            placeholder="Nome"
             value={nome}
-            onChange={(e) =>
-              setNome(e.target.value)
-            }
+            onChange={(e) => setNome(e.target.value)}
+            className="login-input"
           />
 
           <input
             type="email"
-            className="login-input"
-            placeholder="E-mail"
+            placeholder="Email"
             value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
+            className="login-input"
           />
+
+          {/* 🔥 CARGO AGORA FUNCIONA */}
+          <select
+            value={cargo}
+            onChange={(e) => setCargo(e.target.value)}
+            className="login-input"
+          >
+            <option value="funcionario">Funcionário</option>
+            <option value="funcionario_admin">Administrador</option>
+            <option value="admin">Admin</option>
+          </select>
 
           <input
             type="password"
-            className="login-input"
             placeholder="Senha"
             value={senha}
-            onChange={(e) =>
-              setSenha(e.target.value)
-            }
+            onChange={(e) => setSenha(e.target.value)}
+            className="login-input"
           />
 
           <input
             type="password"
-            className="login-input"
             placeholder="Confirmar senha"
             value={confirmarSenha}
-            onChange={(e) =>
-              setConfirmarSenha(
-                e.target.value
-              )
-            }
+            onChange={(e) => setConfirmarSenha(e.target.value)}
+            className="login-input"
           />
 
-          <button
-            type="submit"
-            className="login-btn"
-            disabled={loading}
-          >
-            {
-              loading
-                ? "Criando..."
-                : "Criar Conta"
-            }
+          <button className="login-btn" disabled={loading}>
+            {loading ? "Criando..." : "Criar conta"}
           </button>
 
           <div className="login-register">
-
-            <span>
-              Já possui uma conta?
-            </span>
-
-            <Link
-              to="/"
-              className="register-link"
-            >
-              Voltar para Login
-            </Link>
-
+            <Link to="/">Voltar</Link>
           </div>
 
         </form>
-
       </div>
 
     </div>

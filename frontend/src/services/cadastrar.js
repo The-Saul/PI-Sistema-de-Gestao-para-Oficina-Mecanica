@@ -1,79 +1,18 @@
-const API =
-  "http://localhost/pi/backend/api/cadastrar";
+const API = "http://localhost/PI/backend/api/cadastrar";
 
-async function request(url, body) {
-
-  const response = await fetch(
-    url,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type":
-          "application/json",
-      },
-      body: JSON.stringify(body),
-    }
-  );
-
-  const data =
-    await response.json();
-
-  if (!response.ok) {
-
-    throw new Error(
-      data.message ||
-      "Erro na requisição"
-    );
-
-  }
-
-  return data;
-
-}
-
-export function cadastrar(
-  nome,
-  email,
-  senha
-) {
-
-  return request(
-    `${API}/cadastro.php`,
-    {
+export function cadastrar(nome, usuario, senha, cargo) {
+  return fetch(`${API}/cadastro.php`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
       nome,
-      email,
+      usuario,
       senha,
-    }
-  );
-
-}
-
-export function enviarCodigo(
-  email
-) {
-
-  return request(
-    `${API}/enviar-codigo.php`,
-    {
-      email,
-    }
-  );
-
-}
-
-export function redefinirSenha(
-  email,
-  codigo,
-  senha
-) {
-
-  return request(
-    `${API}/redefinir-senha.php`,
-    {
-      email,
-      codigo,
-      senha,
-    }
-  );
-
+      cargo
+    }),
+  }).then(async (res) => {
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message);
+    return data;
+  });
 }

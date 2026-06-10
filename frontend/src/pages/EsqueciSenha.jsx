@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   enviarCodigo,
   redefinirSenha
-} from "../services/cadastrar";
+} from "../services/recovery";
 
 import "../Login.css";
 
