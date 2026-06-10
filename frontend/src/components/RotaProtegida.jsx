@@ -8,7 +8,7 @@ import { Navigate } from "react-router-dom";
 function RotaProtegida({ children, cargosPermitidos }) {
   const usuarioRaw = sessionStorage.getItem("usuario");
 
-  console.log("RotaProtegida - usuarioRaw:", usuarioRaw);
+  //console.log("RotaProtegida - usuarioRaw:", usuarioRaw);
 
   // Não logado → vai para login
   if (!usuarioRaw) {

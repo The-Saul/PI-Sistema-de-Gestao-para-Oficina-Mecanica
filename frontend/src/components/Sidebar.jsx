@@ -61,7 +61,7 @@ function Sidebar() {
             {podeAcessarControle && (
               <li>
                 <NavLink to="/controle-acesso" className={({ isActive }) => isActive ? "active" : ""}>
-                  <img src="/icons/lock-alt-svgrepo-com.svg" alt="" className="icon" />
+                  <img src="/icons/lock-alt-svgrepo-com.svg" alt="" className="icon" id="icon-lock" />
                   <span>Controle de Acesso</span>
                 </NavLink>
               </li>
