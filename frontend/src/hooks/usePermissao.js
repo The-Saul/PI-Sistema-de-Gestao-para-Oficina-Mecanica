@@ -4,7 +4,7 @@
 // ============================================================
 
 export function usePermissao() {
-  const usuarioRaw = localStorage.getItem("usuario");
+  const usuarioRaw = sessionStorage.getItem("usuario");
   const usuario    = usuarioRaw ? JSON.parse(usuarioRaw) : null;
   const cargo      = usuario?.cargo ?? "funcionario";
 

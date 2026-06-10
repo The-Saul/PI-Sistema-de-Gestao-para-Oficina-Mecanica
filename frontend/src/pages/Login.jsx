@@ -29,12 +29,16 @@ export default function Login() {
         senha
       );
 
-      localStorage.setItem(
+      console.log("resposta:", response);
+
+      sessionStorage.setItem(
         "usuario",
         JSON.stringify(
           response.usuario
         )
       );
+
+      console.log("salvo no session:", sessionStorage.getItem("usuario"));
 
       alert("Login realizado com sucesso!");
 

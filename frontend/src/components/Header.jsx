@@ -3,8 +3,8 @@
 // ============================================================
 function Header({ title, subtitle, action }) {
 
-  // Lê o usuário logado do localStorage
-  const usuarioRaw = localStorage.getItem("usuario");
+  // Lê o usuário logado do sessionStorage
+  const usuarioRaw = sessionStorage.getItem("usuario");
   const usuario    = usuarioRaw ? JSON.parse(usuarioRaw) : null;
 
   // Determina o cargo: se o campo "usuario" for um email

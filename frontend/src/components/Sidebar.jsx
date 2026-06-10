@@ -73,7 +73,7 @@ function Sidebar() {
       </div>
 
       <footer>
-        <button onClick={() => { localStorage.clear(); navigate("/"); }}>
+        <button onClick={() => { sessionStorage.clear(); navigate("/"); }}>
           <img src="/icons/leave-svgrepo-com.svg" alt="" className="icon" id="icon-lea" />
           <span>Sair</span>
         </button>

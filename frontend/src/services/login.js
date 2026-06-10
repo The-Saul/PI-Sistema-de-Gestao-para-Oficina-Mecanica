@@ -1,4 +1,4 @@
-export async function login(usuario, senha) {
+export async function login(email, senha) {
   const response = await fetch(
     "http://localhost/pi/backend/api/login/login.php",
     {
@@ -7,7 +7,7 @@ export async function login(usuario, senha) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        usuario,
+        email,
         senha,
       }),
     }
