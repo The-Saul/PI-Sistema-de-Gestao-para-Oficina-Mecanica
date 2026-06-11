@@ -7,7 +7,7 @@ const FORM_VAZIO = {
   senha:   "",
 };
 
-function UsuarioModal({ aberto, onFechar, onSalvar, usuarioSelecionado }) {
+function UsuarioModal({ aberto, onFechar, onSalvar, usuarioSelecionado, isAdmin }) {
   const [form,     setForm]     = useState(FORM_VAZIO);
   const [editando, setEditando] = useState(false);
 
@@ -29,7 +29,8 @@ function UsuarioModal({ aberto, onFechar, onSalvar, usuarioSelecionado }) {
 
   if (!aberto) return null;
 
-  const somenteLeitura = !editando;
+  const somenteLeitura  = !editando;
+  const isAdminCargo    = usuarioSelecionado?.cargo === "admin";
   const set = (campo, valor) => setForm((f) => ({ ...f, [campo]: valor }));
 
   const handleSalvar = async (e) => {
@@ -92,11 +93,11 @@ function UsuarioModal({ aberto, onFechar, onSalvar, usuarioSelecionado }) {
             </div>
           </div>
 
-          {/* Cargo */}
+          {/* Cargo — somente leitura se for admin ou estiver visualizando */}
           <div className="modal__row">
             <div className="modal__field">
               <label>Cargo</label>
-              {somenteLeitura ? (
+              {somenteLeitura || isAdminCargo ? (
                 <input
                   type="text"
                   value={labelCargo[form.cargo] ?? form.cargo}
@@ -137,15 +138,15 @@ function UsuarioModal({ aberto, onFechar, onSalvar, usuarioSelecionado }) {
               <button type="submit" className="btn-salvar">Cadastrar</button>
             )}
 
-            {/* Ver detalhes — botão editar com lápis */}
-            {usuarioSelecionado && !editando && (
+            {/* Editar — admin pode editar qualquer um */}
+            {usuarioSelecionado && !editando && isAdmin && (
               <button type="button" className="btn-editar-modal" onClick={() => setEditando(true)}>
                 <img src="./icons/pencil-svgrepo-com.svg" alt="" className="icon icon-btn-editar" />
                 Editar
               </button>
             )}
 
-            {/* Modo edição — salvar */}
+            {/* Salvar alterações */}
             {usuarioSelecionado && editando && (
               <button type="submit" className="btn-salvar">Salvar alterações</button>
             )}

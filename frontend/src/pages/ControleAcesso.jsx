@@ -67,6 +67,8 @@ const labelCargo = {
 
 // ── Card de usuário — mesmo padrão do ClienteCard ─────────────
 function UsuarioCard({ u, usuarioLogadoId, isAdmin, onVisualizar, onExcluir, onAlterarStatus }) {
+  const isAdminMaster = u.cargo === "admin";
+
   return (
     <div className="cliente-card">
 
@@ -95,25 +97,38 @@ function UsuarioCard({ u, usuarioLogadoId, isAdmin, onVisualizar, onExcluir, onA
 
       {/* Direita — botões */}
       <div className="cliente-card__acoes">
-        <button
-          className={u.ativo ? "btn-desativar" : "btn-ativar"}
-          onClick={() => onAlterarStatus(u)}
-          disabled={u.id === usuarioLogadoId}
-        >
-          {u.ativo ? "Desativar" : "Ativar"}
-        </button>
+
+        {/* Ativar/Desativar — não aparece para admin master */}
+        {!isAdminMaster && isAdmin ? (
+          <button
+            className={u.ativo ? "btn-desativar" : "btn-ativar"}
+            onClick={() => onAlterarStatus(u)}
+            disabled={u.id === usuarioLogadoId}
+          >
+            {u.ativo ? "Desativar" : "Ativar"}
+          </button>
+        ) : (
+          <div style={{ width: 90 }} />
+        )}
+
+        {/* Ver detalhes — todos podem */}
         <button className="btn-visualizar" onClick={() => onVisualizar(u)}>
           <img src="./icons/eye-svgrepo-com.svg" alt="" className="icon icon-eye" />
           Visualizar detalhes
         </button>
-        {isAdmin && (
-          <button className="btn-excluir" onClick={() => onExcluir(u)}
-            disabled={u.id === usuarioLogadoId}>
+
+        {/* Excluir — apenas admin master, e nunca o próprio admin master */}
+        {isAdmin && !isAdminMaster && (
+          <button
+            className="btn-excluir"
+            onClick={() => onExcluir(u)}
+            disabled={u.id === usuarioLogadoId}
+          >
             <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon icon-trash" />
           </button>
         )}
-      </div>
 
+      </div>
     </div>
   );
 }
@@ -225,7 +240,12 @@ function ControleAcesso() {
           {!carregando && !erro && usuarios.length === 0 && (
             <p className="lista-vazia">Nenhum usuário cadastrado.</p>
           )}
-          {!carregando && !erro && usuarios.map((u) => (
+          {!carregando && !erro && [...usuarios]
+            .sort((a, b) => {
+              const ordem = { admin: 0, funcionario_admin: 1, funcionario: 2 };
+              return (ordem[a.cargo] ?? 3) - (ordem[b.cargo] ?? 3);
+            })
+            .map((u) => (
             <UsuarioCard
               key={u.id}
               u={u}
@@ -244,6 +264,7 @@ function ControleAcesso() {
         onFechar={() => setModalAberto(false)}
         onSalvar={handleSalvar}
         usuarioSelecionado={usuarioSelecionado}
+        isAdmin={isAdmin}
       />
     </div>
   );
