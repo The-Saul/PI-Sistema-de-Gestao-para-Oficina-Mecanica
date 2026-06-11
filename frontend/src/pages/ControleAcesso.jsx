@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import Header  from "../components/Header";
+import UsuarioModal from "../components/UsuarioModal";
+import { usePermissao } from "../hooks/usePermissao";
 import "../ControleAcesso.css";
 
 const BASE_URL      = "http://localhost/pi/backend/api/usuarios";
@@ -24,98 +26,36 @@ async function alterarStatus(id, ativo) {
   return json;
 }
 
+async function editarUsuario(id, dados) {
+  const res  = await fetch(`${BASE_URL}/usuario.php?id=${id}`, {
+    method:  "PUT",
+    headers: { "Content-Type": "application/json" },
+    body:    JSON.stringify(dados),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Erro ao editar usuário.");
+  return json;
+}
+
+async function excluirUsuario(id) {
+  const res  = await fetch(`${BASE_URL}/usuario.php?id=${id}`, {
+    method:  "DELETE",
+    headers: { "Content-Type": "application/json" },
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json.message || "Erro ao excluir usuário.");
+  return json;
+}
+
 async function cadastrarFuncionario(nome, email, senha, cargo) {
   const res  = await fetch(`${BASE_CADASTRO}/cadastro.php`, {
     method:  "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nome, usuario: email, senha, cargo }),
+    body:    JSON.stringify({ nome, usuario: email, senha, cargo }),
   });
   const json = await res.json();
   if (!res.ok) throw new Error(json.message || "Erro ao cadastrar funcionário.");
   return json;
-}
-
-// ── Modal de Novo Funcionário ─────────────────────────────────
-function ModalNovoFuncionario({ onFechar, onSalvo }) {
-  const [nome,           setNome]           = useState("");
-  const [email,          setEmail]          = useState("");
-  const [cargo,          setCargo]          = useState("funcionario");
-  const [senha,          setSenha]          = useState("");
-  const [confirmarSenha, setConfirmarSenha] = useState("");
-  const [salvando,       setSalvando]       = useState(false);
-
-  const handleSalvar = async (e) => {
-    e.preventDefault();
-    if (!nome || !email || !senha || !confirmarSenha) { alert("Preencha todos os campos."); return; }
-    if (senha !== confirmarSenha) { alert("As senhas não coincidem."); return; }
-    if (senha.length < 6) { alert("A senha deve ter pelo menos 6 caracteres."); return; }
-    setSalvando(true);
-    try {
-      await cadastrarFuncionario(nome, email, senha, cargo);
-      alert(`Funcionário "${nome}" cadastrado com sucesso!`);
-      onSalvo();
-      onFechar();
-    } catch (e) {
-      alert(e.message);
-    } finally {
-      setSalvando(false);
-    }
-  };
-
-  return (
-    <div className="modal-overlay-acesso" onClick={onFechar}>
-      <div className="modal-acesso" onClick={(e) => e.stopPropagation()}>
-
-        <div className="modal-acesso-header">
-          <h2>Novo Funcionário</h2>
-          <button className="modal-acesso-fechar" onClick={onFechar}>×</button>
-        </div>
-
-        <form onSubmit={handleSalvar}>
-
-          <div className="modal-acesso-campo">
-            <label>Nome completo</label>
-            <input className="modal-acesso-input" placeholder="Nome do funcionário"
-              value={nome} onChange={(e) => setNome(e.target.value)} />
-          </div>
-
-          <div className="modal-acesso-campo">
-            <label>E-mail (usado para login)</label>
-            <input type="email" className="modal-acesso-input" placeholder="email@exemplo.com"
-              value={email} onChange={(e) => setEmail(e.target.value)} />
-          </div>
-
-          <div className="modal-acesso-campo">
-            <label>Cargo</label>
-            <select className="modal-acesso-input" value={cargo} onChange={(e) => setCargo(e.target.value)}>
-              <option value="funcionario">Funcionário Comum</option>
-              <option value="funcionario_admin">Funcionário Administrador</option>
-            </select>
-          </div>
-
-          <div className="modal-acesso-campo">
-            <label>Senha</label>
-            <input type="password" className="modal-acesso-input" placeholder="Mínimo 6 caracteres"
-              value={senha} onChange={(e) => setSenha(e.target.value)} />
-          </div>
-
-          <div className="modal-acesso-campo">
-            <label>Confirmar senha</label>
-            <input type="password" className="modal-acesso-input" placeholder="Repita a senha"
-              value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} />
-          </div>
-
-          <div className="modal-acesso-footer">
-            <button type="button" className="btn-cancelar-acesso" onClick={onFechar}>Cancelar</button>
-            <button type="submit" className="acesso-btn" disabled={salvando}>
-              {salvando ? "Cadastrando..." : "Cadastrar Funcionário"}
-            </button>
-          </div>
-
-        </form>
-      </div>
-    </div>
-  );
 }
 
 // ── Labels de cargo ───────────────────────────────────────────
@@ -125,15 +65,70 @@ const labelCargo = {
   funcionario:       "Funcionário",
 };
 
+// ── Card de usuário — mesmo padrão do ClienteCard ─────────────
+function UsuarioCard({ u, usuarioLogadoId, isAdmin, onVisualizar, onExcluir, onAlterarStatus }) {
+  return (
+    <div className="cliente-card">
+
+      {/* Esquerda — avatar + nome + email */}
+      <div className="usuario-info">
+        <div className="acesso-avatar">{u.nome.charAt(0).toUpperCase()}</div>
+        <div className="usuario-info__texto">
+          <span className="cliente-card__nome">{u.nome}</span>
+          <span className="cliente-card__cpf">{u.usuario}</span>
+        </div>
+      </div>
+
+      {/* Centro — cargo e status */}
+      <div className="usuario-centro">
+        <div className="usuario-centro-cargo">
+          <span className={`cargo-badge cargo-${u.cargo}`}>
+            {labelCargo[u.cargo] ?? u.cargo}
+          </span>
+        </div>
+        <div className="usuario-centro-status">
+          <span className={u.ativo ? "status-ativo-usuario" : "status-inativo-usuario"}>
+            {u.ativo ? "● Ativo" : "● Inativo"}
+          </span>
+        </div>
+      </div>
+
+      {/* Direita — botões */}
+      <div className="cliente-card__acoes">
+        <button
+          className={u.ativo ? "btn-desativar" : "btn-ativar"}
+          onClick={() => onAlterarStatus(u)}
+          disabled={u.id === usuarioLogadoId}
+        >
+          {u.ativo ? "Desativar" : "Ativar"}
+        </button>
+        <button className="btn-visualizar" onClick={() => onVisualizar(u)}>
+          <img src="./icons/eye-svgrepo-com.svg" alt="" className="icon icon-eye" />
+          Visualizar detalhes
+        </button>
+        {isAdmin && (
+          <button className="btn-excluir" onClick={() => onExcluir(u)}
+            disabled={u.id === usuarioLogadoId}>
+            <img src="./icons/trash-svgrepo-com.svg" alt="" className="icon icon-trash" />
+          </button>
+        )}
+      </div>
+
+    </div>
+  );
+}
+
 // ── Componente principal ──────────────────────────────────────
 function ControleAcesso() {
-
-  const [usuarios,    setUsuarios]    = useState([]);
-  const [carregando,  setCarregando]  = useState(true);
-  const [erro,        setErro]        = useState("");
-  const [modalAberto, setModalAberto] = useState(false);
+  const [usuarios,           setUsuarios]           = useState([]);
+  const [carregando,         setCarregando]         = useState(true);
+  const [erro,               setErro]               = useState("");
+  const [modalAberto,        setModalAberto]        = useState(false);
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState(null);
 
   const usuarioLogado = JSON.parse(sessionStorage.getItem("usuario") || "{}");
+  const { cargo } = usePermissao();
+  const isAdmin = cargo === "admin";
 
   const carregar = async () => {
     setCarregando(true);
@@ -142,7 +137,7 @@ function ControleAcesso() {
       const dados = await listarUsuarios();
       setUsuarios(dados);
     } catch (e) {
-      setErro("Não foi possível carregar os usuários. Verifique a conexão com a API.");
+      setErro("Não foi possível carregar os usuários.");
     } finally {
       setCarregando(false);
     }
@@ -150,15 +145,50 @@ function ControleAcesso() {
 
   useEffect(() => { carregar(); }, []);
 
-  const handleAlterarStatus = async (usuario) => {
-    if (usuario.id === usuarioLogado.id) {
-      alert("Você não pode desativar sua própria conta.");
-      return;
-    }
-    const acao = usuario.ativo ? "desativar" : "ativar";
-    if (!window.confirm(`Deseja ${acao} o usuário "${usuario.nome}"?`)) return;
+  const handleVisualizar = (u) => {
+    setUsuarioSelecionado(u);
+    setModalAberto(true);
+  };
+
+  const handleNovoFuncionario = () => {
+    setUsuarioSelecionado(null);
+    setModalAberto(true);
+  };
+
+  const handleSalvar = async (form) => {
     try {
-      await alterarStatus(usuario.id, !usuario.ativo);
+      if (usuarioSelecionado) {
+        const dados = { nome: form.nome, usuario: form.usuario, cargo: form.cargo };
+        if (form.senha) dados.senha = form.senha;
+        await editarUsuario(usuarioSelecionado.id, dados);
+      } else {
+        await cadastrarFuncionario(form.nome, form.usuario, form.senha, form.cargo);
+        setModalAberto(false);
+      }
+      await carregar();
+    } catch (e) {
+      alert(e.message);
+      throw e;
+    }
+  };
+
+  const handleAlterarStatus = async (u) => {
+    if (u.id === usuarioLogado.id) { alert("Você não pode desativar sua própria conta."); return; }
+    const acao = u.ativo ? "desativar" : "ativar";
+    if (!window.confirm(`Deseja ${acao} o usuário "${u.nome}"?`)) return;
+    try {
+      await alterarStatus(u.id, !u.ativo);
+      await carregar();
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const handleExcluir = async (u) => {
+    if (u.id === usuarioLogado.id) { alert("Você não pode excluir sua própria conta."); return; }
+    if (!window.confirm(`Tem certeza que deseja excluir "${u.nome}"? Esta ação não pode ser desfeita.`)) return;
+    try {
+      await excluirUsuario(u.id);
       await carregar();
     } catch (e) {
       alert(e.message);
@@ -171,83 +201,50 @@ function ControleAcesso() {
       <main className="main">
         <Header
           title="Controle de Acesso"
-          subtitle="Gerencie os usuários do sistema"
+          subtitle={`${usuarios.length} Usuário${usuarios.length !== 1 ? "s" : ""} Cadastrado${usuarios.length !== 1 ? "s" : ""}`}
+          action={
+            <button className="btn-novo" onClick={handleNovoFuncionario}>
+              <strong>+</strong> Novo Funcionário
+            </button>
+          }
         />
 
-        <div className="tab"><p>Usuários</p></div>
+        <div className="busca-wrapper">
+          <img src="./icons/lupa-svgrepo-com.svg" alt="" className="icon busca-icon" />
+          <input
+            type="text"
+            className="busca-input"
+            placeholder="Busca por nome ou e-mail..."
+            disabled
+          />
+        </div>
 
-        <section className="finance-box">
-          <div className="acesso-header">
-            <h3>Funcionários Cadastrados</h3>
-            <button className="acesso-btn" onClick={() => setModalAberto(true)}>
-              + Novo Funcionário
-            </button>
-          </div>
-
-          {carregando && <p className="acesso-vazio">Carregando usuários...</p>}
-          {!carregando && erro && <p className="acesso-vazio acesso-erro">{erro}</p>}
-
-          {!carregando && !erro && (
-            <table className="acesso-table">
-              <thead>
-                <tr>
-                  <th>Nome</th>
-                  <th>E-mail</th>
-                  <th>Cargo</th>
-                  <th>Status</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                {usuarios.length === 0 ? (
-                  <tr>
-                    <td colSpan="5" className="acesso-vazio">Nenhum usuário cadastrado.</td>
-                  </tr>
-                ) : (
-                  usuarios.map((u) => (
-                    <tr key={u.id}>
-                      <td>
-                        <div className="acesso-nome">
-                          <div className="acesso-avatar">{u.nome.charAt(0).toUpperCase()}</div>
-                          {u.nome}
-                        </div>
-                      </td>
-                      <td>{u.usuario}</td>
-                      <td>
-                        <span className={`cargo-badge cargo-${u.cargo}`}>
-                          {labelCargo[u.cargo] ?? u.cargo}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={u.ativo ? "status-ativo" : "status-inativo"}>
-                          {u.ativo ? "● Ativo" : "● Inativo"}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          className={u.ativo ? "btn-desativar" : "btn-ativar"}
-                          onClick={() => handleAlterarStatus(u)}
-                          disabled={u.id === usuarioLogado.id}
-                          title={u.id === usuarioLogado.id ? "Não é possível alterar sua própria conta" : ""}
-                        >
-                          {u.ativo ? "Desativar" : "Ativar"}
-                        </button>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+        <div className="clientes-lista">
+          {carregando && <p className="lista-vazia">Carregando usuários...</p>}
+          {!carregando && erro && <p className="lista-vazia" style={{ color: "red" }}>{erro}</p>}
+          {!carregando && !erro && usuarios.length === 0 && (
+            <p className="lista-vazia">Nenhum usuário cadastrado.</p>
           )}
-        </section>
+          {!carregando && !erro && usuarios.map((u) => (
+            <UsuarioCard
+              key={u.id}
+              u={u}
+              usuarioLogadoId={usuarioLogado.id}
+              isAdmin={isAdmin}
+              onVisualizar={handleVisualizar}
+              onExcluir={handleExcluir}
+              onAlterarStatus={handleAlterarStatus}
+            />
+          ))}
+        </div>
       </main>
 
-      {modalAberto && (
-        <ModalNovoFuncionario
-          onFechar={() => setModalAberto(false)}
-          onSalvo={carregar}
-        />
-      )}
+      <UsuarioModal
+        aberto={modalAberto}
+        onFechar={() => setModalAberto(false)}
+        onSalvar={handleSalvar}
+        usuarioSelecionado={usuarioSelecionado}
+      />
     </div>
   );
 }
