@@ -286,7 +286,7 @@ INSERT INTO public.usuarios (nome, usuario, senha_hash, cargo)
 VALUES (
     'Administrador Master',
     'admin@gmail.com',
-    '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+    '$2y$10$CNYffIiMpZwvs6J6u7AFU.usSJkCZCFWkE1blR1M.tsXvTopiFrym',
     'admin'
 ) ON CONFLICT (usuario) DO NOTHING;
 
