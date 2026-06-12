@@ -285,9 +285,9 @@ WHERE DATE_TRUNC('month', criado_em) = DATE_TRUNC('month', NOW());
 INSERT INTO public.usuarios (nome, usuario, senha_hash, cargo)
 VALUES (
     'Administrador Master',
-    'admin',
+    'admin@gmail.com',
     '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
-    'admin@gmail.com'
+    'admin'
 ) ON CONFLICT (usuario) DO NOTHING;
 
 -- ============================================================
